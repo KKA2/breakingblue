@@ -1,0 +1,21 @@
+Hierarchy Structure for Breaking Blue (initial plan):
+
+Character (Abstract)
+	-Player
+		-gameStatus (points, level, abilities, etc)
+	-Enemy
+
+Levels (Abstract)
+	-One 
+		-Display (composed into all levels; foreground, background)
+	-Two
+	-Three
+	-Four
+	-ENDGAME
+Master Class: Game (includes movement)
+	-Breaking Blue
+	-Rise of the Red
+Animation (Abtract) - composed into needed classes (player, enemy)
+	Abilities (Abstract)
+		-Flight
+		-High Jump
