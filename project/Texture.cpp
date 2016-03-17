@@ -10,18 +10,16 @@ using namespace std;
 
 Texture::Texture() {
     Renderer = NULL;
+    mTexture = NULL;
 }
 
-Texture::~Texture() {
-    free();
-}
+Texture::~Texture() {}
 
 void Texture::setUp(SDL_Renderer *renderer) {
     Renderer = renderer;
 }
 
 void Texture::loadFromFile(string path) {
-    free();
     SDL_Texture* newTexture = NULL;
     SDL_Surface* loadedSurface = IMG_Load(path.c_str()); // load image
     SDL_SetColorKey(loadedSurface,SDL_TRUE,SDL_MapRGB(loadedSurface->format,0,0xFF,0xFF));
@@ -33,11 +31,9 @@ void Texture::loadFromFile(string path) {
 }
 
 void Texture::free() {
-    if(mTexture != NULL) { // free texture if it exists
+    if (mTexture != NULL) {
         SDL_DestroyTexture(mTexture);
         mTexture = NULL;
-        mWidth = 0;
-        mHeight = 0;
     }
 }
 
@@ -49,12 +45,4 @@ void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double
     }
     // render to screen
     SDL_RenderCopyEx(Renderer,mTexture,clip,&renderQuad,angle,center,flip);
-}
-
-int Texture::getWidth() const {
-    return mWidth;
-}
-
-int Texture::getHeight() const {
-    return mHeight;
 }

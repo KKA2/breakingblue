@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-w
+CFLAGS=-w -ggdb
 LFLAGS=-lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 MAIN=tutorial
 

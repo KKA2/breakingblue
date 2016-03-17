@@ -24,7 +24,7 @@ int main() {
     bool isRunning = false;
     double currRun=0;
     SDL_RendererFlip moveDirection = SDL_FLIP_NONE;
-    int personState = 0;
+    int personState = 0; // 0=standing, 1=running, 2=jumping
 
     master.update((int)xPos,(int)yPos,(int)currRun,personState,moveDirection);
 
@@ -66,7 +66,8 @@ int main() {
         }
         else {
             if (state[SDL_SCANCODE_LEFT]) {
-                master.playSound(2);
+                if (personState != 2) // if not jumping
+                    master.playSound(2);
                 moveDirection = SDL_FLIP_HORIZONTAL;
                 if (personState != 2)
                     personState = 1;
@@ -76,7 +77,8 @@ int main() {
                     currRun+=.3;
             }
             if (state[SDL_SCANCODE_RIGHT]) {
-                master.playSound(2);
+                if (personState != 2)
+                    master.playSound(2);
                 moveDirection = SDL_FLIP_NONE;
                 if (personState != 2)
                     personState = 1;

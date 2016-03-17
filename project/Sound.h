@@ -21,7 +21,7 @@ public:
 private:
     Mix_Music *Intro;
     Mix_Chunk *Landing;
-    Mix_Chunk *Running;
+    //Mix_Chunk *Running;
 };
 
 #endif
