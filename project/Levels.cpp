@@ -15,6 +15,7 @@ Levels::Levels() {
     Window = NULL;
     Renderer = NULL;
     Background = NULL;
+    Foreground = NULL;
     Music = NULL;
 }
 
@@ -22,6 +23,9 @@ Levels::~Levels() {
     // free loaded images
     SDL_DestroyTexture(Background);
     Background = NULL;
+
+    SDL_DestroyTexture(Foreground);
+    Foreground = NULL;
 
     Mix_FreeMusic(Music);
     Music = NULL;
@@ -43,6 +47,7 @@ void Levels::setUp(SDL_Window *window, SDL_Renderer *renderer) {
 
 void Levels::display() {
     SDL_RenderCopy(Renderer,Background,NULL,NULL);
+    SDL_RenderCopy(Renderer,Foreground, NULL, NULL);
 }
 
 void Levels::playMusic() {
@@ -61,4 +66,10 @@ void Levels::setMusic(Mix_Music *music) {
 }
 Mix_Music * Levels::getMusic() {
     return Music;
+}
+void Levels::setForeground(SDL_Texture *foreground) {
+    Foreground = foreground;
+}
+SDL_Texture * Levels::getForeground() {
+    return Foreground;
 }

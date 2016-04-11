@@ -22,12 +22,20 @@ void Sound::loadMedia(int load) {
     if (load != loaded) {
         if (load == 1) {
             Mix_FreeChunk(SoundEffect);
+<<<<<<< HEAD
             SoundEffect = Mix_LoadWAV("music/landing.wav");
+=======
+            SoundEffect = Mix_LoadWAV("./sound/landing.wav");
+>>>>>>> dc68d187ea539599a94f8c6faea6c82016f2f8ce
             loaded = 1;
         }
         else if (load == 2) {
             Mix_FreeChunk(SoundEffect);
+<<<<<<< HEAD
             SoundEffect = Mix_LoadWAV("music/running.wav");
+=======
+            SoundEffect = Mix_LoadWAV("./sound/running.wav");
+>>>>>>> dc68d187ea539599a94f8c6faea6c82016f2f8ce
             loaded = 2;
         }
     }
