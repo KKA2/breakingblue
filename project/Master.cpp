@@ -63,11 +63,11 @@ void Master::play() {
         while (person.getState() == 4) {
             person.setCurrRoll(person.getCurrRoll() + .5);
             if (person.getMoveDir() == SDL_FLIP_NONE)
-                move(10);
+                move(8);
             else
-                move(-10);
+                move(-8);
 
-            if (person.getCurrRoll() < 7)
+            if (person.getCurrRoll() < 8)
                 update();
             else {
                 person.setCurrRoll(0);

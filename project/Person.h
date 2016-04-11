@@ -53,7 +53,7 @@ private:
     Texture JumpingTexture;
     SDL_Rect Ducking;
     Texture DuckingTexture;
-    SDL_Rect Rolling[7];
+    SDL_Rect Rolling[8];
     Texture RollingTexture;
     SDL_Rect Punching[11];
     Texture PunchingTexture;
