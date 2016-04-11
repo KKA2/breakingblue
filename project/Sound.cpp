@@ -1,3 +1,6 @@
+// Breaking Blue
+// Sound.cpp
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 #include <iostream>

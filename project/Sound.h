@@ -1,5 +1,5 @@
-// Ann Keenan
-// Mar 12
+// Breaking Blue
+// Sound.h
 
 #ifndef _SOUND
 #define _SOUND
@@ -19,7 +19,7 @@ public:
     void playSound(int);
 private:
     Mix_Chunk *SoundEffect;
-    int loaded;
+    int loadedSound;
 };
 
 #endif
