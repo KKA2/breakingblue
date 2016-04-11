@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include "Levels.h"
+#include "Texture.h"
 
 using namespace std;
 
@@ -45,9 +46,9 @@ void Levels::setUp(SDL_Window *window, SDL_Renderer *renderer) {
     Renderer = renderer;
 }
 
-void Levels::display() {
+void Levels::display(SDL_Rect * camera) {
     SDL_RenderCopy(Renderer,Background,NULL,NULL);
-    SDL_RenderCopy(Renderer,Foreground, NULL, NULL);
+    SDL_RenderCopy(Renderer,Foreground, camera, NULL);
 }
 
 void Levels::playMusic() {
@@ -72,4 +73,13 @@ void Levels::setForeground(SDL_Texture *foreground) {
 }
 SDL_Texture * Levels::getForeground() {
     return Foreground;
+}
+int Levels::getLevelW() {
+    return lWidth;
+}
+SDL_Renderer * Levels::getRenderer() {
+    return Renderer;
+}
+void Levels::setLWidth(int width) {
+    lWidth = width;
 }

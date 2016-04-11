@@ -19,7 +19,7 @@ public:
     ~Levels();
     SDL_Texture * loadTexture(string);
     void setUp(SDL_Window *,SDL_Renderer *);
-    void display();
+    void display(SDL_Rect *);
     void playMusic();
     void setBackground(SDL_Texture *);
     SDL_Texture * getBackground();
@@ -28,14 +28,18 @@ public:
     virtual void loadMedia() = 0;
     void setForeground(SDL_Texture *);
     SDL_Texture * getForeground();
+    int getLevelW();
+    SDL_Renderer * getRenderer();
+    SDL_Rect * getNewCam();
+    void setLWidth(int);
 
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
-
     SDL_Texture *Foreground;
     SDL_Texture *Background;
     Mix_Music *Music;
+    int lWidth;
 };
 
 #endif

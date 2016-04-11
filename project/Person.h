@@ -20,7 +20,7 @@ public:
     ~Person();
     void setUp(SDL_Window *,SDL_Renderer *);
     void loadMedia();
-    void draw();
+    void draw(int camX); //height of level always 400
 
     double getXPos() const;
     void setXPos(const double);

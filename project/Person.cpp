@@ -90,21 +90,22 @@ void Person::loadMedia() {
     }
 }
 
-void Person::draw() {
+void Person::draw(int camX) {
+
     if (State == 0)
-        StandingTexture.render(XPos,YPos,&Standing,MoveDir);
+        StandingTexture.render(XPos-camX,YPos,&Standing,MoveDir);
     else if (State == 1)
-        RunningTexture.render(XPos,YPos,&Running[int(CurrRun)],MoveDir);
+        RunningTexture.render(XPos-camX,YPos,&Running[int(CurrRun)],MoveDir);
     else if (State == 2)
-        JumpingTexture.render(XPos,YPos,&Jumping,MoveDir);
+        JumpingTexture.render(XPos-camX,YPos,&Jumping,MoveDir);
     else if (State == 3)
-        DuckingTexture.render(XPos,YPos,&Ducking,MoveDir);
+        DuckingTexture.render(XPos-camX,YPos,&Ducking,MoveDir);
     else if (State == 4)
-        RollingTexture.render(XPos,YPos,&Rolling[int(CurrRoll)],MoveDir);
+        RollingTexture.render(XPos-camX,YPos,&Rolling[int(CurrRoll)],MoveDir);
     else if (State == 5)
-        PunchingTexture.render(XPos,YPos,&Rolling[int(CurrPunch)],MoveDir);
+        PunchingTexture.render(XPos-camX,YPos,&Rolling[int(CurrPunch)],MoveDir);
     else if (State == 6)
-        BackflipTexture.render(XPos,YPos,&Backflip[int(CurrFlip)],MoveDir);
+        BackflipTexture.render(XPos-camX,YPos,&Backflip[int(CurrFlip)],MoveDir);
 }
 
 double Person::getXPos() const {

@@ -26,12 +26,25 @@ void Texture::loadFromFile(string path) {
     IMG_Init(IMG_INIT_PNG); //adds PNG support
     SDL_Texture* newTexture = NULL;
     SDL_Surface* loadedSurface = IMG_Load(path.c_str()); // load image
-    SDL_SetColorKey(loadedSurface,SDL_TRUE,SDL_MapRGB(loadedSurface->format,0,0xFF,0xFF));
-    newTexture = SDL_CreateTextureFromSurface(Renderer,loadedSurface); // create texture from surface pixels
-    mWidth = loadedSurface->w;
-    mHeight = loadedSurface->h;
-    SDL_FreeSurface(loadedSurface); // get rid of old loaded surface
-    mTexture = newTexture;
+    if (loadedSurface == NULL) {
+        printf("Unable to load image %s! SDL_image Error: %s", path.c_str(), IMG_GetError() );
+    } else {
+        //color key image
+        SDL_SetColorKey(loadedSurface,SDL_TRUE,SDL_MapRGB(loadedSurface->format,0,0xFF,0xFF));
+        
+        //create texture from surface pixels
+        newTexture = SDL_CreateTextureFromSurface(Renderer,loadedSurface); // create texture from surface pixels
+        if(newTexture == NULL) {
+            printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+        }
+        else {
+            mWidth = loadedSurface->w;
+            mHeight = loadedSurface->h;
+        }
+        
+        SDL_FreeSurface(loadedSurface); // get rid of old loaded surface
+        mTexture = newTexture;
+    }
 }
 
 void Texture::free() {
@@ -40,7 +53,6 @@ void Texture::free() {
         mTexture = NULL;
     }
 }
-
 void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double angle, SDL_Point *center) {
     SDL_Rect renderQuad = { x, y, mWidth, mHeight }; // set rendering space and render to screen
     if(clip != NULL) { // set clip rendering dimensions
@@ -49,4 +61,10 @@ void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double
     }
     // render to screen
     SDL_RenderCopyEx(Renderer,mTexture,clip,&renderQuad,angle,center,flip);
+}
+int Texture::getWidth() {
+    return mWidth;
+}
+int Texture::getHeight() {
+    return mHeight;
 }

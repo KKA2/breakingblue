@@ -11,8 +11,12 @@
 #include <iostream>
 #include <string>
 #include "Levels.h"
+#include "Texture.h"
 
 using namespace std;
+
+const int LEVEL_WIDTH = 4000;
+const int LEVEL_HEIGHT = 400;
 
 class Level1 : public Levels {
 public:
@@ -20,8 +24,9 @@ public:
     ~Level1();
     void loadMedia();
     void loadTexture();
-
 private:
+	SDL_Texture* fgTexture;
+	
 };
 
 #endif

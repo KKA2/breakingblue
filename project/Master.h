@@ -32,11 +32,12 @@ public:
     void move(const double);
     void update();
     void stopMusic();
+    SDL_Rect getCamera();
 
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
-
+    SDL_Rect camera;
     Sound sound;
     Person person;
     Level1 level1;

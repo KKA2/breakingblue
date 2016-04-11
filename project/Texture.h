@@ -17,6 +17,8 @@ class Texture {
 public:
     Texture();
     ~Texture();
+    int getWidth();
+    int getHeight();
     void setUp(SDL_Renderer *);
     SDL_Texture * loadTexture(string);
     void loadFromFile(string);

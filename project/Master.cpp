@@ -42,6 +42,10 @@ void Master::init() {
     SDL_SetRenderDrawColor(Renderer,0xFF,0xFF,0xFF,0xFF); // initialize renderer color
     IMG_Init(IMG_INIT_PNG);
     Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
+    camera.h = SCREEN_HEIGHT;
+    camera.w = SCREEN_WIDTH;
+    camera.x = 0;
+    camera.y = 0;
 }
 
 void Master::loadMedia() {
@@ -59,14 +63,26 @@ void Master::play() {
 
     level1.playMusic();
 
+    //create camera for scolling
+    
+
     while (!quit) {
+        //center camera over the player
+        camera.x = person.getXPos() + 75 - SCREEN_WIDTH/2;
+        camera.y = person.getYPos() + 94 - SCREEN_HEIGHT/2;
+        //keep camera in bounds
+        if (camera.x < 0) {
+            camera.x = 0;
+        } else if (camera.x > level1.getLevelW() - camera.w ) {
+            camera.x = level1.getLevelW() - camera.w;
+        }
         while (person.getState() == 4) {
             person.setCurrRoll(person.getCurrRoll() + .5);
             if (person.getMoveDir() == SDL_FLIP_NONE)
                 move(8);
             else
                 move(-8);
-
+            
             if (person.getCurrRoll() < 8)
                 update();
             else {
@@ -185,18 +201,22 @@ void Master::play() {
 
 void Master::move(const double ch_x) {
     person.setXPos(person.getXPos() + ch_x);
+    camera.x = person.getXPos() + 75 - SCREEN_WIDTH/2;
 
-    if (person.getXPos() > SCREEN_WIDTH-150)
-        person.setXPos(SCREEN_WIDTH-150);
+    if (person.getXPos() > SCREEN_WIDTH)
+        person.setXPos(SCREEN_WIDTH);
     else if (person.getXPos() < 0)
         person.setXPos(0);
 }
 
 void Master::update() {
     SDL_RenderClear(Renderer);
-    level1.display();
+    level1.display(&camera);
     // foreground
-    person.draw();
+    person.draw(camera.x);
     // update screen
     SDL_RenderPresent(Renderer);
+}
+SDL_Rect Master::getCamera() {
+    return camera;
 }
