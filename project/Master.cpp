@@ -53,7 +53,7 @@ void Master::play() {
     bool quit = false;
     SDL_Event e;
 
-    double maxJumpHeight = 200;
+    double maxJumpHeight = 100;
 
     update();
 
