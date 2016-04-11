@@ -48,7 +48,7 @@ void Person::setUp(SDL_Window *window, SDL_Renderer *renderer) {
 }
 
 void Person::loadMedia() {
-    RunningTexture.loadFromFile("./imgs/figs/running.png");
+    RunningTexture.loadFromFile("imgs/figs/running.png");
     for (int i=0;i<7;i++) {
         Running[i].x = 75*i;
         Running[i].y = 0;
@@ -56,16 +56,16 @@ void Person::loadMedia() {
         Running[i].h = 94;
     }
 
-    StandingTexture.loadFromFile("./imgs/figs/standing.png");
+    StandingTexture.loadFromFile("imgs/figs/standing.png");
     Standing.x = 0; Standing.y = 0; Standing.w = 75; Standing.h = 94;
 
-    JumpingTexture.loadFromFile("./imgs/figs/jumping.png");
+    JumpingTexture.loadFromFile("imgs/figs/jumping.png");
     Jumping.x = 0; Jumping.y = 0; Jumping.w = 75; Jumping.h = 94;
 
-    DuckingTexture.loadFromFile("./imgs/figs/ducking.png");
+    DuckingTexture.loadFromFile("imgs/figs/ducking.png");
     Ducking.x = 0; Ducking.y = 0; Ducking.w = 75; Ducking.h = 94;
 
-    RollingTexture.loadFromFile("./imgs/figs/rolling.png");
+    RollingTexture.loadFromFile("imgs/figs/rolling.png");
     for (int i=0;i<8;i++) {
         Rolling[i].x = 75*i;
         Rolling[i].y = 0;
@@ -73,7 +73,7 @@ void Person::loadMedia() {
         Rolling[i].h = 94;
     }
 
-    PunchingTexture.loadFromFile("./imgs/figs/punching.png");
+    PunchingTexture.loadFromFile("imgs/figs/punching.png");
     for (int i=0;i<11;i++) {
         Punching[i].x = 75*i;
         Punching[i].y = 0;
@@ -81,7 +81,7 @@ void Person::loadMedia() {
         Punching[i].h = 94;
     }
 
-    BackflipTexture.loadFromFile("./imgs/figs/backflip.png");
+    BackflipTexture.loadFromFile("imgs/figs/backflip.png");
     for (int i=0;i<26;i++) {
         Backflip[i].x = 75*i;
         Backflip[i].y = 0;
