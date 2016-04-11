@@ -15,13 +15,11 @@ class Sound {
 public:
     Sound();
     ~Sound();
-    void loadMedia();
+    void loadMedia(int);
     void playSound(int);
-    void playMusic(int);
 private:
-    Mix_Music *Intro;
-    Mix_Chunk *Landing;
-    //Mix_Chunk *Running;
+    Mix_Chunk *SoundEffect;
+    int loaded;
 };
 
 #endif

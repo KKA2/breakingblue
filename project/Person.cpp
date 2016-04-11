@@ -1,7 +1,11 @@
+// Breaking Blue
+// Person.cpp
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include <string>
+#include "Master.h"
 #include "Person.h"
 #include "Texture.h"
 
@@ -10,6 +14,14 @@ using namespace std;
 Person::Person() {
     Window = NULL;
     Renderer = NULL;
+    XPos = SCREEN_WIDTH/2;
+    YPos = GroundLevel;
+    CurrRun = 0;
+    CurrRoll = 0;
+    CurrPunch = 0;
+    MoveDir = SDL_FLIP_NONE;
+    State = 0;
+    JumpDir = 0;
 }
 
 Person::~Person() {
@@ -17,6 +29,9 @@ Person::~Person() {
     StandingTexture.free();
     JumpingTexture.free();
     DuckingTexture.free();
+    RollingTexture.free();
+    PunchingTexture.free();
+    BackflipTexture.free();
 }
 
 void Person::setUp(SDL_Window *window, SDL_Renderer *renderer) {
@@ -27,31 +42,123 @@ void Person::setUp(SDL_Window *window, SDL_Renderer *renderer) {
     StandingTexture.setUp(renderer);
     JumpingTexture.setUp(renderer);
     DuckingTexture.setUp(renderer);
+    RollingTexture.setUp(renderer);
+    PunchingTexture.setUp(renderer);
+    BackflipTexture.setUp(renderer);
 }
 
 void Person::loadMedia() {
     RunningTexture.loadFromFile("running.png");
     for (int i=0;i<7;i++) {
-        Running[i].x = 350*i;
+        Running[i].x = 150*i;
         Running[i].y = 0;
-        Running[i].w = 350;
-        Running[i].h = 250;
+        Running[i].w = 150;
+        Running[i].h = 188;
     }
+
     StandingTexture.loadFromFile("standing.png");
-    Standing.x = 0; Standing.y = 0; Standing.w = 350; Standing.h = 250;
+    Standing.x = 0; Standing.y = 0; Standing.w = 150; Standing.h = 188;
+
     JumpingTexture.loadFromFile("jumping.png");
-    Jumping.x = 0; Jumping.y = 0; Jumping.w = 350; Jumping.h = 250;
+    Jumping.x = 0; Jumping.y = 0; Jumping.w = 150; Jumping.h = 188;
+
     DuckingTexture.loadFromFile("ducking.png");
-    Ducking.x = 0; Ducking.y = 0; Ducking.w = 350; Ducking.h = 250;
+    Ducking.x = 0; Ducking.y = 0; Ducking.w = 150; Ducking.h = 188;
+
+    RollingTexture.loadFromFile("rolling.png");
+    for (int i=0;i<7;i++) {
+        Rolling[i].x = 150*i;
+        Rolling[i].y = 0;
+        Rolling[i].w = 150;
+        Rolling[i].h = 188;
+    }
+
+    PunchingTexture.loadFromFile("punching.png");
+    for (int i=0;i<11;i++) {
+        Punching[i].x = 150*i;
+        Punching[i].y = 0;
+        Punching[i].w = 150;
+        Punching[i].h = 188;
+    }
+
+    BackflipTexture.loadFromFile("backflip.png");
+    for (int i=0;i<26;i++) {
+        Backflip[i].x = 150*i;
+        Backflip[i].y = 0;
+        Backflip[i].w = 150;
+        Backflip[i].h = 188;
+    }
 }
 
-void Person::draw(int xPos, int yPos, int currRun, int state, SDL_RendererFlip dir) {
-    if (state == 0)
-        StandingTexture.render(xPos,yPos,&Standing,dir);
-    else if (state == 1)
-        RunningTexture.render(xPos,yPos,&Running[currRun],dir);
-    else if (state == 2)
-        JumpingTexture.render(xPos,yPos,&Jumping,dir);
-    else if (state == 3)
-        DuckingTexture.render(xPos,yPos,&Ducking,dir);
+void Person::draw() {
+    if (State == 0)
+        StandingTexture.render(XPos,YPos,&Standing,MoveDir);
+    else if (State == 1)
+        RunningTexture.render(XPos,YPos,&Running[int(CurrRun)],MoveDir);
+    else if (State == 2)
+        JumpingTexture.render(XPos,YPos,&Jumping,MoveDir);
+    else if (State == 3)
+        DuckingTexture.render(XPos,YPos,&Ducking,MoveDir);
+    else if (State == 4)
+        RollingTexture.render(XPos,YPos,&Rolling[int(CurrRoll)],MoveDir);
+    else if (State == 5)
+        PunchingTexture.render(XPos,YPos,&Rolling[int(CurrPunch)],MoveDir);
+    else if (State == 6)
+        BackflipTexture.render(XPos,YPos,&Backflip[int(CurrFlip)],MoveDir);
 }
+
+double Person::getXPos() const {
+    return XPos;
+}
+void Person::setXPos(const double xPos) {
+    XPos = xPos;
+}
+double Person::getYPos() const {
+    return YPos;
+}
+void Person::setYPos(const double yPos) {
+    YPos = yPos;
+}
+double Person::getCurrRun() const {
+    return CurrRun;
+}
+void Person::setCurrRun(const double currRun) {
+    CurrRun = currRun;
+}
+double Person::getCurrRoll() const {
+    return CurrRoll;
+}
+void Person::setCurrRoll(const double currRoll) {
+    CurrRoll = currRoll;
+}
+double Person::getCurrPunch() const {
+    return CurrPunch;
+}
+void Person::setCurrPunch(const double currPunch) {
+    CurrPunch = currPunch;
+}
+double Person::getCurrFlip() const {
+    return CurrFlip;
+}
+void Person::setCurrFlip(const double currFlip) {
+    CurrFlip = currFlip;
+}
+SDL_RendererFlip Person::getMoveDir() const {
+    return MoveDir;
+}
+void Person::setMoveDir(const SDL_RendererFlip moveDir) {
+    MoveDir = moveDir;
+}
+int Person::getState() const {
+    return State;
+}
+void Person::setState(const int state) {
+    State = state;
+}
+int Person::getJumpDir() const {
+    return JumpDir;
+}
+void Person::setJumpDir(const int jumpDir) {
+    JumpDir = jumpDir;
+}
+

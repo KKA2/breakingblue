@@ -1,5 +1,5 @@
-// Ann Keenan
-// Feb 29
+// Breaking Blue
+// Person.h
 
 #ifndef _PERSON
 #define _PERSON
@@ -20,7 +20,27 @@ public:
     ~Person();
     void setUp(SDL_Window *,SDL_Renderer *);
     void loadMedia();
-    void draw(int,int,int,int,SDL_RendererFlip);
+    void draw();
+
+    double getXPos() const;
+    void setXPos(const double);
+    double getYPos() const;
+    void setYPos(const double);
+    double getCurrRun() const;
+    void setCurrRun(const double);
+    double getCurrRoll() const;
+    void setCurrRoll(const double);
+    double getCurrPunch() const;
+    void setCurrPunch(const double);
+    double getCurrFlip() const;
+    void setCurrFlip(const double);
+    SDL_RendererFlip getMoveDir() const;
+    void setMoveDir(const SDL_RendererFlip);
+    int getState() const;
+    void setState(const int);
+    int getJumpDir() const;
+    void setJumpDir(const int);
+
 private:
     SDL_Window *Window;
     SDL_Renderer *Renderer;
@@ -33,6 +53,23 @@ private:
     Texture JumpingTexture;
     SDL_Rect Ducking;
     Texture DuckingTexture;
+    SDL_Rect Rolling[7];
+    Texture RollingTexture;
+    SDL_Rect Punching[11];
+    Texture PunchingTexture;
+    SDL_Rect Backflip[26];
+    Texture BackflipTexture;
+
+    double XPos;
+    double YPos;
+    double CurrRun;
+    double CurrRoll;
+    double CurrPunch;
+    double CurrFlip;
+    SDL_RendererFlip MoveDir;
+    // 0=standing, 1=running, 2=jumping, 3=ducking, 4=rolling, 5=punching, 6=backflip
+    int State;
+    int JumpDir;
 };
 
 #endif

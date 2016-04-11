@@ -1,5 +1,5 @@
-// Ann Keenan
-// Feb 29
+// Breaking Blue
+// Master.h
 
 #ifndef _MASTER
 #define _MASTER
@@ -12,11 +12,13 @@
 #include <string>
 #include "Person.h"
 #include "Sound.h"
+#include "Level1.h"
 
 using namespace std;
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 500;
+const int SCREEN_WIDTH = 1000;
+const int SCREEN_HEIGHT = 400;
+const int GroundLevel = SCREEN_HEIGHT-200;
 
 class Master {
 public:
@@ -25,18 +27,19 @@ public:
     void init();
     void loadMedia();
     SDL_Texture *loadTexture(string path);
-    void update(int,int,int,int,SDL_RendererFlip);
-    void playSound(int);
-    void playMusic(int);
+
+    void play();
+    void move(const double);
+    void update();
     void stopMusic();
 
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
-    SDL_Texture *Background;
 
-    Person person;
     Sound sound;
+    Person person;
+    Level1 level1;
 };
 
 #endif

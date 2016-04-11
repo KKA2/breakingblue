@@ -1,3 +1,6 @@
+// Breaking Blue
+// Master.cpp
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -13,14 +16,11 @@ using namespace std;
 Master::Master() {
     init();
     person.setUp(Window,Renderer);
+    level1.setUp(Window,Renderer);
     loadMedia();
 }
 
 Master::~Master() {
-    // free loaded images
-    SDL_DestroyTexture(Background);
-    Background = NULL;
-
     // destroy window    
     SDL_DestroyRenderer(Renderer);
     SDL_DestroyWindow(Window);
@@ -45,33 +45,158 @@ void Master::init() {
 }
 
 void Master::loadMedia() {
-    Background = loadTexture("background.png");
     person.loadMedia();
-    sound.loadMedia();
+    level1.loadMedia();
 }
 
-SDL_Texture * Master::loadTexture(string path) {
-    SDL_Texture *newTexture = NULL; // optimized surface
-    SDL_Surface *loadedSurface = IMG_Load(path.c_str()); // loaded surface
-    newTexture = SDL_CreateTextureFromSurface(Renderer,loadedSurface);
-    SDL_FreeSurface(loadedSurface);
+void Master::play() {
+    bool quit = false;
+    SDL_Event e;
 
-    return newTexture;
+    double maxJumpHeight = 200;
+
+    update();
+
+    level1.playMusic();
+
+    while (!quit) {
+        while (person.getState() == 4) {
+            person.setCurrRoll(person.getCurrRoll() + .5);
+            if (person.getMoveDir() == SDL_FLIP_NONE)
+                move(10);
+            else
+                move(-10);
+
+            if (person.getCurrRoll() < 7)
+                update();
+            else {
+                person.setCurrRoll(0);
+                person.setState(3);
+            }
+        }
+
+        while (person.getState() == 5) {
+            person.setCurrPunch(person.getCurrPunch() + .5);
+            if (person.getCurrPunch() < 11)
+                update();
+            else {
+                person.setCurrPunch(0);
+                break;
+            }
+        }
+
+        while (SDL_PollEvent(&e) != 0) {
+            if(e.type == SDL_QUIT)
+                quit = true;
+            else if(e.type == SDL_KEYDOWN) {
+                switch(e.key.keysym.sym) {
+                    case SDLK_UP: 
+                        /*if (person.getState() == 1) { // if running
+                            person.setState(6);
+                        }
+                        else {*/
+                            person.setState(2);
+                            if (person.getJumpDir() == 0)
+                                person.setJumpDir(-1);
+                        //}
+                    break;
+                    case SDLK_q:
+                        quit = true;
+                    break;
+                }
+            }
+        }
+/*
+        while (person.getState() == 6) {
+            person.setCurrFlip(person.getCurrFlip() + .5);
+            if (person.getMoveDir() == SDL_FLIP_NONE)
+                move(1);
+            else
+                move(-1);
+
+            if (person.getCurrFlip() < 26)
+                update();
+            else {
+                person.setCurrFlip(0);
+                person.setState(0);
+            }
+        }
+*/
+        person.setState(0);
+        person.setYPos(person.getYPos()+person.getJumpDir()*((maxJumpHeight+5)-(GroundLevel-person.getYPos()))/(maxJumpHeight+5)*50);
+
+        if (person.getYPos() < GroundLevel) {
+            person.setState(2);
+            if (person.getYPos() <= GroundLevel-maxJumpHeight)
+                person.setJumpDir(1);
+        }
+        else if (person.getJumpDir() == 1) {
+            sound.playSound(1);
+            person.setState(0);
+            person.setJumpDir(0);
+            person.setYPos(GroundLevel);
+        }
+
+        const Uint8 *state = SDL_GetKeyboardState(NULL);
+
+        if (state[SDL_SCANCODE_DOWN]) { // duck
+            if (person.getState() != 2) {
+                person.setState(3);
+                if (state[SDL_SCANCODE_LEFT]) {
+                    person.setMoveDir(SDL_FLIP_HORIZONTAL);
+                    person.setState(4);
+                }
+                else if (state[SDL_SCANCODE_RIGHT]) {
+                    person.setMoveDir(SDL_FLIP_NONE);
+                    person.setState(4);
+                }
+            }
+        }
+        else if (state[SDL_SCANCODE_LEFT]) { // run left
+            if (person.getState() != 2) // if not jumping
+                sound.playSound(2);
+            person.setMoveDir(SDL_FLIP_HORIZONTAL);
+            if (person.getState() != 2)
+                person.setState(1);
+            move(-10);
+            if (person.getYPos() >= GroundLevel)
+                person.setCurrRun(person.getCurrRun() + .3);
+        }
+        else if (state[SDL_SCANCODE_RIGHT]) { // run right
+            if (person.getState() != 2)
+                sound.playSound(2);
+            person.setMoveDir(SDL_FLIP_NONE);
+            if (person.getState() != 2)
+                person.setState(1);
+            move(10);
+            if (person.getYPos() >= GroundLevel)
+                person.setCurrRun(person.getCurrRun() + .3);
+        }
+        else {
+            person.setCurrRun(0);
+        }
+
+        if (person.getCurrRun() >= 7) // keep in bounds of array for running
+            person.setCurrRun(0);
+
+        update();
+    }
 }
 
-void Master::update(int xPos, int yPos, int currRun, int state, SDL_RendererFlip dir) {
+void Master::move(const double ch_x) {
+    person.setXPos(person.getXPos() + ch_x);
+
+    if (person.getXPos() > SCREEN_WIDTH-150)
+        person.setXPos(SCREEN_WIDTH-150);
+    else if (person.getXPos() < 0)
+        person.setXPos(0);
+}
+
+void Master::update() {
     SDL_RenderClear(Renderer);
-    // background
-    SDL_RenderCopy(Renderer,Background,NULL,NULL);
+    level1.display();
     // foreground
-    person.draw(xPos,yPos,currRun,state,dir);
-
-    SDL_RenderPresent(Renderer); // update screen
-}
-
-void Master::playSound(int s) {
-    sound.playSound(s);
-}
-void Master::playMusic(int s) {
-    sound.playMusic(s);
+    person.draw();
+    // update screen
+    SDL_RenderPresent(Renderer);
 }

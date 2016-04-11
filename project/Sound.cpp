@@ -7,39 +7,32 @@
 using namespace std;
 
 Sound::Sound() {
-    Intro = NULL;
-    Landing = NULL;
-    //Running = NULL;
+    SoundEffect = NULL;
 }
 
 Sound::~Sound() {
-    Mix_FreeChunk(Landing);
-    //Mix_FreeChunk(Running);
-    Landing = NULL;
-    //Running = NULL;
-
-    Mix_FreeMusic(Intro);
-    Intro = NULL;
+    Mix_FreeChunk(SoundEffect);
+    SoundEffect = NULL;
 }
 
-void Sound::loadMedia() {
-    Intro = Mix_LoadMUS("intro.wav");
-    Landing = Mix_LoadWAV("landing.wav");
-    //Running = Mix_LoadWAV("running.wav");
+void Sound::loadMedia(int load) {
+    if (load != loaded) {
+        if (load == 1) {
+            Mix_FreeChunk(SoundEffect);
+            SoundEffect = Mix_LoadWAV("landing.wav");
+            loaded = 1;
+        }
+        else if (load == 2) {
+            Mix_FreeChunk(SoundEffect);
+            SoundEffect = Mix_LoadWAV("running.wav");
+            loaded = 2;
+        }
+    }
 }
 
 void Sound::playSound(int sound) {
+    loadMedia(sound);
     Mix_Volume(0,100);
-    if (sound == 1) // jump landing
-        Mix_PlayChannel(0,Landing,0);
-    else if (sound == 2) // running
-        if (Mix_Playing(0) == 0)
-            Mix_PlayChannel(0,Landing,0);
-}
-
-void Sound::playMusic(int sound) {
-    if (sound == 1) {
-        Mix_PlayMusic(Intro,-1);
-        Mix_VolumeMusic(30);
-    }
+    if (Mix_Playing(0) == 0)
+        Mix_PlayChannel(0,SoundEffect,0);
 }
