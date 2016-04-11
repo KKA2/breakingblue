@@ -19,7 +19,7 @@ public:
     void playSound(int);
 private:
     Mix_Chunk *SoundEffect;
-    int loadedSound;
+    int loaded;
 };
 
 #endif
