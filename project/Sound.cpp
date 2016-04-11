@@ -22,12 +22,12 @@ void Sound::loadMedia(int load) {
     if (load != loaded) {
         if (load == 1) {
             Mix_FreeChunk(SoundEffect);
-            SoundEffect = Mix_LoadWAV("landing.wav");
+            SoundEffect = Mix_LoadWAV("./sound/landing.wav");
             loaded = 1;
         }
         else if (load == 2) {
             Mix_FreeChunk(SoundEffect);
-            SoundEffect = Mix_LoadWAV("running.wav");
+            SoundEffect = Mix_LoadWAV("./sound/running.wav");
             loaded = 2;
         }
     }

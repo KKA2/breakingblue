@@ -18,7 +18,7 @@ using namespace std;
 
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 400;
-const int GroundLevel = SCREEN_HEIGHT-200;
+const int GroundLevel = SCREEN_HEIGHT-300;
 
 class Master {
 public:

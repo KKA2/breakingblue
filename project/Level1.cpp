@@ -17,6 +17,6 @@ Level1::Level1() {}
 Level1::~Level1() {}
 
 void Level1::loadMedia() {
-    Levels::setBackground(Levels::loadTexture("background.png"));
-    Levels::setMusic(Mix_LoadMUS("intro.wav"));
+    Levels::setBackground(Levels::loadTexture("./imgs/background.png"));
+    Levels::setMusic(Mix_LoadMUS("./sound/intro.wav"));
 }
