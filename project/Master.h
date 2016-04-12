@@ -30,7 +30,7 @@ public:
 
     void play();
 
-    void moveFigure(const double,const double);
+    int moveFigure(const double,const double);
     void update();
     void updateCamera();
 

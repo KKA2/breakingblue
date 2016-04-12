@@ -57,6 +57,7 @@ void Master::play() {
     SDL_Event e;
 
     double maxJumpHeight = 150;
+    int speed = 30;
 
     updateCamera();
     update();
@@ -96,7 +97,7 @@ void Master::play() {
                 break;
             }
         }
-
+        person.setState(0);
         while (SDL_PollEvent(&e) != 0) {
             if(e.type == SDL_QUIT)
                 quit = true;
@@ -104,8 +105,11 @@ void Master::play() {
                 switch(e.key.keysym.sym) {
                     case SDLK_UP: 
                         person.setState(2);
-                        if (person.getJumpDir() == 0)
+                        if (person.getJumpHeight() == 0)
                             person.setJumpDir(-1);
+                    break;
+                    case SDLK_SPACE:
+                        person.setState(5);
                     break;
                     case SDLK_q:
                         quit = true;
@@ -129,26 +133,28 @@ void Master::play() {
             }
         }
 */
-        person.setState(0);
-        //cout << person.getJumpDir()*(maxJumpHeight - ((maxJumpHeight+5)-(person.getJumpHeight()))/(maxJumpHeight+5)*50) << endl;
-        double changeY =  person.getJumpDir() * ((maxJumpHeight+10 + person.getJumpHeight())/(maxJumpHeight+10)) * 50;    
-        person.setJumpHeight(person.getJumpHeight() + changeY);
+        double changeY =  person.getJumpDir() * ((maxJumpHeight+10 - person.getJumpHeight())/(maxJumpHeight+10)) * speed;    
+        person.setJumpHeight(person.getJumpHeight() - changeY);
+        cout << person.getJumpHeight() << endl;
         moveFigure(0,changeY);
         if (person.getJumpDir() == -1) {
             person.setState(2);
-            if (abs(person.getJumpHeight()) >= maxJumpHeight) {
+            if (person.getJumpHeight() >= maxJumpHeight)
                 person.setJumpDir(1);
+            else if (person.getYPos() < 5) { // hit ceiling
+                person.setJumpDir(1);
+                if (person.getJumpHeight() < 50) // if short fall
+                    speed = 5; // temp adjust speed
             }
         }
         else if (person.getJumpDir() == 1) {
-            bool onGround = checkGround(&person, &level1);
-            if (onGround) {
+            person.setState(2);
+            if (moveFigure(0,0) == 2) {
                 sound.playSound(1);
                 person.setState(0);
                 person.setJumpDir(0);
                 person.setJumpHeight(0);
-                person.setYPos(person.getYPos() - changeY);
-                moveFigure(0,0);
+                speed = 30;
             }
         }
 
@@ -198,29 +204,29 @@ void Master::play() {
     }
 }
 
-void Master::moveFigure(const double chX, const double chY) {
+int Master::moveFigure(const double chX, const double chY) {
     person.setXPos(person.getXPos() + chX);
     person.setYPos(person.getYPos() + chY);
     bool inWall = false;
+    int aboveGround = checkGround(&person,&level1);;
     if (person.getJumpHeight() == 0) { // not jumping
         //ensure person is on ground
-        int notOnGround = checkGround(&person, &level1);
         int oldYPos = person.getYPos();
-        if (notOnGround) { //continue until player hits ground or edge of board
+        if (aboveGround) { //continue until player hits ground or edge of board
             //updateCamera();
-            //person.setState(2);
+            person.setState(2);
             /*if (person.getYPos() < 0) { //player is stuck in barrier
                 notOnGround = 0;
                 inWall = true;
                 person.setYPos(oldYPos); //reset position
             }
-            else */if (notOnGround == 1) { //is in air
-                person.setYPos(person.getYPos() + 7); //shift player down one pixel (falling)
-                notOnGround = checkGround(&person, &level1);
+            else */if (aboveGround == 1) { //is in air
+                person.setYPos(person.getYPos() + 5); //shift player down (falling)
+                aboveGround = checkGround(&person,&level1);
             }
             else { //notOnGround == 2
-                person.setYPos(person.getYPos() - 3); //shift player up one pixel (falling)
-                notOnGround = checkGround(&person, &level1);
+                person.setYPos(person.getYPos() - 2); //shift player (falling)
+                aboveGround = checkGround(&person,&level1);
             } 
         }
         if(inWall) {
@@ -241,6 +247,7 @@ void Master::moveFigure(const double chX, const double chY) {
         person.setYPos(0);
     
     updateCamera();
+    return aboveGround;
 }
 
 void Master::updateCamera() {
