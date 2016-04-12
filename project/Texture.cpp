@@ -24,7 +24,6 @@ void Texture::free() {
         SDL_DestroyTexture(mTexture);
         mTexture = NULL;
     }
-
 }
 
 void Texture::setUp(SDL_Renderer *renderer) {
@@ -68,8 +67,6 @@ void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double
 Uint8 Texture::getAlpha(Uint32 pixel) {
     Uint8 red, green, blue, alpha;
     SDL_GetRGBA(pixel,surface->format,&red,&green,&blue,&alpha);
-
-    cout << "alpha = " << alpha << endl;
     return alpha;
 }
 
@@ -80,28 +77,24 @@ Uint32 Texture::getPixel(int x, int y) {
     Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
     SDL_UnlockSurface(surface);
 
-    switch(bpp) {
-    case 1:
-        return *p;
+    switch (bpp) {
+        case 1:
+            return *p;
         break;
-
-    case 2:
-        return *(Uint16 *)p;
+        case 2:
+            return *(Uint16 *)p;
         break;
-
-    case 3:
-        if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
-            return p[0] << 16 | p[1] << 8 | p[2];
-        else
-            return p[0] | p[1] << 8 | p[2] << 16;
+        case 3:
+            if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+                return p[0] << 16 | p[1] << 8 | p[2];
+            else
+                return p[0] | p[1] << 8 | p[2] << 16;
         break;
-
-    case 4:
-        return *(Uint32 *)p;
+        case 4:
+            return *(Uint32 *)p;
         break;
-
-    default:
-        return 0; // avoid warnings
+        default:
+            return 0; // avoid warnings
     }
 }
 
