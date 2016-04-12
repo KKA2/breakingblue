@@ -65,40 +65,26 @@ void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double
     SDL_RenderCopyEx(Renderer,mTexture,clip,&renderQuad,angle,center,flip);
 }
 
+Uint8 Texture::getAlpha(int x, int y) {
+    SDL_PixelFormat *fmt = surface->format;
+
+    SDL_LockSurface(surface);
+    Uint32 *p = (Uint8 *) surface->pixels + y * surface->pitch + x * sizeof *p;
+    SDL_UnlockSurface(surface);
+
+    Uint32 temp;
+    temp = p&fmt->Amask; /* Isolate alpha component */
+    temp = temp>>fmt->Ashift;/* Shift it down to 8-bit */
+    temp = temp<<fmt->Aloss; /* Expand to a full 8-bit number */
+    Uint8 alpha = (Uint8)temp;
+
+    return alpha;
+}
+
 int Texture::getWidth() {
     return mWidth;
 }
 
 int Texture::getHeight() {
     return mHeight;
-}
-
-Uint32 Texture::getPixel(SDL_Surface *surface, int x, int y) {
-    int bpp = surface->format->BytesPerPixel;
-    // Here p is the address to the pixel we want to retrieve
-    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-
-    switch(bpp) {
-    case 1:
-        return *p;
-
-    case 2:
-        return *(Uint16 *)p;
-
-    case 3:
-        if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
-            return p[0] << 16 | p[1] << 8 | p[2];
-        else
-            return p[0] | p[1] << 8 | p[2] << 16;
-
-    case 4:
-        return *(Uint32 *)p;
-
-    default:
-        return 0; // shouldn't happen, but avoids warnings
-    }
-}
-
-SDL_Surface * Texture::getSurface() {
-    return surface;
 }

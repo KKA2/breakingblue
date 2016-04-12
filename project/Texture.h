@@ -24,10 +24,10 @@ public:
     void loadFromFile(string);
     void render(int,int,SDL_Rect *,SDL_RendererFlip = SDL_FLIP_NONE,double = 0.0,SDL_Point * = NULL);
 
+    Uint8 getAlpha(int,int);
+
     int getWidth();
     int getHeight();
-    Uint32 getPixel(SDL_Surface *surface,int x,int y);
-    SDL_Surface * getSurface();
 private:
     SDL_Renderer *Renderer;
     SDL_Texture *mTexture;
