@@ -66,7 +66,7 @@ void Master::play() {
     int notOnGround = checkGround(&person, &level1);
     while (notOnGround) { //continue until player hits ground or edge of board
         //updateCamera();
-        person.setYPos(person.getYPos() + 2); //shift player down one pixel (falling)
+        person.setYPos(person.getYPos() + 7); //shift player down one pixel (falling)
         notOnGround = checkGround(&person, &level1);
         update();
     }
@@ -209,17 +209,17 @@ void Master::moveFigure(const double chX, const double chY) {
         if (notOnGround) { //continue until player hits ground or edge of board
             //updateCamera();
             //person.setState(2);
-            if (person.getYPos() < 0) { //player is stuck in barrier
+            /*if (person.getYPos() < 0) { //player is stuck in barrier
                 notOnGround = 0;
                 inWall = true;
                 person.setYPos(oldYPos); //reset position
             }
-            else if (notOnGround == 1) { //is in air
-                person.setYPos(person.getYPos() + 2); //shift player down one pixel (falling)
+            else */if (notOnGround == 1) { //is in air
+                person.setYPos(person.getYPos() + 7); //shift player down one pixel (falling)
                 notOnGround = checkGround(&person, &level1);
             }
             else { //notOnGround == 2
-                person.setYPos(person.getYPos() - 2); //shift player up one pixel (falling)
+                person.setYPos(person.getYPos() - 3); //shift player up one pixel (falling)
                 notOnGround = checkGround(&person, &level1);
             } 
         }
