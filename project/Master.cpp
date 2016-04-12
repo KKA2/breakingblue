@@ -183,12 +183,11 @@ void Master::moveFigure(const double chX) {
     person.setXPos(person.getXPos() + chX);
     //ensure person is on ground
     bool onGround = checkGround(&person, &level1);
-    /*if (!onGround) { //continue until player hits ground or edge of board
-        updateCamera();
-        printf("not on ground\n");
-        person.setYPos(person.getYPos() - 1); //shift player down one pixel (falling)
+    if (!onGround) { //continue until player hits ground or edge of board
+        //updateCamera();
+        person.setYPos(person.getYPos() + 1); //shift player down one pixel (falling)
         onGround = checkGround(&person, &level1);
-    }*/
+    }
     
     //check if person is not in foreground
     bool hasCollided = checkCollision(&person, &level1);
@@ -228,16 +227,18 @@ bool Master::checkCollision(Person *person, Level1 *level) {
 
 bool Master::checkGround(Person *person, Level1 *level1) {
     //get value of pixel at current position of player on foreground
-    //Texture * currTex = level1->getForeground();    
+    //Texture * currTex = level1->getForeground();
+
+    Uint32 pixel;
+    pixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+75);
     
     //convert to RGBA values
-    Uint8 a;
-    a = level1->getForeground()->getAlpha(person->getXPos()+40,person->getYPos()+75);
+    Uint8 alpha;
+    alpha = level1->getForeground()->getAlpha(pixel);
 
-    int alpha = (int)a;
-    if(alpha < 10) //transparent pixel; i.e. is in air
-        return 0;
+    if(int(alpha) < 10) //transparent pixel
+        return 1;
 
-    return 1;
+    return 0;
 
 }

@@ -16,6 +16,7 @@ Texture::Texture() {
 
 Texture::~Texture() {
     free();
+    SDL_FreeSurface(surface);
 }
 
 void Texture::free() {
@@ -23,6 +24,7 @@ void Texture::free() {
         SDL_DestroyTexture(mTexture);
         mTexture = NULL;
     }
+
 }
 
 void Texture::setUp(SDL_Renderer *renderer) {
@@ -33,24 +35,22 @@ void Texture::loadFromFile(string path) {
     free();
     IMG_Init(IMG_INIT_PNG); //adds PNG support
     SDL_Texture* newTexture = NULL;
-    SDL_Surface* loadedSurface = IMG_Load(path.c_str()); // load image
-    surface = loadedSurface;
-    if (loadedSurface == NULL)
+    surface = IMG_Load(path.c_str()); // load image
+    if (surface == NULL)
         printf("Unable to load image %s! SDL_image Error: %s",path.c_str(),IMG_GetError());
     else {
         //color key image
-        SDL_SetColorKey(loadedSurface,SDL_TRUE,SDL_MapRGB(loadedSurface->format,0,0xFF,0xFF));
+        SDL_SetColorKey(surface,SDL_TRUE,SDL_MapRGB(surface->format,0,0xFF,0xFF));
         
         //create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface(Renderer,loadedSurface); // create texture from surface pixels
+        newTexture = SDL_CreateTextureFromSurface(Renderer,surface); // create texture from surface pixels
         if(newTexture == NULL)
             printf("Unable to create texture from %s! SDL Error: %s\n",path.c_str(),SDL_GetError());
         else {
-            mWidth = loadedSurface->w;
-            mHeight = loadedSurface->h;
+            mWidth = surface->w;
+            mHeight = surface->h;
         }
         
-        SDL_FreeSurface(loadedSurface); // get rid of old loaded surface
         mTexture = newTexture;
     }
 }
@@ -65,20 +65,44 @@ void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double
     SDL_RenderCopyEx(Renderer,mTexture,clip,&renderQuad,angle,center,flip);
 }
 
-Uint8 Texture::getAlpha(int x, int y) {
-    SDL_PixelFormat *fmt = surface->format;
+Uint8 Texture::getAlpha(Uint32 pixel) {
+    Uint8 red, green, blue, alpha;
+    SDL_GetRGBA(pixel,surface->format,&red,&green,&blue,&alpha);
+
+    cout << "alpha = " << alpha << endl;
+    return alpha;
+}
+
+Uint32 Texture::getPixel(int x, int y) {
+    int bpp = surface->format->BytesPerPixel;
 
     SDL_LockSurface(surface);
-    Uint32 *p = (Uint32 *) surface->pixels + y * surface->pitch + x * sizeof *p;
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
     SDL_UnlockSurface(surface);
 
-    Uint32 temp;
-    temp = *p&fmt->Amask; /* Isolate alpha component */
-    temp = temp>>fmt->Ashift;/* Shift it down to 8-bit */
-    temp = temp<<fmt->Aloss; /* Expand to a full 8-bit number */
-    Uint8 alpha = (Uint8)temp;
+    switch(bpp) {
+    case 1:
+        return *p;
+        break;
 
-    return alpha;
+    case 2:
+        return *(Uint16 *)p;
+        break;
+
+    case 3:
+        if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+            return p[0] << 16 | p[1] << 8 | p[2];
+        else
+            return p[0] | p[1] << 8 | p[2] << 16;
+        break;
+
+    case 4:
+        return *(Uint32 *)p;
+        break;
+
+    default:
+        return 0; // avoid warnings
+    }
 }
 
 int Texture::getWidth() {

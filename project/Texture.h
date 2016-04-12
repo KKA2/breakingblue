@@ -24,7 +24,8 @@ public:
     void loadFromFile(string);
     void render(int,int,SDL_Rect *,SDL_RendererFlip = SDL_FLIP_NONE,double = 0.0,SDL_Point * = NULL);
 
-    Uint8 getAlpha(int,int);
+    Uint8 getAlpha(Uint32);
+    Uint32 getPixel(int,int);
 
     int getWidth();
     int getHeight();
