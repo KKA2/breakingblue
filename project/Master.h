@@ -33,7 +33,7 @@ public:
     void updateCamera();
 
     bool checkCollision(Person * person, Level1 *level1); //ensures figures stay on ground level
-    bool checkGround(Person * person, Level1 *level1);
+    int checkGround(Person * person, Level1 *level1);
 
 private:
     SDL_Window *Window; // window rendering to

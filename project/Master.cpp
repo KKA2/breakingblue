@@ -61,11 +61,11 @@ void Master::play() {
 
     level1.playMusic();
 
-    bool onGround = checkGround(&person, &level1);
-    while (!onGround) { //continue until player hits ground or edge of board
+    int notOnGround = checkGround(&person, &level1);
+    while (notOnGround) { //continue until player hits ground or edge of board
         //updateCamera();
         person.setYPos(person.getYPos() + 2); //shift player down one pixel (falling)
-        onGround = checkGround(&person, &level1);
+        notOnGround = checkGround(&person, &level1);
         update();
     }
 
@@ -202,13 +202,19 @@ void Master::moveFigure(const double chX, const double chY) {
 
     if (person.getJumpHeight() == 0) { // not jumping
         //ensure person is on ground
-        bool onGround = checkGround(&person, &level1);
-        if (!onGround) { //continue until player hits ground or edge of board
+        int notOnGround = checkGround(&person, &level1);
+        while (notOnGround) { //continue until player hits ground or edge of board
             //updateCamera();
             //person.setState(2);
-            person.setYPos(person.getYPos() + 2); //shift player down one pixel (falling)
-            onGround = checkGround(&person, &level1);
+            if (notOnGround == 1) { //is in air
+                person.setYPos(person.getYPos() + 2); //shift player down one pixel (falling)
+                notOnGround = checkGround(&person, &level1);
+            } else { //notOnGround == 2
+                person.setYPos(person.getYPos() - 2); //shift player up one pixel (falling)
+                notOnGround = checkGround(&person, &level1);
+            }
         }
+
     }
     //check if person is not in foreground
     bool hasCollided = checkCollision(&person, &level1);
@@ -251,20 +257,25 @@ bool Master::checkCollision(Person *person, Level1 *level) {
     return 0;
 }
 
-bool Master::checkGround(Person *person, Level1 *level1) {
+int Master::checkGround(Person *person, Level1 *level1) {
     //get value of pixel at current position of player on foreground
     //Texture * currTex = level1->getForeground();
 
-    Uint32 pixel;
-    pixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+90);
+    Uint32 pixel, abovePixel;
+    pixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+93);
+    abovePixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+90);
     
     //convert to RGBA values
     Uint8 alpha;
     alpha = level1->getForeground()->getAlpha(pixel);
 
-    if(int(alpha) < 10) //transparent pixel
-        return 0;
+    Uint8 beta;
+    beta = level1->getForeground()->getAlpha(abovePixel);    
+    if(int(alpha) < 10) //transparent pixel; is in air
+        return 1;
+    if(int(beta) > 10) //pixel is not transparent   
+        return 2;
 
-    return 1;
+    return 0;
 
 }
