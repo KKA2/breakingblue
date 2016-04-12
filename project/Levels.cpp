@@ -63,30 +63,39 @@ void Levels::playMusic() {
 void Levels::setBackground(SDL_Texture *background) {
     Background = background;
 }
+
 SDL_Texture * Levels::getBackground() {
     return Background;
 }
+
 void Levels::setForeground(string path) {
     Foreground.loadFromFile(path);
 }
+
 Texture * Levels::getForeground() {
     return &Foreground;
 }
+
 void Levels::setCameraX(int x) {
     Camera.x = x;
 }
+
 int Levels::getCameraX() {
     return Camera.x;
 }
+
 void Levels::setMusic(Mix_Music *music) {
     Music = music;
 }
+
 Mix_Music * Levels::getMusic() {
     return Music;
 }
+
 int Levels::getLevelW() {
     return lWidth;
 }
+
 void Levels::setLWidth(int width) {
     lWidth = width;
 }

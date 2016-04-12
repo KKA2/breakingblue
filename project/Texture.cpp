@@ -18,13 +18,20 @@ Texture::~Texture() {
     free();
 }
 
+void Texture::free() {
+    if (mTexture != NULL) {
+        SDL_DestroyTexture(mTexture);
+        mTexture = NULL;
+    }
+}
+
 void Texture::setUp(SDL_Renderer *renderer) {
     Renderer = renderer;
 }
 
 void Texture::loadFromFile(string path) {
     free();
-    //IMG_Init(IMG_INIT_PNG); //adds PNG support
+    IMG_Init(IMG_INIT_PNG); //adds PNG support
     SDL_Texture* newTexture = NULL;
     SDL_Surface* loadedSurface = IMG_Load(path.c_str()); // load image
     surface = loadedSurface;
@@ -48,12 +55,6 @@ void Texture::loadFromFile(string path) {
     }
 }
 
-void Texture::free() {
-    if (mTexture != NULL) {
-        SDL_DestroyTexture(mTexture);
-        mTexture = NULL;
-    }
-}
 void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double angle, SDL_Point *center) {
     SDL_Rect renderQuad = { x, y, mWidth, mHeight }; // set rendering space and render to screen
     if(clip != NULL) { // set clip rendering dimensions
@@ -63,18 +64,18 @@ void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double
     // render to screen
     SDL_RenderCopyEx(Renderer,mTexture,clip,&renderQuad,angle,center,flip);
 }
+
 int Texture::getWidth() {
     return mWidth;
 }
+
 int Texture::getHeight() {
     return mHeight;
 }
-SDL_Surface * Texture::getSurface() {
-    return surface;
-}
-Uint32 Texture::getpixel(SDL_Surface *surface, int x, int y) {
+
+Uint32 Texture::getPixel(SDL_Surface *surface, int x, int y) {
     int bpp = surface->format->BytesPerPixel;
-    /* Here p is the address to the pixel we want to retrieve */
+    // Here p is the address to the pixel we want to retrieve
     Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
 
     switch(bpp) {
@@ -94,6 +95,10 @@ Uint32 Texture::getpixel(SDL_Surface *surface, int x, int y) {
         return *(Uint32 *)p;
 
     default:
-        return 0;       /* shouldn't happen, but avoids warnings */
+        return 0; // shouldn't happen, but avoids warnings
     }
+}
+
+SDL_Surface * Texture::getSurface() {
+    return surface;
 }

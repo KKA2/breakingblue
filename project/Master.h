@@ -26,14 +26,15 @@ public:
     ~Master();
     void init();
     void loadMedia();
-    SDL_Texture *loadTexture(string path);
+    
+    void play();
+
+    void moveFigure(const double);
+    void update();
+    void updateCamera();
+
     bool checkCollision(Person * person, Level1 *level1); //ensures figures stay on ground level
     bool checkGround(Person * person, Level1 *level1);
-    void play();
-    void moveFigure(const double);
-    void updateCamera();
-    void update();
-    void stopMusic();
 
 private:
     SDL_Window *Window; // window rendering to
