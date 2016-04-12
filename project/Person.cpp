@@ -14,7 +14,7 @@ using namespace std;
 Person::Person() {
     Window = NULL;
     Renderer = NULL;
-    XPos = SCREEN_WIDTH/2;
+    XPos = 75;
     YPos = GroundLevel;
     CurrRun = 0;
     CurrRoll = 0;
