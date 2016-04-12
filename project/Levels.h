@@ -25,7 +25,7 @@ public:
     void setBackground(SDL_Texture *);
     SDL_Texture * getBackground();
     void setForeground(string);
-    Texture getForeground();
+    Texture * getForeground();
     void setCameraX(int);
     int getCameraX();
     void setMusic(Mix_Music *);
@@ -34,7 +34,6 @@ public:
     int getLevelW();
     SDL_Rect * getNewCam();
     void setLWidth(int);
-
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer

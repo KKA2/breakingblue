@@ -53,7 +53,7 @@ void Master::play() {
     bool quit = false;
     SDL_Event e;
 
-    double maxJumpHeight = 100;
+    double maxJumpHeight = 150;
 
     updateCamera();
     update();
@@ -185,13 +185,25 @@ void Master::play() {
 }
 
 void Master::moveFigure(const double chX) {
-    person.setXPos(person.getXPos() + chX);
+    
 
+    person.setXPos(person.getXPos() + chX);
+    //ensure person is on ground
+    bool onGround = checkGround(&person, &level1);
+    if (!onGround) { //continue until player hits ground or edge of board
+        updateCamera();
+        printf("not on ground\n");
+        //person.setYPos(person.getYPos() - 1); //shift player down one pixel (falling)
+        //onGround = checkGround(&person, &level1);
+    }
+    //check if person is not in foreground
+    bool hasCollided = checkCollision(&person, &level1);
+    
     if (person.getXPos() > LEVEL_WIDTH - 75)
         person.setXPos(LEVEL_WIDTH - 75);
     else if (person.getXPos() < 0)
         person.setXPos(0);
-
+    
     updateCamera();
 }
 
@@ -212,4 +224,30 @@ void Master::update() {
     person.draw(level1.getCameraX());
     // update screen
     SDL_RenderPresent(Renderer);
+}
+bool Master::checkCollision(Person *person, Level1 *level) {
+
+    //check if on ground
+
+    int feet = person->getYPos();
+
+    return 0;
+}
+bool Master::checkGround(Person *person, Level1 *level1) {
+    
+    //get value of pixel at current position of player on foreground
+    Texture * currTex = level1->getForeground();
+    SDL_LockSurface(currTex->getSurface());
+    Uint32 pixel = currTex->getpixel(currTex->getSurface(), person->getXPos(), person->getYPos() );
+    //convert to RGBA values
+    Uint8 r, g, b, a;
+
+    SDL_GetRGBA(pixel, currTex->getSurface()->format, &r, &g, &b, &a);
+    SDL_UnlockSurface(currTex->getSurface());
+
+    int alpha = (int)a;
+    if(alpha < 10) { //transparent pixel; i.e. is in air
+        return 0;
+    }
+    return 1;
 }

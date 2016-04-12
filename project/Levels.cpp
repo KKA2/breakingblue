@@ -69,8 +69,8 @@ SDL_Texture * Levels::getBackground() {
 void Levels::setForeground(string path) {
     Foreground.loadFromFile(path);
 }
-Texture Levels::getForeground() {
-    return Foreground;
+Texture * Levels::getForeground() {
+    return &Foreground;
 }
 void Levels::setCameraX(int x) {
     Camera.x = x;

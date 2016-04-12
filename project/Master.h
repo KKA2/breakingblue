@@ -27,7 +27,8 @@ public:
     void init();
     void loadMedia();
     SDL_Texture *loadTexture(string path);
-
+    bool checkCollision(Person * person, Level1 *level1); //ensures figures stay on ground level
+    bool checkGround(Person * person, Level1 *level1);
     void play();
     void moveFigure(const double);
     void updateCamera();
