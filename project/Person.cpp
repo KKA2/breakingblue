@@ -14,14 +14,15 @@ using namespace std;
 Person::Person() {
     Window = NULL;
     Renderer = NULL;
-    XPos = 75;
-    YPos = GroundLevel;
+    XPos = 0;
+    YPos = 0;
     CurrRun = 0;
     CurrRoll = 0;
     CurrPunch = 0;
     MoveDir = SDL_FLIP_NONE;
     State = 0;
     JumpDir = 0;
+    JumpHeight = 0;
 }
 
 Person::~Person() {
@@ -157,4 +158,12 @@ int Person::getJumpDir() const {
 
 void Person::setJumpDir(const int jumpDir) {
     JumpDir = jumpDir;
+}
+
+double Person::getJumpHeight() const {
+    return JumpHeight;
+}
+
+void Person::setJumpHeight(const double jumpHeight) {
+    JumpHeight = jumpHeight;
 }

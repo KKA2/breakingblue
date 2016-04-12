@@ -18,7 +18,6 @@ using namespace std;
 
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 400;
-const int GroundLevel = SCREEN_HEIGHT-260;
 
 class Master {
 public:
@@ -26,10 +25,10 @@ public:
     ~Master();
     void init();
     void loadMedia();
-    
+
     void play();
 
-    void moveFigure(const double);
+    void moveFigure(const double,const double);
     void update();
     void updateCamera();
 

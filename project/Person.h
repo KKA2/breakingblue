@@ -38,6 +38,8 @@ public:
     void setState(const int);
     int getJumpDir() const;
     void setJumpDir(const int);
+    double getJumpHeight() const;
+    void setJumpHeight(const double);
 
 private:
     SDL_Window *Window;
@@ -66,6 +68,7 @@ private:
     // 0=standing, 1=running, 2=jumping, 3=ducking, 4=rolling, 5=punching
     int State;
     int JumpDir;
+    double JumpHeight;
 };
 
 #endif

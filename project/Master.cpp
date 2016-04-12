@@ -7,6 +7,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
 #include <string>
+#include <cmath>
 #include "Master.h"
 #include "Person.h"
 #include "Sound.h"
@@ -58,15 +59,23 @@ void Master::play() {
     updateCamera();
     update();
 
-    level1.playMusic();    
+    level1.playMusic();
+
+    bool onGround = checkGround(&person, &level1);
+    while (!onGround) { //continue until player hits ground or edge of board
+        //updateCamera();
+        person.setYPos(person.getYPos() + 2); //shift player down one pixel (falling)
+        onGround = checkGround(&person, &level1);
+        update();
+    }
 
     while (!quit) {
         while (person.getState() == 4) {
             person.setCurrRoll(person.getCurrRoll() + .5);
             if (person.getMoveDir() == SDL_FLIP_NONE)
-                moveFigure(8);
+                moveFigure(8,0);
             else
-                moveFigure(-8);
+                moveFigure(-8,0);
             
             if (person.getCurrRoll() < 8)
                 update();
@@ -119,18 +128,26 @@ void Master::play() {
         }
 */
         person.setState(0);
-        person.setYPos(person.getYPos()+person.getJumpDir()*((maxJumpHeight+5)-(GroundLevel-person.getYPos()))/(maxJumpHeight+5)*50);
-
-        if (person.getYPos() < GroundLevel) {
+        //cout << person.getJumpDir()*(maxJumpHeight - ((maxJumpHeight+5)-(person.getJumpHeight()))/(maxJumpHeight+5)*50) << endl;
+        double changeY =  person.getJumpDir() * ((maxJumpHeight+10 + person.getJumpHeight())/(maxJumpHeight+10)) * 50;    
+        person.setJumpHeight(person.getJumpHeight() + changeY);
+        moveFigure(0,changeY);
+        if (person.getJumpDir() == -1) {
             person.setState(2);
-            if (person.getYPos() <= GroundLevel-maxJumpHeight)
+            if (abs(person.getJumpHeight()) >= maxJumpHeight) {
                 person.setJumpDir(1);
+            }
         }
         else if (person.getJumpDir() == 1) {
-            sound.playSound(1);
-            person.setState(0);
-            person.setJumpDir(0);
-            person.setYPos(GroundLevel);
+            bool onGround = checkGround(&person, &level1);
+            if (onGround) {
+                sound.playSound(1);
+                person.setState(0);
+                person.setJumpDir(0);
+                person.setJumpHeight(0);
+                person.setYPos(person.getYPos() - changeY);
+                moveFigure(0,0);
+            }
         }
 
         const Uint8 *state = SDL_GetKeyboardState(NULL);
@@ -154,8 +171,8 @@ void Master::play() {
             person.setMoveDir(SDL_FLIP_HORIZONTAL);
             if (person.getState() != 2)
                 person.setState(1);
-            moveFigure(-10);
-            if (person.getYPos() >= GroundLevel)
+            moveFigure(-10,0);
+            if (person.getJumpHeight() == 0)
                 person.setCurrRun(person.getCurrRun() + .3);
         }
         else if (state[SDL_SCANCODE_RIGHT]) { // run right
@@ -164,8 +181,8 @@ void Master::play() {
             person.setMoveDir(SDL_FLIP_NONE);
             if (person.getState() != 2)
                 person.setState(1);
-            moveFigure(10);
-            if (person.getYPos() >= GroundLevel)
+            moveFigure(10,0);
+            if (person.getJumpHeight() == 0)
                 person.setCurrRun(person.getCurrRun() + .3);
         }
         else {
@@ -179,16 +196,20 @@ void Master::play() {
     }
 }
 
-void Master::moveFigure(const double chX) {
+void Master::moveFigure(const double chX, const double chY) {
     person.setXPos(person.getXPos() + chX);
-    //ensure person is on ground
-    bool onGround = checkGround(&person, &level1);
-    if (!onGround) { //continue until player hits ground or edge of board
-        //updateCamera();
-        person.setYPos(person.getYPos() + 1); //shift player down one pixel (falling)
-        onGround = checkGround(&person, &level1);
+    person.setYPos(person.getYPos() + chY);
+
+    if (person.getJumpHeight() == 0) { // not jumping
+        //ensure person is on ground
+        bool onGround = checkGround(&person, &level1);
+        if (!onGround) { //continue until player hits ground or edge of board
+            //updateCamera();
+            //person.setState(2);
+            person.setYPos(person.getYPos() + 2); //shift player down one pixel (falling)
+            onGround = checkGround(&person, &level1);
+        }
     }
-    
     //check if person is not in foreground
     bool hasCollided = checkCollision(&person, &level1);
     
@@ -196,6 +217,11 @@ void Master::moveFigure(const double chX) {
         person.setXPos(LEVEL_WIDTH - 75);
     else if (person.getXPos() < 0)
         person.setXPos(0);
+
+    if (person.getYPos() > LEVEL_HEIGHT)
+        exit(1);
+    else if (person.getYPos() < 0)
+        person.setYPos(0);
     
     updateCamera();
 }
@@ -237,8 +263,8 @@ bool Master::checkGround(Person *person, Level1 *level1) {
     alpha = level1->getForeground()->getAlpha(pixel);
 
     if(int(alpha) < 10) //transparent pixel
-        return 1;
+        return 0;
 
-    return 0;
+    return 1;
 
 }
