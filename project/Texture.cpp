@@ -69,11 +69,11 @@ Uint8 Texture::getAlpha(int x, int y) {
     SDL_PixelFormat *fmt = surface->format;
 
     SDL_LockSurface(surface);
-    Uint32 *p = (Uint8 *) surface->pixels + y * surface->pitch + x * sizeof *p;
+    Uint32 *p = (Uint32 *) surface->pixels + y * surface->pitch + x * sizeof *p;
     SDL_UnlockSurface(surface);
 
     Uint32 temp;
-    temp = p&fmt->Amask; /* Isolate alpha component */
+    temp = *p&fmt->Amask; /* Isolate alpha component */
     temp = temp>>fmt->Ashift;/* Shift it down to 8-bit */
     temp = temp<<fmt->Aloss; /* Expand to a full 8-bit number */
     Uint8 alpha = (Uint8)temp;
