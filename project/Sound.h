@@ -1,5 +1,7 @@
-// Breaking Blue
 // Sound.h
+// Interface for Sound Class; sound effects
+// Project: Breaking Blue
+// Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #ifndef _SOUND
 #define _SOUND

@@ -1,5 +1,7 @@
-// Breaking Blue
 // Person.cpp
+// Implementation of Person Class; provides stick figures
+// Project: Breaking Blue
+// Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

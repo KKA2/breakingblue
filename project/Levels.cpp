@@ -1,6 +1,7 @@
-// Breaking Blue
 // Levels.cpp
-
+// Implementation of Levels Class
+// Project: Breaking Blue
+// Authors: Kate Barlock, Kat Herring, Ann Keenan
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>

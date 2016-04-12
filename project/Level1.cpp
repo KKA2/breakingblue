@@ -1,5 +1,7 @@
-// Breaking Blue
 // Level1.cpp
+// Implementation of Level1 derived Class
+// Project: Breaking Blue
+// Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

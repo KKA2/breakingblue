@@ -1,5 +1,7 @@
-// Breaking Blue
 // Sound.cpp
+// Implemation of Sound Class; sound effects
+// Project: Breaking Blue
+// Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>

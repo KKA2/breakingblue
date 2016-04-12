@@ -1,5 +1,7 @@
-// Breaking Blue
 // Person.h
+// Interface of Person Class; provides stick figures
+// Project: Breaking Blue
+// Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #ifndef _PERSON
 #define _PERSON

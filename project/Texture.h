@@ -1,5 +1,7 @@
-// Ann Keenan
-// Feb 29
+// Texture.h
+// Interface for Texture Class; creates and renders textures for display
+// Project: Breaking Blue
+// Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #ifndef _TEXTURE
 #define _TEXTURE

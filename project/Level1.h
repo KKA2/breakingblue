@@ -1,5 +1,7 @@
-// Breaking Blue
 // Level1.h
+// Interface for Level1 Derived Class
+// Project: Breaking Blue
+// Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #ifndef _LEVEL1
 #define _LEVEL1
