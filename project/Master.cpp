@@ -256,7 +256,7 @@ bool Master::checkGround(Person *person, Level1 *level1) {
     //Texture * currTex = level1->getForeground();
 
     Uint32 pixel;
-    pixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+75);
+    pixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+90);
     
     //convert to RGBA values
     Uint8 alpha;
