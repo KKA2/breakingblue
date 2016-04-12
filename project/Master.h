@@ -29,15 +29,14 @@ public:
     SDL_Texture *loadTexture(string path);
 
     void play();
-    void move(const double);
+    void moveFigure(const double);
+    void updateCamera();
     void update();
     void stopMusic();
-    SDL_Rect getCamera();
 
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
-    SDL_Rect camera;
     Sound sound;
     Person person;
     Level1 level1;

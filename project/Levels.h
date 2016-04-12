@@ -10,6 +10,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
 #include <string>
+#include "Texture.h"
 
 using namespace std;
 
@@ -19,25 +20,27 @@ public:
     ~Levels();
     SDL_Texture * loadTexture(string);
     void setUp(SDL_Window *,SDL_Renderer *);
-    void display(SDL_Rect *);
+    void display();
     void playMusic();
     void setBackground(SDL_Texture *);
     SDL_Texture * getBackground();
+    void setForeground(string);
+    Texture getForeground();
+    void setCameraX(int);
+    int getCameraX();
     void setMusic(Mix_Music *);
     Mix_Music * getMusic();
     virtual void loadMedia() = 0;
-    void setForeground(SDL_Texture *);
-    SDL_Texture * getForeground();
     int getLevelW();
-    SDL_Renderer * getRenderer();
     SDL_Rect * getNewCam();
     void setLWidth(int);
 
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
-    SDL_Texture *Foreground;
     SDL_Texture *Background;
+    Texture Foreground;
+    SDL_Rect Camera;
     Mix_Music *Music;
     int lWidth;
 };

@@ -42,10 +42,6 @@ void Master::init() {
     SDL_SetRenderDrawColor(Renderer,0xFF,0xFF,0xFF,0xFF); // initialize renderer color
     IMG_Init(IMG_INIT_PNG);
     Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
-    camera.h = SCREEN_HEIGHT;
-    camera.w = SCREEN_WIDTH;
-    camera.x = 0;
-    camera.y = 0;
 }
 
 void Master::loadMedia() {
@@ -59,29 +55,18 @@ void Master::play() {
 
     double maxJumpHeight = 100;
 
+    updateCamera();
     update();
 
-    level1.playMusic();
-
-    //create camera for scolling
-    
+    level1.playMusic();    
 
     while (!quit) {
-        //center camera over the player
-        camera.x = person.getXPos() + 75 - SCREEN_WIDTH/2;
-        camera.y = person.getYPos() + 94 - SCREEN_HEIGHT/2;
-        //keep camera in bounds
-        if (camera.x < 0) {
-            camera.x = 0;
-        } else if (camera.x > level1.getLevelW() - camera.w ) {
-            camera.x = level1.getLevelW() - camera.w;
-        }
         while (person.getState() == 4) {
             person.setCurrRoll(person.getCurrRoll() + .5);
             if (person.getMoveDir() == SDL_FLIP_NONE)
-                move(8);
+                moveFigure(8);
             else
-                move(-8);
+                moveFigure(-8);
             
             if (person.getCurrRoll() < 8)
                 update();
@@ -126,9 +111,9 @@ void Master::play() {
         while (person.getState() == 6) {
             person.setCurrFlip(person.getCurrFlip() + .5);
             if (person.getMoveDir() == SDL_FLIP_NONE)
-                move(1);
+                moveFigure(1);
             else
-                move(-1);
+                moveFigure(-1);
 
             if (person.getCurrFlip() < 26)
                 update();
@@ -174,7 +159,7 @@ void Master::play() {
             person.setMoveDir(SDL_FLIP_HORIZONTAL);
             if (person.getState() != 2)
                 person.setState(1);
-            move(-10);
+            moveFigure(-10);
             if (person.getYPos() >= GroundLevel)
                 person.setCurrRun(person.getCurrRun() + .3);
         }
@@ -184,7 +169,7 @@ void Master::play() {
             person.setMoveDir(SDL_FLIP_NONE);
             if (person.getState() != 2)
                 person.setState(1);
-            move(10);
+            moveFigure(10);
             if (person.getYPos() >= GroundLevel)
                 person.setCurrRun(person.getCurrRun() + .3);
         }
@@ -199,24 +184,32 @@ void Master::play() {
     }
 }
 
-void Master::move(const double ch_x) {
-    person.setXPos(person.getXPos() + ch_x);
-    camera.x = person.getXPos() + 75 - SCREEN_WIDTH/2;
+void Master::moveFigure(const double chX) {
+    person.setXPos(person.getXPos() + chX);
 
-    if (person.getXPos() > SCREEN_WIDTH)
-        person.setXPos(SCREEN_WIDTH);
+    if (person.getXPos() > LEVEL_WIDTH - 75)
+        person.setXPos(LEVEL_WIDTH - 75);
     else if (person.getXPos() < 0)
         person.setXPos(0);
+
+    updateCamera();
+}
+
+void Master::updateCamera() {
+    //center camera over the player
+    level1.setCameraX(person.getXPos() + 75 - SCREEN_WIDTH/2);
+    //keep camera in bounds
+    if (level1.getCameraX() < 0)
+        level1.setCameraX(0);
+    else if (level1.getCameraX() > level1.getLevelW() - SCREEN_WIDTH)
+        level1.setCameraX(level1.getLevelW() - SCREEN_WIDTH);
 }
 
 void Master::update() {
     SDL_RenderClear(Renderer);
-    level1.display(&camera);
+    level1.display();
     // foreground
-    person.draw(camera.x);
+    person.draw(level1.getCameraX());
     // update screen
     SDL_RenderPresent(Renderer);
-}
-SDL_Rect Master::getCamera() {
-    return camera;
 }

@@ -25,8 +25,6 @@ public:
     void loadMedia();
     void loadTexture();
 private:
-	SDL_Texture* fgTexture;
-	
 };
 
 #endif

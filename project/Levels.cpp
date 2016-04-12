@@ -9,6 +9,7 @@
 #include <string>
 #include "Levels.h"
 #include "Texture.h"
+#include "Master.h"
 
 using namespace std;
 
@@ -16,8 +17,11 @@ Levels::Levels() {
     Window = NULL;
     Renderer = NULL;
     Background = NULL;
-    Foreground = NULL;
     Music = NULL;
+    Camera.x = 0;
+    Camera.y = 0;
+    Camera.w = SCREEN_WIDTH;
+    Camera.h = SCREEN_HEIGHT;
 }
 
 Levels::~Levels() {
@@ -25,8 +29,7 @@ Levels::~Levels() {
     SDL_DestroyTexture(Background);
     Background = NULL;
 
-    SDL_DestroyTexture(Foreground);
-    Foreground = NULL;
+    Foreground.free();
 
     Mix_FreeMusic(Music);
     Music = NULL;
@@ -44,11 +47,12 @@ SDL_Texture * Levels::loadTexture(string path) {
 void Levels::setUp(SDL_Window *window, SDL_Renderer *renderer) {
     Window = window;
     Renderer = renderer;
+    Foreground.setUp(renderer);
 }
 
-void Levels::display(SDL_Rect * camera) {
+void Levels::display() {
     SDL_RenderCopy(Renderer,Background,NULL,NULL);
-    SDL_RenderCopy(Renderer,Foreground, camera, NULL);
+    Foreground.render(0,0,&Camera);
 }
 
 void Levels::playMusic() {
@@ -62,23 +66,26 @@ void Levels::setBackground(SDL_Texture *background) {
 SDL_Texture * Levels::getBackground() {
     return Background;
 }
+void Levels::setForeground(string path) {
+    Foreground.loadFromFile(path);
+}
+Texture Levels::getForeground() {
+    return Foreground;
+}
+void Levels::setCameraX(int x) {
+    Camera.x = x;
+}
+int Levels::getCameraX() {
+    return Camera.x;
+}
 void Levels::setMusic(Mix_Music *music) {
     Music = music;
 }
 Mix_Music * Levels::getMusic() {
     return Music;
 }
-void Levels::setForeground(SDL_Texture *foreground) {
-    Foreground = foreground;
-}
-SDL_Texture * Levels::getForeground() {
-    return Foreground;
-}
 int Levels::getLevelW() {
     return lWidth;
-}
-SDL_Renderer * Levels::getRenderer() {
-    return Renderer;
 }
 void Levels::setLWidth(int width) {
     lWidth = width;

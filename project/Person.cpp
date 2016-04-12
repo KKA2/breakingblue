@@ -91,7 +91,6 @@ void Person::loadMedia() {
 }
 
 void Person::draw(int camX) {
-
     if (State == 0)
         StandingTexture.render(XPos-camX,YPos,&Standing,MoveDir);
     else if (State == 1)
