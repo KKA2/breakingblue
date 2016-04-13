@@ -21,6 +21,7 @@ Person::Person() {
     CurrRun = 0;
     CurrRoll = 0;
     CurrPunch = 0;
+    CurrKick = 0;
     MoveDir = SDL_FLIP_NONE;
     State = 0;
     JumpDir = 0;
@@ -34,6 +35,7 @@ Person::~Person() {
     DuckingTexture.free();
     RollingTexture.free();
     PunchingTexture.free();
+    KickingTexture.free();
 }
 
 void Person::setUp(SDL_Window *window, SDL_Renderer *renderer) {
@@ -46,6 +48,7 @@ void Person::setUp(SDL_Window *window, SDL_Renderer *renderer) {
     DuckingTexture.setUp(renderer);
     RollingTexture.setUp(renderer);
     PunchingTexture.setUp(renderer);
+    KickingTexture.setUp(renderer);
 }
 
 void Person::loadMedia() {
@@ -75,11 +78,19 @@ void Person::loadMedia() {
     }
 
     PunchingTexture.loadFromFile("imgs/figs/punching.png");
-    for (int i=0;i<11;i++) {
+    for (int i=0;i<13;i++) {
         Punching[i].x = 75*i;
         Punching[i].y = 0;
         Punching[i].w = 75;
         Punching[i].h = 94;
+    }
+
+    KickingTexture.loadFromFile("imgs/figs/kicking.png");
+    for (int i=0;i<11;i++) {
+        Kicking[i].x = 75*i;
+        Kicking[i].y = 0;
+        Kicking[i].w = 75;
+        Kicking[i].h = 94;
     }
 }
 
@@ -95,7 +106,9 @@ void Person::draw(int camX) {
     else if (State == 4)
         RollingTexture.render(XPos-camX,YPos,&Rolling[int(CurrRoll)],MoveDir);
     else if (State == 5)
-        PunchingTexture.render(XPos-camX,YPos,&Rolling[int(CurrPunch)],MoveDir);
+        PunchingTexture.render(XPos-camX,YPos,&Punching[int(CurrPunch)],MoveDir);
+    else if (State == 6)
+        KickingTexture.render(XPos-camX,YPos,&Kicking[int(CurrKick)],MoveDir);
 }
 
 double Person::getXPos() const {
@@ -136,6 +149,14 @@ double Person::getCurrPunch() const {
 
 void Person::setCurrPunch(const double currPunch) {
     CurrPunch = currPunch;
+}
+
+double Person::getCurrKick() const {
+    return CurrKick;
+}
+
+void Person::setCurrKick(const double currKick) {
+    CurrKick = currKick;
 }
 
 SDL_RendererFlip Person::getMoveDir() const {
