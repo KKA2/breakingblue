@@ -95,10 +95,23 @@ void Master::play() {
                 person.setCurrPunch(person.getCurrPunch() + .2);
             else
                 person.setCurrPunch(person.getCurrPunch() + .8);
+
             if (person.getCurrPunch() < 13)
                 update();
             else {
                 person.setCurrPunch(0);
+                person.setState(0);
+            }
+        }
+        while (person.getState() == 6) {
+            cout << "KICK" << endl;
+            cout << person.getCurrKick() << endl;
+            person.setCurrKick(person.getCurrKick() + .4);
+
+            if (person.getCurrKick() < 11)
+                update();
+            else {
+                person.setCurrKick(0);
                 person.setState(0);
             }
         }
@@ -116,6 +129,9 @@ void Master::play() {
                     case SDLK_SPACE:
                         person.setState(5);
                     break;
+                    case SDLK_RETURN:
+                        cout << "ENTER" << endl;
+                        person.setState(6);
                     case SDLK_q:
                         quit = true;
                     break;
@@ -203,7 +219,6 @@ void Master::play() {
 
         if (person.getCurrRun() >= 7) // keep in bounds of array for running
             person.setCurrRun(0);
-
         update();
     }
 }

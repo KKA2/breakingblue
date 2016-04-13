@@ -70,7 +70,7 @@ void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double
 }
 
 Uint8 Texture::getAlpha(Uint32 pixel) {
-    Uint8 red, green, blue, alpha;
+    Uint8 red,green,blue,alpha;
     SDL_GetRGBA(pixel,surface->format,&red,&green,&blue,&alpha);
     return alpha;
 }

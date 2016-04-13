@@ -34,6 +34,8 @@ public:
     void setCurrRoll(const double);
     double getCurrPunch() const;
     void setCurrPunch(const double);
+    double getCurrKick() const;
+    void setCurrKick(const double);
     SDL_RendererFlip getMoveDir() const;
     void setMoveDir(const SDL_RendererFlip);
     int getState() const;
@@ -59,13 +61,15 @@ private:
     Texture RollingTexture;
     SDL_Rect Punching[13];
     Texture PunchingTexture;
+    SDL_Rect Kicking[11];
+    Texture KickingTexture;
 
     double XPos;
     double YPos;
     double CurrRun;
     double CurrRoll;
     double CurrPunch;
-    double CurrFlip;
+    double CurrKick;
     SDL_RendererFlip MoveDir;
     // 0=standing, 1=running, 2=jumping, 3=ducking, 4=rolling, 5=punching
     int State;
