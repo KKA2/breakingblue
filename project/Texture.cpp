@@ -37,16 +37,16 @@ void Texture::setUp(SDL_Renderer *renderer) {
 
 void Texture::loadFromFile(string path) {
     free();
-    IMG_Init(IMG_INIT_PNG); //adds PNG support
+    IMG_Init(IMG_INIT_PNG); // adds PNG support
     SDL_Texture* newTexture = NULL;
     surface = IMG_Load(path.c_str()); // load image
     if (surface == NULL)
         printf("Unable to load image %s! SDL_image Error: %s",path.c_str(),IMG_GetError());
     else {
-        //color key image
+        // color key image
         SDL_SetColorKey(surface,SDL_TRUE,SDL_MapRGB(surface->format,0,0xFF,0xFF));
         
-        //create texture from surface pixels
+        // create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface(Renderer,surface); // create texture from surface pixels
         if(newTexture == NULL)
             printf("Unable to create texture from %s! SDL Error: %s\n",path.c_str(),SDL_GetError());

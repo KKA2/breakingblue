@@ -194,26 +194,27 @@ Texture * Person::getTexture(const int state) {
 
     Texture * texture;
     switch (state) {
-        case 0: //standing
+        case 0: // standing
             texture = &StandingTexture;
             break;
-        case 1: //running
+        case 1: // running
             texture = &RunningTexture;
             break;
-        case 2: //jumping
+        case 2: // jumping
             texture = &JumpingTexture;
             break;
-        case 3: //ducking
+        case 3: // ducking
             texture = &DuckingTexture;
             break;
-        case 4: //rolling
+        case 4: // rolling
             texture = &RollingTexture;
             break;
-        case 5: //punching
+        case 5: // punching
             texture = &PunchingTexture;
             break;
-        default: //optional
-            //assume case 0
+        case 6: // kicking
+            texture = &KickingTexture;
+        default: // assume standing
             texture = &StandingTexture;
             break;
     }

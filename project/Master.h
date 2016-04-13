@@ -34,7 +34,7 @@ public:
     void update();
     void updateCamera();
 
-    int checkCollision(Person * person, Level1 *level1); //ensures figures stay on ground level
+    int checkCollision(Person * person, Level1 *level1); // ensures figures stay on ground level
     int checkGround(Person * person, Level1 *level1);
 
 private:

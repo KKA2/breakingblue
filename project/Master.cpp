@@ -65,17 +65,17 @@ void Master::play() {
     level1.playMusic();
 
     int notOnGround = checkGround(&person, &level1);
-    while (notOnGround) { //continue until player hits ground or edge of board
-        //updateCamera();
-        person.setYPos(person.getYPos() + 7); //shift player down one pixel (falling)
+    while (notOnGround) { // continue until player hits ground or edge of board
+        // updateCamera();
+        person.setYPos(person.getYPos() + 7); // shift player down
         notOnGround = checkGround(&person, &level1);
         update();
     }
 
     while (!quit) {
-        while (person.getState() == 4) {
+        while (person.getState() == 4) { // rolling
             person.setCurrRoll(person.getCurrRoll() + .5);
-            if (person.getMoveDir() == SDL_FLIP_NONE)
+            if (person.getMoveDir() == SDL_FLIP_NONE) // check direction for movement
                 moveFigure(8,0);
             else
                 moveFigure(-8,0);
@@ -88,13 +88,15 @@ void Master::play() {
             }
         }
 
-        while (person.getState() == 5) {
+        while (person.getState() == 5) { // punching
+            if (person.getCurrPunch() == 0)
+                moveFigure(4,0);
             if (person.getCurrPunch() < 6)
                 person.setCurrPunch(person.getCurrPunch() + .4);
             else if (person.getCurrPunch() < 8)
-                person.setCurrPunch(person.getCurrPunch() + .2);
+                person.setCurrPunch(person.getCurrPunch() + .25);
             else
-                person.setCurrPunch(person.getCurrPunch() + .8);
+                person.setCurrPunch(person.getCurrPunch() + 1);
 
             if (person.getCurrPunch() < 13)
                 update();
@@ -103,10 +105,14 @@ void Master::play() {
                 person.setState(0);
             }
         }
-        while (person.getState() == 6) {
-            cout << "KICK" << endl;
-            cout << person.getCurrKick() << endl;
-            person.setCurrKick(person.getCurrKick() + .4);
+
+        while (person.getState() == 6) { // kicking
+            if (person.getCurrKick() < 5)
+                person.setCurrKick(person.getCurrKick() + .45);
+            else if (person.getCurrKick() < 6)
+                person.setCurrKick(person.getCurrKick() + .1);
+            else
+                person.setCurrKick(person.getCurrKick() + .8);
 
             if (person.getCurrKick() < 11)
                 update();
@@ -115,7 +121,9 @@ void Master::play() {
                 person.setState(0);
             }
         }
+
         person.setState(0);
+
         while (SDL_PollEvent(&e) != 0) {
             if(e.type == SDL_QUIT)
                 quit = true;
@@ -125,35 +133,20 @@ void Master::play() {
                         person.setState(2);
                         if (person.getJumpHeight() == 0)
                             person.setJumpDir(-1);
-                    break;
+                        break;
                     case SDLK_SPACE:
                         person.setState(5);
-                    break;
+                        break;
                     case SDLK_RETURN:
-                        cout << "ENTER" << endl;
                         person.setState(6);
+                        break;
                     case SDLK_q:
                         quit = true;
-                    break;
+                        break;
                 }
             }
         }
-/*
-        while (person.getState() == 6) {
-            person.setCurrFlip(person.getCurrFlip() + .5);
-            if (person.getMoveDir() == SDL_FLIP_NONE)
-                moveFigure(1);
-            else
-                moveFigure(-1);
 
-            if (person.getCurrFlip() < 26)
-                update();
-            else {
-                person.setCurrFlip(0);
-                person.setState(0);
-            }
-        }
-*/
         double changeY =  person.getJumpDir() * ((maxJumpHeight+10 - person.getJumpHeight())/(maxJumpHeight+10)) * speed;    
         person.setJumpHeight(person.getJumpHeight() - changeY);
         moveFigure(0,changeY);
@@ -219,6 +212,7 @@ void Master::play() {
 
         if (person.getCurrRun() >= 7) // keep in bounds of array for running
             person.setCurrRun(0);
+        
         update();
     }
 }
@@ -227,35 +221,36 @@ int Master::moveFigure(const double chX, const double chY) {
     person.setXPos(person.getXPos() + chX);
     person.setYPos(person.getYPos() + chY);
     bool inWall = false;
-    //check if person is not in foreground
+    // check if person is not in foreground
     int hasCollided = checkCollision(&person, &level1);
 
-
-    int aboveGround = checkGround(&person,&level1);;
+    int notOnGround = checkGround(&person,&level1);;
     if (person.getJumpHeight() == 0) { // not jumping
-        //ensure person is on ground
+        // ensure person is on ground
         int oldYPos = person.getYPos();
-        if (aboveGround) { //continue until player hits ground or edge of board
-            //updateCamera();
-            person.setState(2);
-            /*if (person.getYPos() < 0) { //player is stuck in barrier
+        if (notOnGround) { // continue until player hits ground or edge of board
+            if (person.getState() != 1)
+                person.setState(2);
+            // updateCamera();
+            /*if (person.getYPos() < 0) { // player is stuck in barrier
                 notOnGround = 0;
                 inWall = true;
-                person.setYPos(oldYPos); //reset position
+                person.setYPos(oldYPos); // reset position
             }
-            else */if (aboveGround == 1) { //is in air
-                person.setYPos(person.getYPos() + 5); //shift player down (falling)
-                aboveGround = checkGround(&person,&level1);
-                if (!aboveGround)
+            else */
+            if (notOnGround == 1) { // is in air
+                person.setYPos(person.getYPos() + 5); // shift player down (falling)
+                notOnGround = checkGround(&person,&level1);
+                if (!notOnGround)
                     sound.playSound(1);
             }
-            else { //notOnGround == 2
-                person.setYPos(person.getYPos() - 2); //shift player (falling)
-                aboveGround = checkGround(&person,&level1);
+            else {
+                person.setYPos(person.getYPos() - 2); // shift player up (rising)
+                notOnGround = checkGround(&person,&level1);
             } 
         }
         if(inWall) {
-            person.setXPos(person.getXPos() - 25); //kick player back for now
+            person.setXPos(person.getXPos() - 25); // kick player back for now
         }
     }
     
@@ -270,13 +265,13 @@ int Master::moveFigure(const double chX, const double chY) {
         person.setYPos(0);
     
     updateCamera();
-    return aboveGround;
+    return notOnGround;
 }
 
 void Master::updateCamera() {
-    //center camera over the player
+    // center camera over the player
     level1.setCameraX(person.getXPos() + 75 - SCREEN_WIDTH/2);
-    //keep camera in bounds
+    // keep camera in bounds
     if (level1.getCameraX() < 0)
         level1.setCameraX(0);
     else if (level1.getCameraX() > level1.getLevelW() - SCREEN_WIDTH)
@@ -292,28 +287,28 @@ void Master::update() {
     SDL_RenderPresent(Renderer);
 }
 
-int Master::checkCollision(Person *person, Level1 *level) { //1 = right; 2 = top; 3 = left; 0 = no collide
+int Master::checkCollision(Person *person, Level1 *level) { // 1 = right; 2 = top; 3 = left; 0 = no collide
 
     int boundingH = 94, boundingW = 75;
 
-    //compares alpha of both char and player
-    //input int value of current state to getAlpha
+    // compares alpha of both char and player
+    // input int value of current state to getAlpha
     int state = person->getState();
     Texture * playerTex = person->getTexture(state);
 
-    double frame = 0; //current frame in sprite
+    double frame = 0; // current frame in sprite
     switch (state) {
-        case 1: //running
+        case 1: // running
             frame = person->getCurrRun();  
-        case 4: //rolling
+        case 4: // rolling
             frame = person->getCurrRoll();
-        case 5: //punching
+        case 5: // punching
             frame = person->getCurrPunch();
-        default: //standing, jumping, ducking
-            //breaking
+        default: // standing, jumping, ducking
+            // breaking
             break;
     }
-    //left edge to check
+    // left edge to check
     int leftEdge = int(frame) * boundingW;
     int rightEdge = leftEdge + boundingW;
     Uint8 personAlpha, alpha;
@@ -323,43 +318,43 @@ int Master::checkCollision(Person *person, Level1 *level) { //1 = right; 2 = top
         for(int x = 0; x < boundingW; x++) {
             personPixel = playerTex->getPixel(x+leftEdge, y);
             personAlpha = playerTex->getAlpha(personPixel);
-            if (personAlpha > 0) { //player is there
-                pixel = level->getForeground()->getPixel(person->getXPos()+x, y); //in frame
+            if (personAlpha > 0) { // player is there
+                pixel = level->getForeground()->getPixel(person->getXPos()+x, y); // in frame
                 alpha = level->getForeground()->getAlpha(pixel);
-                if (alpha > 0) { //collision
-                    //assume collision side
-                    //cout << "Collision" << endl;
+                if (alpha > 0) { // collision
+                    // assume collision side
+                    // cout << "Collision" << endl;
                     if (y<25) // hit top
                         return 2;
-                    else if(x<37) //hit left 
+                    else if(x<37) // hit left 
                         return 3;
-                    else //hit right
+                    else // hit right
                         return 1;
                 }   
             }
         }
     }
-    //cout << "No Collision" << endl;
-    return 0; //no collision
+    // cout << "No Collision" << endl;
+    return 0; // no collision
 }
 
 int Master::checkGround(Person *person, Level1 *level1) {
-    //get value of pixel at current position of player on foreground
-    //Texture * currTex = level1->getForeground();
+    // get value of pixel at current position of player on foreground
+    // Texture * currTex = level1->getForeground();
 
     Uint32 pixel, abovePixel;
     pixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+93);
     abovePixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+90);
     
-    //convert to RGBA values
+    // convert to RGBA values
     Uint8 alpha;
     alpha = level1->getForeground()->getAlpha(pixel);
 
     Uint8 beta;
     beta = level1->getForeground()->getAlpha(abovePixel);    
-    if(int(alpha) < 10) //transparent pixel; is in air
+    if(int(alpha) < 10) // transparent pixel; is in air
         return 1;
-    if(int(beta) > 10) //pixel is not transparent   
+    if(int(beta) > 10) // pixel is not transparent   
         return 2;
 
     return 0;

@@ -72,7 +72,7 @@ private:
     double CurrPunch;
     double CurrKick;
     SDL_RendererFlip MoveDir;
-    // 0=standing, 1=running, 2=jumping, 3=ducking, 4=rolling, 5=punching
+    // 0=standing, 1=running, 2=jumping, 3=ducking, 4=rolling, 5=punching, 6=kicking
     int State;
     int JumpDir;
     double JumpHeight;
