@@ -135,7 +135,6 @@ void Master::play() {
 */
         double changeY =  person.getJumpDir() * ((maxJumpHeight+10 - person.getJumpHeight())/(maxJumpHeight+10)) * speed;    
         person.setJumpHeight(person.getJumpHeight() - changeY);
-        cout << person.getJumpHeight() << endl;
         moveFigure(0,changeY);
         if (person.getJumpDir() == -1) {
             person.setState(2);
@@ -223,6 +222,8 @@ int Master::moveFigure(const double chX, const double chY) {
             else */if (aboveGround == 1) { //is in air
                 person.setYPos(person.getYPos() + 5); //shift player down (falling)
                 aboveGround = checkGround(&person,&level1);
+                if (!aboveGround)
+                    sound.playSound(1);
             }
             else { //notOnGround == 2
                 person.setYPos(person.getYPos() - 2); //shift player (falling)
