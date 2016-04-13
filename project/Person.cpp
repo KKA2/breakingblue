@@ -75,7 +75,7 @@ void Person::loadMedia() {
     }
 
     PunchingTexture.loadFromFile("imgs/figs/punching.png");
-    for (int i=0;i<11;i++) {
+    for (int i=0;i<13;i++) {
         Punching[i].x = 75*i;
         Punching[i].y = 0;
         Punching[i].w = 75;
@@ -95,7 +95,7 @@ void Person::draw(int camX) {
     else if (State == 4)
         RollingTexture.render(XPos-camX,YPos,&Rolling[int(CurrRoll)],MoveDir);
     else if (State == 5)
-        PunchingTexture.render(XPos-camX,YPos,&Rolling[int(CurrPunch)],MoveDir);
+        PunchingTexture.render(XPos-camX,YPos,&Punching[int(CurrPunch)],MoveDir);
 }
 
 double Person::getXPos() const {

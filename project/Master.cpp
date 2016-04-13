@@ -89,12 +89,17 @@ void Master::play() {
         }
 
         while (person.getState() == 5) {
-            person.setCurrPunch(person.getCurrPunch() + .5);
-            if (person.getCurrPunch() < 11)
+            if (person.getCurrPunch() < 6)
+                person.setCurrPunch(person.getCurrPunch() + .4);
+            else if (person.getCurrPunch() < 8)
+                person.setCurrPunch(person.getCurrPunch() + .2);
+            else
+                person.setCurrPunch(person.getCurrPunch() + .8);
+            if (person.getCurrPunch() < 13)
                 update();
             else {
                 person.setCurrPunch(0);
-                break;
+                person.setState(0);
             }
         }
         person.setState(0);

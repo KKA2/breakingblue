@@ -57,7 +57,7 @@ private:
     Texture DuckingTexture;
     SDL_Rect Rolling[8];
     Texture RollingTexture;
-    SDL_Rect Punching[11];
+    SDL_Rect Punching[13];
     Texture PunchingTexture;
 
     double XPos;
