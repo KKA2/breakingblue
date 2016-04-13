@@ -169,3 +169,33 @@ double Person::getJumpHeight() const {
 void Person::setJumpHeight(const double jumpHeight) {
     JumpHeight = jumpHeight;
 }
+Texture * Person::getTexture(const int state) {
+
+    Texture * texture;
+    switch (state) {
+        case 0: //standing
+            texture = &StandingTexture;
+            break;
+        case 1: //running
+            texture = &RunningTexture;
+            break;
+        case 2: //jumping
+            texture = &JumpingTexture;
+            break;
+        case 3: //ducking
+            texture = &DuckingTexture;
+            break;
+        case 4: //rolling
+            texture = &RollingTexture;
+            break;
+        case 5: //punching
+            texture = &PunchingTexture;
+            break;
+        default: //optional
+            //assume case 0
+            texture = &StandingTexture;
+            break;
+    }
+
+    return texture;
+}

@@ -42,7 +42,8 @@ public:
     void setJumpDir(const int);
     double getJumpHeight() const;
     void setJumpHeight(const double);
-
+    Texture * getTexture(const int);
+    
 private:
     SDL_Window *Window;
     SDL_Renderer *Renderer;

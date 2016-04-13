@@ -207,6 +207,10 @@ int Master::moveFigure(const double chX, const double chY) {
     person.setXPos(person.getXPos() + chX);
     person.setYPos(person.getYPos() + chY);
     bool inWall = false;
+    //check if person is not in foreground
+    int hasCollided = checkCollision(&person, &level1);
+
+
     int aboveGround = checkGround(&person,&level1);;
     if (person.getJumpHeight() == 0) { // not jumping
         //ensure person is on ground
@@ -234,8 +238,6 @@ int Master::moveFigure(const double chX, const double chY) {
             person.setXPos(person.getXPos() - 25); //kick player back for now
         }
     }
-    //check if person is not in foreground
-    bool hasCollided = checkCollision(&person, &level1);
     
     if (person.getXPos() > LEVEL_WIDTH - 75)
         person.setXPos(LEVEL_WIDTH - 75);
@@ -270,10 +272,55 @@ void Master::update() {
     SDL_RenderPresent(Renderer);
 }
 
-bool Master::checkCollision(Person *person, Level1 *level) {
-    //check if on ground
-    int feet = person->getYPos();
-    return 0;
+int Master::checkCollision(Person *person, Level1 *level) { //1 = right; 2 = top; 3 = left; 0 = no collide
+
+    int boundingH = 94, boundingW = 75;
+
+    //compares alpha of both char and player
+    //input int value of current state to getAlpha
+    int state = person->getState();
+    Texture * playerTex = person->getTexture(state);
+
+    double frame = 0; //current frame in sprite
+    switch (state) {
+        case 1: //running
+            frame = person->getCurrRun();  
+        case 4: //rolling
+            frame = person->getCurrRoll();
+        case 5: //punching
+            frame = person->getCurrPunch();
+        default: //standing, jumping, ducking
+            //breaking
+            break;
+    }
+    //left edge to check
+    int leftEdge = int(frame) * boundingW;
+    int rightEdge = leftEdge + boundingW;
+    Uint8 personAlpha, alpha;
+    Uint32 personPixel, pixel;
+
+    for(int y = boundingH; y > 0; y--) {
+        for(int x = 0; x < boundingW; x++) {
+            personPixel = playerTex->getPixel(x+leftEdge, y);
+            personAlpha = playerTex->getAlpha(personPixel);
+            if (personAlpha > 0) { //player is there
+                pixel = level->getForeground()->getPixel(person->getXPos()+x, y); //in frame
+                alpha = level->getForeground()->getAlpha(pixel);
+                if (alpha > 0) { //collision
+                    //assume collision side
+                    //cout << "Collision" << endl;
+                    if (y<25) // hit top
+                        return 2;
+                    else if(x<37) //hit left 
+                        return 3;
+                    else //hit right
+                        return 1;
+                }   
+            }
+        }
+    }
+    //cout << "No Collision" << endl;
+    return 0; //no collision
 }
 
 int Master::checkGround(Person *person, Level1 *level1) {
