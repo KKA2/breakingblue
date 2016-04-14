@@ -1,5 +1,5 @@
 // Texture.h
-// Interface for Texture Class; creates and renders textures for display
+// Interface for Texture class; creates and renders textures for display
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 

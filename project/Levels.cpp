@@ -1,5 +1,5 @@
 // Levels.cpp
-// Implementation of Levels Class
+// Implementation of Levels class
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 #include <SDL2/SDL.h>

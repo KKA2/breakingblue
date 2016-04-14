@@ -1,5 +1,5 @@
 // Level1.cpp
-// Implementation of Level1 derived Class
+// Implementation of Level1 derived class
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 

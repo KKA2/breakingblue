@@ -1,5 +1,5 @@
 // Master.h
-// Interface for Master Class to control gameplay
+// Interface for Master class to control gameplay
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 

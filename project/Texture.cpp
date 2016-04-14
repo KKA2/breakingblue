@@ -1,5 +1,5 @@
 // Texture.cpp
-// Implemation of Texture Class; creates and renders textures for display
+// Implemation of Texture class; creates and renders textures for display
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 

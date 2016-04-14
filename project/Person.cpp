@@ -1,5 +1,5 @@
 // Person.cpp
-// Implementation of Person Class; provides stick figures
+// Implementation of Person class; provides stick figures
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 

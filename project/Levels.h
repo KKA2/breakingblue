@@ -1,5 +1,5 @@
 // Levels.h
-// Interface for Levels Class
+// Interface for Levels class
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 

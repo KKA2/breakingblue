@@ -1,5 +1,5 @@
 // Master.cpp
-// Implementation of master class to control gameplay
+// Implementation of Master class to control gameplay
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
@@ -287,10 +287,9 @@ void Master::update() {
     SDL_RenderPresent(Renderer);
 }
 
-int Master::checkCollision(Person *person, Level1 *level) { // 1 = right; 2 = top; 3 = left; 0 = no collide
-
+int Master::checkCollision(Person *person, Level1 *level) {
+    // 1 = right; 2 = top; 3 = left; 0 = no collide
     int boundingH = 94, boundingW = 75;
-
     // compares alpha of both char and player
     // input int value of current state to getAlpha
     int state = person->getState();
@@ -340,8 +339,6 @@ int Master::checkCollision(Person *person, Level1 *level) { // 1 = right; 2 = to
 
 int Master::checkGround(Person *person, Level1 *level1) {
     // get value of pixel at current position of player on foreground
-    // Texture * currTex = level1->getForeground();
-
     Uint32 pixel, abovePixel;
     pixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+93);
     abovePixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+90);

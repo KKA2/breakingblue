@@ -1,5 +1,5 @@
 // Level1.h
-// Interface for Level1 Derived Class
+// Interface for Level1 derived class
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
