@@ -12,6 +12,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
 #include <string>
+#include <cmath>
 #include "Person.h"
 #include "Sound.h"
 #include "Level1.h"

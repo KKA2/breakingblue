@@ -3,12 +3,6 @@
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
-#include <iostream>
-#include <string>
 #include "Texture.h"
 
 using namespace std;
