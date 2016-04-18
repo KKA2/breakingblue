@@ -31,7 +31,7 @@ public:
 
     void play();
 
-    int moveFigure(const double,const double);
+    int moveFigure(const double,const double,bool=true);
     void update();
     void updateCamera();
 

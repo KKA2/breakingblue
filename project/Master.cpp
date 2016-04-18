@@ -47,7 +47,7 @@ void Master::play() {
     bool quit = false;
     SDL_Event e;
 
-    double maxJumpHeight = 150;
+    double maxJumpHeight = 120;
     int speed = 30;
 
     updateCamera();
@@ -140,8 +140,8 @@ void Master::play() {
 
         double changeY =  person.getJumpDir() * ((maxJumpHeight+10 - person.getJumpHeight())/(maxJumpHeight+10)) * speed;    
         person.setJumpHeight(person.getJumpHeight() - changeY);
-        moveFigure(0,changeY);
         if (person.getJumpDir() == -1) {
+            moveFigure(0,changeY);
             person.setState(2);
             if (person.getJumpHeight() >= maxJumpHeight)
                 person.setJumpDir(1);
@@ -150,15 +150,20 @@ void Master::play() {
                 if (person.getJumpHeight() < 50) // if short fall
                     speed = 5; // temp adjust speed
             }
+
         }
         else if (person.getJumpDir() == 1) {
             person.setState(2);
-            if (moveFigure(0,0) == 2) {
+            if (moveFigure(0,changeY,false) == 2) { // jump below ground
                 sound.playSound(1);
                 person.setState(0);
                 person.setJumpDir(0);
                 person.setJumpHeight(0);
                 speed = 30;
+                while (moveFigure(0,5) == 1);
+            }
+            else { // can still jump down
+                moveFigure(0,changeY);
             }
         }
 
@@ -203,12 +208,13 @@ void Master::play() {
 
         if (person.getCurrRun() >= 7) // keep in bounds of array for running
             person.setCurrRun(0);
-        
+
+        moveFigure(0,0);
         update();
     }
 }
 
-int Master::moveFigure(const double chX, const double chY) {
+int Master::moveFigure(const double chX, const double chY, bool move) {
     person.setXPos(person.getXPos() + chX);
     person.setYPos(person.getYPos() + chY);
     bool inWall = false;
@@ -230,13 +236,16 @@ int Master::moveFigure(const double chX, const double chY) {
             }
             else */
             if (notOnGround == 1) { // is in air
-                person.setYPos(person.getYPos() + 5); // shift player down (falling)
+                if (move == true)
+                    person.setYPos(person.getYPos() + 5); // shift player down (falling)
                 notOnGround = checkGround(&person,&level1);
                 if (!notOnGround)
                     sound.playSound(1);
+
             }
             else {
-                person.setYPos(person.getYPos() - 2); // shift player up (rising)
+                if (move == true)
+                    person.setYPos(person.getYPos() - 2); // shift player up (rising)
                 notOnGround = checkGround(&person,&level1);
             } 
         }
@@ -254,8 +263,14 @@ int Master::moveFigure(const double chX, const double chY) {
         exit(1);
     else if (person.getYPos() < 0)
         person.setYPos(0);
-    
-    updateCamera();
+
+    if (move == false) {
+        person.setXPos(person.getXPos() - chX);
+        person.setYPos(person.getYPos() - chY);
+    }
+    else {
+        updateCamera();
+    }
     return notOnGround;
 }
 
