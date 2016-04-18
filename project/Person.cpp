@@ -11,7 +11,7 @@ Person::Person() {
     Window = NULL;
     Renderer = NULL;
     XPos = 0;
-    YPos = 0;
+    YPos = 200;
     CurrRun = 0;
     CurrRoll = 0;
     CurrPunch = 0;
