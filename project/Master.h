@@ -35,7 +35,8 @@ public:
     void update();
     void updateCamera();
 
-    int checkCollision(Person * person, Level1 *level1); // ensures figures stay on ground level
+    int checkCollision(Person * person, Level1 *level1); // checks for right/left/top collisions with foreground
+    void fixCollision(Person *person, int collisionType); // respond to collision
     int checkGround(Person * person, Level1 *level1);
 
 private:
