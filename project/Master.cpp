@@ -218,12 +218,10 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
     person.setXPos(person.getXPos() + chX);
     person.setYPos(person.getYPos() + chY);
     bool inWall = false; //i dont think this variable is helpful anymore !!!
-    // check if person is not in foreground
-        // is checkCollision supposed to do this? !!!
 
     //check for/respond to collision
     int hasCollided = checkCollision(&person, &level1);
-    while(hasCollided){  // hasCollided: 1 = right; 2 = top; 3 = left; 0 = no collide
+    while(hasCollided){  // hasCollided: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
         fixCollision(&person, hasCollided);
         hasCollided = checkCollision(&person, &level1);
     }
@@ -301,13 +299,18 @@ void Master::update() {
 }
 
 void Master::fixCollision(Person *person, int collisionType){
+    // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left;
     
-    if (collisionType == 3){ //left side
+    if (collisionType == 4){ //left side
         person->setXPos(person->getXPos() + 5); //kick back to the right
-    } else if (collisionType == 2){ //top
-        person->setYPos(person->getYPos() + 5); //move player back down
-    } else { //right
+    } else if (collisionType == 3){ //right
         person->setXPos(person->getXPos() - 5); //kick back to the left
+    } else if (collisionType == 2){ //topright
+        person->setYPos(person->getYPos() + 5); //move player back down
+        person->setXPos(person->getXPos() - 10); //kick back to the left 
+    } else { //topleft
+        person->setYPos(person->getYPos() + 5); //move player back down
+        person->setXPos(person->getXPos() + 10); //kick back to the left
     }
 
 }
@@ -315,7 +318,7 @@ void Master::fixCollision(Person *person, int collisionType){
 
 int Master::checkCollision(Person *person, Level1 *level) {
     //compare current player image to foreground and detect collision/collision type
-    // return values: 1 = right; 2 = top; 3 = left; 0 = no collide
+    // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
 
     int boundingH = 94, boundingW = 75; //height and width of player image
     Uint8 personAlpha, alpha; //store alpha levels 
@@ -352,12 +355,14 @@ int Master::checkCollision(Person *person, Level1 *level) {
                 alpha = level->getForeground()->getAlpha(pixel); //check foreground transparency
                 if (alpha > 0) { // collision (assume collision on right side if none else found)
                     //cout << "Collision" << endl; !!!
-                    if (y < 25) // hit top
-                        return 2;
-                    else if(x < 37) // hit left 
-                        return 3;
-                    else // hit right
+                    if (y < boundingH/3 & x < boundingW/2) //hit top left
                         return 1;
+                    else if (y < boundingH/3 & x >= boundingW/2) //hit top right
+                        return 2;
+                    else if (x >= boundingW/2) //just right
+                        return 3;
+                    else //just left
+                        return 4;
                 }   
             }
         }
