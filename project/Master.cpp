@@ -302,15 +302,15 @@ void Master::fixCollision(Person *person, int collisionType){
     // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left;
     
     if (collisionType == 4){ //left side
-        person->setXPos(person->getXPos() + 5); //kick back to the right
+        person->setXPos(person->getXPos() + 5); //kick to the right
     } else if (collisionType == 3){ //right
-        person->setXPos(person->getXPos() - 5); //kick back to the left
+        person->setXPos(person->getXPos() - 5); //kick to the left
     } else if (collisionType == 2){ //topright
         person->setYPos(person->getYPos() + 5); //move player back down
-        person->setXPos(person->getXPos() - 10); //kick back to the left 
+        person->setXPos(person->getXPos() - 10); //kick to the left 
     } else { //topleft
         person->setYPos(person->getYPos() + 5); //move player back down
-        person->setXPos(person->getXPos() + 10); //kick back to the left
+        person->setXPos(person->getXPos() + 10); //kick to the right
     }
 
 }
@@ -345,9 +345,9 @@ int Master::checkCollision(Person *person, Level1 *level) {
     int leftEdge = int(frame) * boundingW;
     int rightEdge = leftEdge + boundingW;
 
-    // for the bounding box of the player, compares alpha of both char and player
-    for(int y = boundingH; y > 0; y--) { //loop through all y positions in bounding box
-        for(int x = 0; x < boundingW; x++) { //loop through all x positions in bounding box
+    // loops through bounding box of the player, compares alpha of both char and player
+    for(int y = boundingH; y > 0; y--) { 
+        for(int x = 0; x < boundingW; x++) { 
             personPixel = playerTex->getPixel(x+leftEdge, y); //access current pixel
             personAlpha = playerTex->getAlpha(personPixel); //access alpha value of pixel (i.e. transparency)
             if (personAlpha > 0) { // if part of player on current pixel
@@ -355,9 +355,9 @@ int Master::checkCollision(Person *person, Level1 *level) {
                 alpha = level->getForeground()->getAlpha(pixel); //check foreground transparency
                 if (alpha > 0) { // collision (assume collision on right side if none else found)
                     //cout << "Collision" << endl; !!!
-                    if (y < boundingH/3 & x < boundingW/2) //hit top left
+                    if (y < boundingH/6 & x < boundingW/2) //hit top left
                         return 1;
-                    else if (y < boundingH/3 & x >= boundingW/2) //hit top right
+                    else if (y < boundingH/6 & x >= boundingW/2) //hit top right
                         return 2;
                     else if (x >= boundingW/2) //just right
                         return 3;
