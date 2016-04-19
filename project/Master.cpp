@@ -58,7 +58,7 @@ void Master::play() {
     int notOnGround = checkGround(&person, &level1);
     while (notOnGround) { // continue until player hits ground or edge of board
         // updateCamera();
-        person.setYPos(person.getYPos() + 7); // shift player down
+        person.setYPos(person.getYPos() + 2); // shift player down
         notOnGround = checkGround(&person, &level1);
         update();
     }
@@ -160,9 +160,9 @@ void Master::play() {
                 person.setJumpDir(0);
                 person.setJumpHeight(0);
                 speed = 30;
-                while (moveFigure(0,5) == 1);
+                while (moveFigure(0,5) == 1); // move to ground if above ground
             }
-            else { // can still jump down
+            else { // if can still jump down
                 moveFigure(0,changeY);
             }
         }
@@ -329,9 +329,9 @@ int Master::checkCollision(Person *person, Level1 *level) {
                 if (alpha > 0) { // collision
                     // assume collision side
                     // cout << "Collision" << endl;
-                    if (y<25) // hit top
+                    if (y < 25) // hit top
                         return 2;
-                    else if(x<37) // hit left 
+                    else if(x < 37) // hit left 
                         return 3;
                     else // hit right
                         return 1;
@@ -354,10 +354,10 @@ int Master::checkGround(Person *person, Level1 *level1) {
     alpha = level1->getForeground()->getAlpha(pixel);
 
     Uint8 beta;
-    beta = level1->getForeground()->getAlpha(abovePixel);    
+    beta = level1->getForeground()->getAlpha(abovePixel);
     if(int(alpha) < 10) // transparent pixel; is in air
         return 1;
-    if(int(beta) > 10) // pixel is not transparent   
+    if(int(beta) > 10) // pixel is not transparent
         return 2;
 
     return 0;

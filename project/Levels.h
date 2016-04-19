@@ -3,7 +3,6 @@
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
-
 #ifndef _LEVELS
 #define _LEVELS
 
