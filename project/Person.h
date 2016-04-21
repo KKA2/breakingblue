@@ -18,6 +18,8 @@ public:
     void loadMedia();
     void draw(int);
 
+    Texture * getTexture(const int);
+
     double getXPos() const;
     void setXPos(const double);
     double getYPos() const;
@@ -38,7 +40,8 @@ public:
     void setJumpDir(const int);
     double getJumpHeight() const;
     void setJumpHeight(const double);
-    Texture * getTexture(const int);
+    int getCurrLevel() const;
+    void setCurrLevel(const int);
     
 private:
     SDL_Window *Window;
@@ -66,10 +69,12 @@ private:
     double CurrPunch;
     double CurrKick;
     SDL_RendererFlip MoveDir;
+    // states:
     // 0=standing, 1=running, 2=jumping, 3=ducking, 4=rolling, 5=punching, 6=kicking
     int State;
     int JumpDir;
     double JumpHeight;
+    int CurrLevel;
 };
 
 #endif

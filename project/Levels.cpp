@@ -24,9 +24,6 @@ Levels::~Levels() {
     SDL_DestroyTexture(Background);
     Background = NULL;
 
-    for (int f=0;f<4;f++)
-        Foreground[f].free();
-
     Mix_FreeMusic(Music);
     Music = NULL;
 }
@@ -43,13 +40,10 @@ SDL_Texture * Levels::loadTexture(string path) {
 void Levels::setUp(SDL_Window *window, SDL_Renderer *renderer) {
     Window = window;
     Renderer = renderer;
-    for (int f=0;f<4;f++)
-        Foreground[f].setUp(renderer);
 }
 
 void Levels::display(int f) {
     SDL_RenderCopy(Renderer,Background,NULL,NULL);
-    Foreground[f].render(0,0,&Camera);
 }
 
 void Levels::playMusic() {
@@ -63,14 +57,6 @@ void Levels::setBackground(string path) {
 
 SDL_Texture * Levels::getBackground() {
     return Background;
-}
-
-void Levels::setForeground(string path,int f) {
-    Foreground[f].loadFromFile(path);
-}
-
-Texture * Levels::getForeground(int f) {
-    return &Foreground[f];
 }
 
 void Levels::setCameraX(int x) {

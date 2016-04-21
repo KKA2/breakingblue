@@ -21,13 +21,13 @@ public:
     void setUp(SDL_Window *,SDL_Renderer *);
     void display();
     void loadMedia();
-    void setForeground(string);
     Texture * getForeground();
     double getCurrDoor(int);
     void setCurrDoor(int,double);
     int getLevelWidth();
 
 private:
+    Texture Foreground[4];
     Texture Door1Texture;
     Texture Door2Texture;
     Texture Door3Texture;

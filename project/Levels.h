@@ -20,8 +20,6 @@ public:
     void playMusic();
     void setBackground(string);
     SDL_Texture * getBackground();
-    void setForeground(string,int);
-    virtual Texture * getForeground(int);
     void setCameraX(int);
     int getCameraX();
     SDL_Rect * getCamera();
@@ -32,7 +30,6 @@ private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
     SDL_Texture *Background;
-    Texture Foreground[4];
     SDL_Rect Camera;
     Mix_Music *Music;
 };
