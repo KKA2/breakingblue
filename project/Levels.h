@@ -26,7 +26,7 @@ public:
     void setCameraX(int);
     int getCameraX();
     SDL_Rect * getCamera();
-    int getCurrDoor(int);
+    double getCurrDoor(int);
     void setCurrDoor(int,double);
     int getLevelWidth();
 

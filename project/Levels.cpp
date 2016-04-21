@@ -56,7 +56,7 @@ SDL_Rect * Levels::getCamera() {
         return level1.getCamera();
 }
 
-int Levels::getCurrDoor(int door) {
+double Levels::getCurrDoor(int door) {
     if (CurrLevel == 1)
         return level1.getCurrDoor(door);
 }

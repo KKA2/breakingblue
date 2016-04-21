@@ -33,7 +33,7 @@ private:
     Texture Door3Texture;
 
     double CurrDoor; // store current relevant door (which one hasn't been knocked down)
-    double CurrDoor1;
+    double CurrDoor1; // state of first door
     double CurrDoor2;
     double CurrDoor3;
 };

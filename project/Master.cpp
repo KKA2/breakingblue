@@ -110,7 +110,6 @@ void Master::play() {
             if (hasCollided) { // add to punch only once (four punches must collide)
                 if (levels.getCurrLevel() == 1)
                     levels.setCurrDoor(0,levels.getCurrDoor(0) + .25);
-                //cout << levels.getCurrDoor(0) << endl;
                 sound.playSound(3);
 
                 do { // fix collision
