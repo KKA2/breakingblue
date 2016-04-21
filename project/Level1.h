@@ -23,22 +23,19 @@ public:
     void loadMedia();
     void setForeground(string);
     Texture * getForeground();
-    double getCurrDoor();
-    void setCurrDoor(double);
-    double getCurrDoor1();
-    void setCurrDoor1(double);
+    double getCurrDoor(int);
+    void setCurrDoor(int,double);
     int getLevelWidth();
 
 private:
-    SDL_Window *Window; // window rendering to
-    SDL_Renderer *Renderer; // window renderer
     Texture Door1Texture;
-    SDL_Rect Door1[6];
     Texture Door2Texture;
     Texture Door3Texture;
 
-    double currDoor; // store current relevant door (which one hasn't been knocked down)
-    double currDoor1; // frame of door1
+    double CurrDoor; // store current relevant door (which one hasn't been knocked down)
+    double CurrDoor1;
+    double CurrDoor2;
+    double CurrDoor3;
 };
 
 #endif

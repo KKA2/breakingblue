@@ -42,7 +42,7 @@ void Texture::loadFromFile(string path) {
         
         // create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface(Renderer,surface); // create texture from surface pixels
-        if(newTexture == NULL)
+        if (newTexture == NULL)
             printf("Unable to create texture from %s! SDL Error: %s\n",path.c_str(),SDL_GetError());
         else {
             mWidth = surface->w;
@@ -55,7 +55,7 @@ void Texture::loadFromFile(string path) {
 
 void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double angle, SDL_Point *center) {
     SDL_Rect renderQuad = { x, y, mWidth, mHeight }; // set rendering space and render to screen
-    if(clip != NULL) { // set clip rendering dimensions
+    if (clip != NULL) { // set clip rendering dimensions
         renderQuad.w = clip->w;
         renderQuad.h = clip->h;
     }
@@ -84,7 +84,7 @@ Uint32 Texture::getPixel(int x, int y) {
             return *(Uint16 *)p;
         break;
         case 3:
-            if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+            if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
                 return p[0] << 16 | p[1] << 8 | p[2];
             else
                 return p[0] | p[1] << 8 | p[2] << 16;

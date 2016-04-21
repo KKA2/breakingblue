@@ -64,6 +64,29 @@ void Master::play() {
     }
 
     while (!quit) {
+        // check if a door is hit down
+        if (level1.getCurrDoor(0) == 1) { // hit down first door
+            while (level1.getCurrDoor(1) < 6) {
+                level1.setCurrDoor(1,level1.getCurrDoor(1) + .2);
+                update();
+            }
+            level1.setCurrDoor(1,6); // error check
+        }
+        else if (level1.getCurrDoor(0) == 2) { // hit down second door
+            while (level1.getCurrDoor(2) < 6) {
+                level1.setCurrDoor(2,level1.getCurrDoor(2) + .2);
+                update();
+            }
+            level1.setCurrDoor(2,6); // error check
+        }
+        else if (level1.getCurrDoor(0) == 3) { // hit down third door
+            while (level1.getCurrDoor(3) < 6) {
+                level1.setCurrDoor(3,level1.getCurrDoor(3) + .2);
+                update();
+            }
+            level1.setCurrDoor(3,6); // error check
+        }
+
         while (person.getState() == 4) { // rolling
             person.setCurrRoll(person.getCurrRoll() + .5);
             if (person.getMoveDir() == SDL_FLIP_NONE) // check direction for movement
@@ -78,26 +101,17 @@ void Master::play() {
                 person.setState(3);
             }
         }
-
         while (person.getState() == 5) { // punching
-            //check for/respond to collision
+            //check for collision
             int hasCollided = checkCollision(&person,&level1);
-            if (hasCollided) {
-                do {
+            if (hasCollided) { // add to punch only once (four punches must collide)
+                level1.setCurrDoor(0,level1.getCurrDoor(0) + .25);
+                do { // fix collision
                     fixCollision(&person,hasCollided);
-                    hasCollided = checkCollision(&person, &level1);
+                    hasCollided = checkCollision(&person,&level1);
                 } while (hasCollided);
-
-                // add to punch only once (need to collide five times)
-                level1.setCurrDoor(level1.getCurrDoor() + .25);
-                if (level1.getCurrDoor() == 2) { // hit down first door
-                    while (level1.getCurrDoor1() < 5) {
-                        level1.setCurrDoor1(level1.getCurrDoor1()+.1);
-                        update();
-                    }
-                }
             }
-            
+
             if (person.getCurrPunch() == 0)
                 moveFigure(4,0);
             if (person.getCurrPunch() < 6)
@@ -321,18 +335,19 @@ void Master::fixCollision(Person *person, int collisionType){
     
     if (collisionType == 4){ //left side
         person->setXPos(person->getXPos() + 5); //kick to the right
-    } else if (collisionType == 3){ //right
+    }
+    else if (collisionType == 3){ //right
         person->setXPos(person->getXPos() - 5); //kick to the left
-    } else if (collisionType == 2){ //topright
+    }
+    else if (collisionType == 2){ //topright
         person->setYPos(person->getYPos() + 5); //move player back down
         person->setXPos(person->getXPos() - 10); //kick to the left 
-    } else { //topleft
+    }
+    else { //topleft
         person->setYPos(person->getYPos() + 5); //move player back down
         person->setXPos(person->getXPos() + 10); //kick to the right
     }
-
 }
-
 
 int Master::checkCollision(Person *person, Level1 *level) {
     //compare current player image to foreground and detect collision/collision type
