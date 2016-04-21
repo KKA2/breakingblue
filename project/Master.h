@@ -9,7 +9,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
+//#include <SDL2/SDL_mixer.h>
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -42,7 +42,7 @@ public:
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
-    Sound sound;
+    //Sound sound;
     Person person;
     Level1 level1;
 };

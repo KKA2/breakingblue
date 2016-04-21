@@ -80,6 +80,24 @@ void Master::play() {
         }
 
         while (person.getState() == 5) { // punching
+            //check for/respond to collision
+            int hasCollided = checkCollision(&person,&level1);
+            if (hasCollided) {
+                do {
+                    fixCollision(&person,hasCollided);
+                    hasCollided = checkCollision(&person, &level1);
+                } while (hasCollided);
+
+                // add to punch only once (need to collide five times)
+                level1.setCurrDoor(level1.getCurrDoor() + .25);
+                if (level1.getCurrDoor() == 2) { // hit down first door
+                    while (level1.getCurrDoor1() < 5) {
+                        level1.setCurrDoor1(level1.getCurrDoor1()+.1);
+                        update();
+                    }
+                }
+            }
+            
             if (person.getCurrPunch() == 0)
                 moveFigure(4,0);
             if (person.getCurrPunch() < 6)
@@ -155,7 +173,7 @@ void Master::play() {
         else if (person.getJumpDir() == 1) {
             person.setState(2);
             if (moveFigure(0,changeY,false) == 2) { // jump below ground
-                sound.playSound(1);
+                //sound.playSound(1);
                 person.setState(0);
                 person.setJumpDir(0);
                 person.setJumpHeight(0);
@@ -183,8 +201,8 @@ void Master::play() {
             }
         }
         else if (state[SDL_SCANCODE_LEFT]) { // run left
-            if (person.getState() != 2) // if not jumping
-                sound.playSound(2);
+            //if (person.getState() != 2) // if not jumping
+            //    sound.playSound(2);
             person.setMoveDir(SDL_FLIP_HORIZONTAL);
             if (person.getState() != 2)
                 person.setState(1);
@@ -193,8 +211,8 @@ void Master::play() {
                 person.setCurrRun(person.getCurrRun() + .3);
         }
         else if (state[SDL_SCANCODE_RIGHT]) { // run right
-            if (person.getState() != 2)
-                sound.playSound(2);
+            //if (person.getState() != 2)
+            //    sound.playSound(2);
             person.setMoveDir(SDL_FLIP_NONE);
             if (person.getState() != 2)
                 person.setState(1);
@@ -220,10 +238,10 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
     bool inWall = false; //i dont think this variable is helpful anymore !!!
 
     //check for/respond to collision
-    int hasCollided = checkCollision(&person, &level1);
+    int hasCollided = checkCollision(&person,&level1);
     while(hasCollided){  // hasCollided: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
-        fixCollision(&person, hasCollided);
-        hasCollided = checkCollision(&person, &level1);
+        fixCollision(&person,hasCollided);
+        hasCollided = checkCollision(&person,&level1);
     }
 
     int notOnGround = checkGround(&person,&level1);;
@@ -244,8 +262,8 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
                 if (move == true)
                     person.setYPos(person.getYPos() + 5); // shift player down (falling)
                 notOnGround = checkGround(&person,&level1);
-                if (!notOnGround)
-                    sound.playSound(1);
+                //if (!notOnGround)
+                //    sound.playSound(1);
 
             }
             else { //is in the ground
@@ -285,8 +303,8 @@ void Master::updateCamera() {
     // keep camera in bounds
     if (level1.getCameraX() < 0)
         level1.setCameraX(0);
-    else if (level1.getCameraX() > level1.getLevelW() - SCREEN_WIDTH)
-        level1.setCameraX(level1.getLevelW() - SCREEN_WIDTH);
+    else if (level1.getCameraX() > level1.getLevelWidth() - SCREEN_WIDTH)
+        level1.setCameraX(level1.getLevelWidth() - SCREEN_WIDTH);
 }
 
 void Master::update() {
@@ -332,11 +350,18 @@ int Master::checkCollision(Person *person, Level1 *level) {
     double frame = 0; // current frame in sprite
     switch (state) {
         case 1: // running
-            frame = person->getCurrRun();  
+            frame = person->getCurrRun();
+            break;
+        case 3: // ducking
+            boundingH = 30; 
+            break;
         case 4: // rolling
+            boundingH = 30; 
             frame = person->getCurrRoll();
+            break;
         case 5: // punching
             frame = person->getCurrPunch();
+            break;
         default: // standing, jumping, ducking
             break; //for textures with only one frame
     }
@@ -388,6 +413,5 @@ int Master::checkGround(Person *person, Level1 *level1) {
     if(int(beta) > 10) // pixel is not transparent
         return 2;
 
-    return 0; 
-
+    return 0;
 }

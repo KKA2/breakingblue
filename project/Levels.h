@@ -8,37 +8,33 @@
 
 #include "Texture.h"
 
-
 using namespace std;
 
 class Levels {
 public:
     Levels();
     ~Levels();
-    SDL_Texture * loadTexture(string);
-    void setUp(SDL_Window *,SDL_Renderer *);
-    void display();
+    virtual SDL_Texture * loadTexture(string);
+    virtual void setUp(SDL_Window *,SDL_Renderer *);
+    virtual void display(int);
     void playMusic();
-    void setBackground(SDL_Texture *);
+    void setBackground(string);
     SDL_Texture * getBackground();
-    void setForeground(string);
-    Texture * getForeground();
+    void setForeground(string,int);
+    virtual Texture * getForeground(int);
     void setCameraX(int);
     int getCameraX();
+    SDL_Rect * getCamera();
     void setMusic(Mix_Music *);
     Mix_Music * getMusic();
     virtual void loadMedia() = 0;
-    int getLevelW();
-    SDL_Rect * getNewCam();
-    void setLWidth(int);
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
     SDL_Texture *Background;
-    Texture Foreground;
+    Texture Foreground[4];
     SDL_Rect Camera;
     Mix_Music *Music;
-    int lWidth;
 };
 
 #endif
