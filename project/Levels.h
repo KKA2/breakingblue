@@ -7,6 +7,7 @@
 #define _LEVELS
 
 #include "Texture.h"
+#include "Level1.h"
 
 using namespace std;
 
@@ -14,27 +15,26 @@ class Levels {
 public:
     Levels();
     ~Levels();
-    virtual SDL_Texture * loadTexture(string);
-    virtual void setUp(SDL_Window *,SDL_Renderer *);
-    virtual void display(int);
+    void setUp(SDL_Window *,SDL_Renderer *);
+    void loadMedia();
+
+    void display();
     void playMusic();
-    void setBackground(string);
-    SDL_Texture * getBackground();
+
+    int getCurrLevel();
+    void setCurrLevel(int);
     void setCameraX(int);
     int getCameraX();
     SDL_Rect * getCamera();
-    void setMusic(Mix_Music *);
-    Mix_Music * getMusic();
-    virtual void loadMedia() = 0;
-    virtual Texture * getText();
-    void setText(string);
+    int getCurrDoor(int);
+    void setCurrDoor(int,double);
+    int getLevelWidth();
+
+    Texture * getForeground();
+
 private:
-    SDL_Window *Window; // window rendering to
-    SDL_Renderer *Renderer; // window renderer
-    SDL_Texture *Background;
-    Texture *text;
-    SDL_Rect Camera;
-    Mix_Music *Music;
+    int CurrLevel;
+    Level1 level1;
 };
 
 #endif

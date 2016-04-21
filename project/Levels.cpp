@@ -4,84 +4,74 @@
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #include "Levels.h"
-#include "Master.h"
+#include "Texture.h"
+#include "Level1.h"
 
 using namespace std;
 
 Levels::Levels() {
-    Window = NULL;
-    Renderer = NULL;
-    Background = NULL;
-    Music = NULL;
-    Camera.x = 0;
-    Camera.y = 0;
-    text = NULL;
-    Camera.w = SCREEN_WIDTH;
-    Camera.h = SCREEN_HEIGHT;
+    CurrLevel = 0;
 }
 
-Levels::~Levels() {
-    // free loaded images
-    SDL_DestroyTexture(Background);
-    Background = NULL;
-
-    Mix_FreeMusic(Music);
-    Music = NULL;
-}
-
-SDL_Texture * Levels::loadTexture(string path) {
-    SDL_Texture *newTexture = NULL; // optimized surface
-    SDL_Surface *loadedSurface = IMG_Load(path.c_str()); // loaded surface
-    newTexture = SDL_CreateTextureFromSurface(Renderer,loadedSurface);
-    SDL_FreeSurface(loadedSurface);
-
-    return newTexture;
-}
+Levels::~Levels() {}
 
 void Levels::setUp(SDL_Window *window, SDL_Renderer *renderer) {
-    Window = window;
-    Renderer = renderer;
+    level1.setUp(window,renderer);
 }
 
-void Levels::display(int f) {
-    SDL_RenderCopy(Renderer,Background,NULL,NULL);
+void Levels::loadMedia() {
+    level1.loadMedia();
+}
+
+void Levels::display() {
+    if (CurrLevel == 1)
+        level1.display();
 }
 
 void Levels::playMusic() {
-    Mix_PlayMusic(Music,-1);
-    Mix_VolumeMusic(30);
+    if (CurrLevel == 1)
+        level1.playMusic();
 }
 
-void Levels::setBackground(string path) {
-    Background = loadTexture(path);
+int Levels::getCurrLevel() {
+    return CurrLevel;
 }
 
-SDL_Texture * Levels::getBackground() {
-    return Background;
+void Levels::setCurrLevel(int currLevel) {
+    CurrLevel = currLevel;
 }
 
 void Levels::setCameraX(int x) {
-    Camera.x = x;
+    if (CurrLevel == 1)
+        level1.setCameraX(x);
 }
 
 int Levels::getCameraX() {
-    return Camera.x;
+    if (CurrLevel == 1)
+        return level1.getCameraX();
 }
 
 SDL_Rect * Levels::getCamera() {
-    return &Camera;
+    if (CurrLevel == 1)
+        return level1.getCamera();
 }
 
-void Levels::setMusic(Mix_Music *music) {
-    Music = music;
+int Levels::getCurrDoor(int door) {
+    if (CurrLevel == 1)
+        return level1.getCurrDoor(door);
 }
 
-Mix_Music * Levels::getMusic() {
-    return Music;
+void Levels::setCurrDoor(int door, double currDoor) {
+    if (CurrLevel == 1)
+        level1.setCurrDoor(door,currDoor);
 }
-Texture * Levels::getText() {
-    return text;
+
+int Levels::getLevelWidth() {
+    if (CurrLevel == 1)
+        return level1.getLevelWidth();
 }
-void Levels::setText(string inText) {
-    text->loadFromRenderedText(inText);
+
+Texture * Levels::getForeground() {
+    if (CurrLevel == 1)
+        return level1.getForeground();
 }

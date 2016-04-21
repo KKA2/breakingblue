@@ -12,7 +12,7 @@ Texture::Texture() {
     mTexture = NULL;
     surface = NULL;
     gFont = NULL;
-    textColor = {0, 0, 0};
+    //textColor = { 0, 0, 0 };
 }
 
 Texture::~Texture() {
@@ -62,7 +62,7 @@ void Texture::loadFromRenderedText(string texText) {
 
     } else {
         //render text
-        textColor = { 57, 255, 20 }; //Neon green
+        //textColor = { 57, 255, 20 }; //Neon green
         //remove prexisting texture
         free();
 

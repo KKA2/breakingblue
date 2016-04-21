@@ -10,7 +10,7 @@ using namespace std;
 Master::Master() {
     init();
     person.setUp(Window,Renderer);
-    level1.setUp(Window,Renderer);
+    levels.setUp(Window,Renderer);
     loadMedia();
 }
 
@@ -40,7 +40,7 @@ void Master::init() {
 
 void Master::loadMedia() {
     person.loadMedia();
-    level1.loadMedia();
+    levels.loadMedia();
 }
 
 void Master::play() {
@@ -50,42 +50,45 @@ void Master::play() {
     double maxJumpHeight = 120;
     int speed = 30;
 
+    levels.setCurrLevel(1);
+
     updateCamera();
     update();
 
-    level1.playMusic();
+    levels.playMusic();
 
-    int notOnGround = checkGround(&person, &level1);
+    int notOnGround = checkGround(&person);
     while (notOnGround) { // continue until player hits ground or edge of board
         // updateCamera();
         person.setYPos(person.getYPos() + 2); // shift player down
-        notOnGround = checkGround(&person, &level1);
+        notOnGround = checkGround(&person);
         update();
     }
 
     while (!quit) {
         // check if a door is hit down
-        if (level1.getCurrDoor(0) == 1) { // hit down first door
-            while (level1.getCurrDoor(1) < 6) {
-                level1.setCurrDoor(1,level1.getCurrDoor(1) + .2);
-                update();
+        if (levels.getCurrLevel() == 1)
+            if (levels.getCurrDoor(0) == 1) { // hit down first door
+                while (levels.getCurrDoor(1) < 6) {
+                    levels.setCurrDoor(1,levels.getCurrDoor(1) + .2);
+                    update();
+                }
+                levels.setCurrDoor(1,6); // error check
             }
-            level1.setCurrDoor(1,6); // error check
-        }
-        else if (level1.getCurrDoor(0) == 2) { // hit down second door
-            while (level1.getCurrDoor(2) < 6) {
-                level1.setCurrDoor(2,level1.getCurrDoor(2) + .2);
-                update();
+            else if (levels.getCurrDoor(0) == 2) { // hit down second door
+                while (levels.getCurrDoor(2) < 6) {
+                    levels.setCurrDoor(2,levels.getCurrDoor(2) + .2);
+                    update();
+                }
+                levels.setCurrDoor(2,6); // error check
             }
-            level1.setCurrDoor(2,6); // error check
-        }
-        else if (level1.getCurrDoor(0) == 3) { // hit down third door
-            while (level1.getCurrDoor(3) < 6) {
-                level1.setCurrDoor(3,level1.getCurrDoor(3) + .2);
-                update();
+            else if (levels.getCurrDoor(0) == 3) { // hit down third door
+                while (levels.getCurrDoor(3) < 6) {
+                    levels.setCurrDoor(3,levels.getCurrDoor(3) + .2);
+                    update();
+                }
+                levels.setCurrDoor(3,6); // error check
             }
-            level1.setCurrDoor(3,6); // error check
-        }
 
         while (person.getState() == 4) { // rolling
             person.setCurrRoll(person.getCurrRoll() + .5);
@@ -103,14 +106,16 @@ void Master::play() {
         }
         while (person.getState() == 5) { // punching
             // check for collision
-            int hasCollided = checkCollision(&person,&level1);
+            int hasCollided = checkCollision(&person);
             if (hasCollided) { // add to punch only once (four punches must collide)
-                level1.setCurrDoor(0,level1.getCurrDoor(0) + .25);
+                if (levels.getCurrLevel() == 1)
+                    levels.setCurrDoor(0,levels.getCurrDoor(0) + .25);
+                //cout << levels.getCurrDoor(0) << endl;
                 sound.playSound(3);
 
                 do { // fix collision
                     fixCollision(&person,hasCollided);
-                    hasCollided = checkCollision(&person,&level1);
+                    hasCollided = checkCollision(&person);
                 } while (hasCollided);
             }
 
@@ -253,13 +258,13 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
     person.setYPos(person.getYPos() + chY);
 
     // check for/respond to collision
-    int hasCollided = checkCollision(&person,&level1);
+    int hasCollided = checkCollision(&person);
     while(hasCollided){  // hasCollided: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
         fixCollision(&person,hasCollided);
-        hasCollided = checkCollision(&person,&level1);
+        hasCollided = checkCollision(&person);
     }
 
-    int notOnGround = checkGround(&person,&level1);;
+    int notOnGround = checkGround(&person);
     if (person.getJumpHeight() == 0) { // not jumping
         // ensure person is on ground
         int oldYPos = person.getYPos();
@@ -270,14 +275,14 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
             if (notOnGround == 1) { // is in air
                 if (move == true)
                     person.setYPos(person.getYPos() + 5); // shift player down (falling)
-                notOnGround = checkGround(&person,&level1);
+                notOnGround = checkGround(&person);
                 if (!notOnGround)
                     sound.playSound(1);
             }
             else { // is in the ground
                 if (move == true)
                     person.setYPos(person.getYPos() - 2); // shift player up (rising)
-                notOnGround = checkGround(&person,&level1);
+                notOnGround = checkGround(&person);
             } 
         }
     }
@@ -304,19 +309,19 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
 
 void Master::updateCamera() {
     // center camera over the player
-    level1.setCameraX(person.getXPos() + 75 - SCREEN_WIDTH/2);
+    levels.setCameraX(person.getXPos() + 75 - SCREEN_WIDTH/2);
     // keep camera in bounds
-    if (level1.getCameraX() < 0)
-        level1.setCameraX(0);
-    else if (level1.getCameraX() > level1.getLevelWidth() - SCREEN_WIDTH)
-        level1.setCameraX(level1.getLevelWidth() - SCREEN_WIDTH);
+    if (levels.getCameraX() < 0)
+        levels.setCameraX(0);
+    else if (levels.getCameraX() > levels.getLevelWidth() - SCREEN_WIDTH)
+        levels.setCameraX(levels.getLevelWidth() - SCREEN_WIDTH);
 }
 
 void Master::update() {
     SDL_RenderClear(Renderer);
-    level1.display();
+    levels.display();
     // foreground
-    person.draw(level1.getCameraX());
+    person.draw(levels.getCameraX());
     // update screen
     SDL_RenderPresent(Renderer);
 }
@@ -340,7 +345,7 @@ void Master::fixCollision(Person *person, int collisionType){
     }
 }
 
-int Master::checkCollision(Person *person, Level1 *level) {
+int Master::checkCollision(Person *person) {
     // compare current player image to foreground and detect collision/collision type
     // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
 
@@ -382,8 +387,8 @@ int Master::checkCollision(Person *person, Level1 *level) {
             personPixel = playerTex->getPixel(x+leftEdge, y); // access current pixel
             personAlpha = playerTex->getAlpha(personPixel); // access alpha value of pixel (i.e. transparency)
             if (personAlpha > 0) { // if part of player on current pixel
-                pixel = level->getForeground()->getPixel(person->getXPos()+x, y); // get foreground pixel
-                alpha = level->getForeground()->getAlpha(pixel); // check foreground transparency
+                pixel = levels.getForeground()->getPixel(person->getXPos()+x, y); // get foreground pixel
+                alpha = levels.getForeground()->getAlpha(pixel); // check foreground transparency
                 if (alpha > 0) { // collision (assume collision on right side if none else found)
                     if (y < boundingH/6 & x < boundingW/2) // hit top left
                         return 1;
@@ -400,18 +405,18 @@ int Master::checkCollision(Person *person, Level1 *level) {
     return 0; // no collision
 }
 
-int Master::checkGround(Person *person, Level1 *level1) {
+int Master::checkGround(Person *person) {
     // get value of pixel at current position of player on foreground
     Uint32 pixel, abovePixel;
-    pixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+93);
-    abovePixel = level1->getForeground()->getPixel(person->getXPos()+40,person->getYPos()+90);
+    pixel = levels.getForeground()->getPixel(person->getXPos()+40,person->getYPos()+93);
+    abovePixel = levels.getForeground()->getPixel(person->getXPos()+40,person->getYPos()+90);
     
     // convert to RGBA values
     Uint8 alpha;
-    alpha = level1->getForeground()->getAlpha(pixel);
+    alpha = levels.getForeground()->getAlpha(pixel);
 
     Uint8 beta;
-    beta = level1->getForeground()->getAlpha(abovePixel);
+    beta = levels.getForeground()->getAlpha(abovePixel);
     if(int(alpha) < 10) // transparent pixel; is in air
         return 1;
     if(int(beta) > 10) // pixel is not transparent

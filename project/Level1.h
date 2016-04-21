@@ -6,7 +6,7 @@
 #ifndef _LEVEL1
 #define _LEVEL1
 
-#include "Levels.h"
+#include "Level.h"
 #include "Texture.h"
 
 using namespace std;
@@ -14,7 +14,7 @@ using namespace std;
 const int LEVEL_WIDTH = 4000;
 const int LEVEL_HEIGHT = 400;
 
-class Level1 : public Levels {
+class Level1 : public Level {
 public:
     Level1();
     ~Level1();

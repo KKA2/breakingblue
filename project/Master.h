@@ -15,7 +15,7 @@
 #include <cmath>
 #include "Person.h"
 #include "Sound.h"
-#include "Level1.h"
+#include "Levels.h"
 
 using namespace std;
 
@@ -35,16 +35,16 @@ public:
     void update();
     void updateCamera();
 
-    int checkCollision(Person * person, Level1 *level1); // checks for right/left/top collisions with foreground
+    int checkCollision(Person * person); // checks for right/left/top collisions with foreground
     void fixCollision(Person *person, int collisionType); // respond to collision
-    int checkGround(Person * person, Level1 *level1);
+    int checkGround(Person * person);
 
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
     Sound sound;
     Person person;
-    Level1 level1;
+    Levels levels;
 };
 
 #endif

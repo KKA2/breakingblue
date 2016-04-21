@@ -23,7 +23,7 @@ Level1::~Level1() {
 }
 
 void Level1::setUp(SDL_Window *window, SDL_Renderer *renderer) {
-    Levels::setUp(window,renderer);
+    Level::setUp(window,renderer);
 
     for (int f=0;f<4;f++)
         Foreground[f].setUp(renderer);
@@ -34,9 +34,9 @@ void Level1::setUp(SDL_Window *window, SDL_Renderer *renderer) {
 }
 
 void Level1::display() {
-    Levels::display(int(CurrDoor));
+    Level::display(int(CurrDoor));
 
-    SDL_Rect cam = *Levels::getCamera();
+    SDL_Rect cam = *Level::getCamera();
 
     getForeground()->render(0,0,&cam);
     cam.y = 400*int(CurrDoor1);
@@ -48,15 +48,15 @@ void Level1::display() {
 }
 
 void Level1::loadMedia() {
-    Levels::setBackground("imgs/bg/level1.png");
-    Levels::setMusic(Mix_LoadMUS("sound/mysterious.wav"));
+    Level::setBackground("imgs/bg/level1.png");
+    Level::setMusic(Mix_LoadMUS("sound/mysterious.wav"));
 
     Foreground[0].loadFromFile("imgs/fg/level1_base1.png");
     Foreground[1].loadFromFile("imgs/fg/level1_base2.png");
     Foreground[2].loadFromFile("imgs/fg/level1_base3.png");
     Foreground[3].loadFromFile("imgs/fg/level1_base4.png");
 
-    //Levels::setText("Level 00 Mission Files: Escape Red Compound" );
+    //Level::setText("Level 00 Mission Files: Escape Red Compound" );
 
     Door1Texture.loadFromFile("imgs/fg/level1_door1.png");
     Door2Texture.loadFromFile("imgs/fg/level1_door2.png");
