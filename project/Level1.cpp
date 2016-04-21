@@ -11,6 +11,8 @@ using namespace std;
 Level1::Level1() {
     CurrDoor = 0;
     CurrDoor1 = 0;
+    CurrDoor2 = 0;
+    CurrDoor3 = 0;
 }
 
 Level1::~Level1() {
@@ -51,16 +53,16 @@ void Level1::loadMedia() {
     Level::setBackground("imgs/bg/level1.png");
     Level::setMusic(Mix_LoadMUS("sound/mysterious.wav"));
 
-    Foreground[0].loadFromFile("imgs/fg/level1_base1.png");
-    Foreground[1].loadFromFile("imgs/fg/level1_base2.png");
-    Foreground[2].loadFromFile("imgs/fg/level1_base3.png");
-    Foreground[3].loadFromFile("imgs/fg/level1_base4.png");
+    Foreground[0].loadFromFile("imgs/lvl1/base1.png");
+    Foreground[1].loadFromFile("imgs/lvl1/base2.png");
+    Foreground[2].loadFromFile("imgs/lvl1/base3.png");
+    Foreground[3].loadFromFile("imgs/lvl1/base4.png");
 
     //Level::setText("Level 00 Mission Files: Escape Red Compound" );
 
-    Door1Texture.loadFromFile("imgs/fg/level1_door1.png");
-    Door2Texture.loadFromFile("imgs/fg/level1_door2.png");
-    Door3Texture.loadFromFile("imgs/fg/level1_door3.png");
+    Door1Texture.loadFromFile("imgs/lvl1/door1.png");
+    Door2Texture.loadFromFile("imgs/lvl1/door2.png");
+    Door3Texture.loadFromFile("imgs/lvl1/door3.png");
 }
 
 Texture * Level1::getForeground() {
