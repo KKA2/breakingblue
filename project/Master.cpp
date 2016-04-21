@@ -266,10 +266,6 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
     int notOnGround = checkGround(&person);
     if (person.getJumpHeight() == 0) { // not jumping
         // ensure person is on ground
-<<<<<<< HEAD
-        //int oldYPos = person.getYPos();
-=======
->>>>>>> 1f5986905abcc044a3b35a03a939cc619a3cf80b
         if (notOnGround) { // continue until player hits ground or edge of board
             if (person.getState() != 1)
                 person.setState(2); // draw falling figure
