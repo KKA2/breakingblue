@@ -78,10 +78,3 @@ void Level::setMusic(Mix_Music *music) {
 Mix_Music * Level::getMusic() {
     return Music;
 }
-Texture  Level::getText() {
-    return text;
-}
-void Level::setText(string inText) {
-    text.loadFromRenderedText(inText);
-
-}
