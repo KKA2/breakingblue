@@ -15,7 +15,6 @@ Level::Level() {
     Music = NULL;
     Camera.x = 0;
     Camera.y = 0;
-    text = NULL;
     Camera.w = SCREEN_WIDTH;
     Camera.h = SCREEN_HEIGHT;
 }
@@ -79,9 +78,10 @@ void Level::setMusic(Mix_Music *music) {
 Mix_Music * Level::getMusic() {
     return Music;
 }
-Texture * Level::getText() {
+Texture  Level::getText() {
     return text;
 }
 void Level::setText(string inText) {
-    text->loadFromRenderedText(inText);
+    text.loadFromRenderedText(inText);
+
 }

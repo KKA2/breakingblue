@@ -49,16 +49,22 @@ void Levels::setCameraX(int x) {
 int Levels::getCameraX() {
     if (CurrLevel == 1)
         return level1.getCameraX();
+    else //not in a level!
+        return 1;
 }
 
 SDL_Rect * Levels::getCamera() {
     if (CurrLevel == 1)
         return level1.getCamera();
+    else //not in a level!
+        return NULL;
 }
 
 double Levels::getCurrDoor(int door) {
     if (CurrLevel == 1)
         return level1.getCurrDoor(door);
+    else //not in a level!
+        return 1;
 }
 
 void Levels::setCurrDoor(int door, double currDoor) {
@@ -69,9 +75,13 @@ void Levels::setCurrDoor(int door, double currDoor) {
 int Levels::getLevelWidth() {
     if (CurrLevel == 1)
         return level1.getLevelWidth();
+    else //not in a level!
+        return 1;
 }
 
 Texture * Levels::getForeground() {
     if (CurrLevel == 1)
         return level1.getForeground();
+    else //not in a level!
+        return NULL;
 }

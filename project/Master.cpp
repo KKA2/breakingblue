@@ -67,7 +67,7 @@ void Master::play() {
 
     while (!quit) {
         // check if a door is hit down
-        if (levels.getCurrLevel() == 1)
+        if (levels.getCurrLevel() == 1) {
             if (levels.getCurrDoor(0) == 1) { // hit down first door
                 while (levels.getCurrDoor(1) < 6) {
                     levels.setCurrDoor(1,levels.getCurrDoor(1) + .2);
@@ -89,7 +89,7 @@ void Master::play() {
                 }
                 levels.setCurrDoor(3,6); // error check
             }
-
+        }
         while (person.getState() == 4) { // rolling
             person.setCurrRoll(person.getCurrRoll() + .5);
             if (person.getMoveDir() == SDL_FLIP_NONE) // check direction for movement
@@ -266,7 +266,7 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
     int notOnGround = checkGround(&person);
     if (person.getJumpHeight() == 0) { // not jumping
         // ensure person is on ground
-        int oldYPos = person.getYPos();
+        //int oldYPos = person.getYPos();
         if (notOnGround) { // continue until player hits ground or edge of board
             if (person.getState() != 1)
                 person.setState(2); // draw falling figure
@@ -378,7 +378,7 @@ int Master::checkCollision(Person *person) {
 
     // set bounds for collisions check (actually denote the current frame)
     int leftEdge = int(frame) * boundingW;
-    int rightEdge = leftEdge + boundingW;
+    //int rightEdge = leftEdge + boundingW;
 
     // loops through bounding box of the player, compares alpha of both char and player
     for(int y = boundingH; y > 0; y--) { 
@@ -389,9 +389,9 @@ int Master::checkCollision(Person *person) {
                 pixel = levels.getForeground()->getPixel(person->getXPos()+x, y); // get foreground pixel
                 alpha = levels.getForeground()->getAlpha(pixel); // check foreground transparency
                 if (alpha > 0) { // collision (assume collision on right side if none else found)
-                    if (y < boundingH/6 & x < boundingW/2) // hit top left
+                    if ((y < boundingH/6) && (x < boundingW/2)) // hit top left
                         return 1;
-                    else if (y < boundingH/6 & x >= boundingW/2) // hit top right
+                    else if ((y < boundingH/6) && (x >= boundingW/2)) // hit top right
                         return 2;
                     else if (x >= boundingW/2) // just right
                         return 3;

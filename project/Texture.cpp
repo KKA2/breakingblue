@@ -11,8 +11,7 @@ Texture::Texture() {
     Renderer = NULL;
     mTexture = NULL;
     surface = NULL;
-    gFont = NULL;
-    //textColor = { 0, 0, 0 };
+    
 }
 
 Texture::~Texture() {
@@ -56,29 +55,43 @@ void Texture::loadFromFile(string path) {
 }
 void Texture::loadFromRenderedText(string texText) {
     //set font from file and size
-    gFont = TTF_OpenFont("./clacon.ttf", 16);
-    if(gFont == NULL) {
+    //return;
+    SDL_Rect target;
+    target.x = 100;
+    target.y = 100;
+    target.w = 200;
+    target.h = 100;
+    TTF_Font *font;
+    TTF_Init();
+    font = TTF_OpenFont("clacon.ttf", 40);
+
+    //cout << TTF_GetError();
+    //return;
+    if(!font) {
         cout << "Failed to load font! Error: " << TTF_GetError() << endl;
 
     } else {
         //render text
-        //textColor = { 57, 255, 20 }; //Neon green
+       
+        SDL_Color textColor = {57, 255, 20}; //Neon green
         //remove prexisting texture
-        free();
-
+        
+        //free();
+        //return;
         //render text surface
-        surface = TTF_RenderText_Solid(gFont, texText.c_str(), textColor);
+        surface = TTF_RenderText_Solid(font, "Hello", textColor);
+        cout << "Success";
         if (surface == NULL) {
             cout << "Unable to render text surface! Error: " << TTF_GetError() << endl;
         } else {
             //create texture from surface pixels
+            
             mTexture = SDL_CreateTextureFromSurface(Renderer, surface);
-
-            mWidth = surface->w;
-            mHeight = surface->h;
+            SDL_RenderCopy(Renderer, mTexture, NULL, &target);
         }
     
     }
+    TTF_CloseFont(font);
     SDL_FreeSurface(surface); //get rid of old surface
     
 }

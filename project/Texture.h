@@ -36,8 +36,6 @@ private:
     SDL_Renderer *Renderer;
     SDL_Texture *mTexture;
     SDL_Surface *surface;
-    TTF_Font *gFont;
-    SDL_Color textColor;
     int mWidth;
     int mHeight;
 };
