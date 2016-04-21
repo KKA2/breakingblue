@@ -16,7 +16,7 @@ public:
     ~Level();
     virtual SDL_Texture * loadTexture(string);
     virtual void setUp(SDL_Window *,SDL_Renderer *);
-    virtual void display(int);
+    void display(int);
     void playMusic();
     void setBackground(string);
     SDL_Texture * getBackground();

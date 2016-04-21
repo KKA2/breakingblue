@@ -266,7 +266,6 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
     int notOnGround = checkGround(&person);
     if (person.getJumpHeight() == 0) { // not jumping
         // ensure person is on ground
-        int oldYPos = person.getYPos();
         if (notOnGround) { // continue until player hits ground or edge of board
             if (person.getState() != 1)
                 person.setState(2); // draw falling figure
@@ -378,7 +377,7 @@ int Master::checkCollision(Person *person) {
 
     // set bounds for collisions check (actually denote the current frame)
     int leftEdge = int(frame) * boundingW;
-    int rightEdge = leftEdge + boundingW;
+    //int rightEdge = leftEdge + boundingW;
 
     // loops through bounding box of the player, compares alpha of both char and player
     for(int y = boundingH; y > 0; y--) { 
