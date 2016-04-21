@@ -1,5 +1,5 @@
 CC=g++
-CXXFLAGS= --std=c++11 -w
+CXXFLAGS=-w
 LFLAGS=-lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 ALL=main.o Master.o Texture.o Person.o Sound.o Levels.o Level1.o
 
