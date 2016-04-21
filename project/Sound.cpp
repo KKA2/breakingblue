@@ -32,12 +32,21 @@ void Sound::loadMedia(int load) {
             SoundEffect = Mix_LoadWAV("sound/running.wav");
             loaded = 2;
         }
+        else if (load == 3) {
+            Mix_FreeChunk(SoundEffect);
+            SoundEffect = Mix_LoadWAV("sound/punching.wav");
+            loaded = 3;
+        }
     }
 }
 
 void Sound::playSound(int sound) {
     loadMedia(sound);
     Mix_Volume(0,100);
-    if (Mix_Playing(0) == 0)
-        Mix_PlayChannel(0,SoundEffect,0);
+    if (sound == 1 && Mix_Playing(1) == 0)
+        Mix_PlayChannel(1,SoundEffect,0);
+    else if (sound == 2 && Mix_Playing(2) == 0)
+        Mix_PlayChannel(2,SoundEffect,0);
+    else if (sound == 3)
+        Mix_PlayChannel(3,SoundEffect,0);
 }

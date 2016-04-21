@@ -106,6 +106,8 @@ void Master::play() {
             int hasCollided = checkCollision(&person,&level1);
             if (hasCollided) { // add to punch only once (four punches must collide)
                 level1.setCurrDoor(0,level1.getCurrDoor(0) + .25);
+                sound.playSound(3);
+
                 do { // fix collision
                     fixCollision(&person,hasCollided);
                     hasCollided = checkCollision(&person,&level1);
@@ -187,7 +189,7 @@ void Master::play() {
         else if (person.getJumpDir() == 1) {
             person.setState(2);
             if (moveFigure(0,changeY,false) == 2) { // jump below ground
-                //sound.playSound(1);
+                sound.playSound(1);
                 person.setState(0);
                 person.setJumpDir(0);
                 person.setJumpHeight(0);
@@ -215,21 +217,21 @@ void Master::play() {
             }
         }
         else if (state[SDL_SCANCODE_LEFT]) { // run left
-            //if (person.getState() != 2) // if not jumping
-            //    sound.playSound(2);
             person.setMoveDir(SDL_FLIP_HORIZONTAL);
-            if (person.getState() != 2)
+            if (person.getState() != 2) { // if not jumping
+                sound.playSound(2);
                 person.setState(1);
+            }
             moveFigure(-10,0);
             if (person.getJumpHeight() == 0)
                 person.setCurrRun(person.getCurrRun() + .3);
         }
         else if (state[SDL_SCANCODE_RIGHT]) { // run right
-            //if (person.getState() != 2)
-            //    sound.playSound(2);
             person.setMoveDir(SDL_FLIP_NONE);
-            if (person.getState() != 2)
+            if (person.getState() != 2) {
+                sound.playSound(2);
                 person.setState(1);
+            }
             moveFigure(10,0);
             if (person.getJumpHeight() == 0)
                 person.setCurrRun(person.getCurrRun() + .3);
@@ -276,9 +278,8 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
                 if (move == true)
                     person.setYPos(person.getYPos() + 5); // shift player down (falling)
                 notOnGround = checkGround(&person,&level1);
-                //if (!notOnGround)
-                //    sound.playSound(1);
-
+                if (!notOnGround)
+                    sound.playSound(1);
             }
             else { //is in the ground
                 if (move == true)
@@ -368,10 +369,10 @@ int Master::checkCollision(Person *person, Level1 *level) {
             frame = person->getCurrRun();
             break;
         case 3: // ducking
-            boundingH = 30; 
+            boundingH = 35; 
             break;
         case 4: // rolling
-            boundingH = 30; 
+            boundingH = 35; 
             frame = person->getCurrRoll();
             break;
         case 5: // punching
@@ -394,7 +395,6 @@ int Master::checkCollision(Person *person, Level1 *level) {
                 pixel = level->getForeground()->getPixel(person->getXPos()+x, y); //get foreground pixel
                 alpha = level->getForeground()->getAlpha(pixel); //check foreground transparency
                 if (alpha > 0) { // collision (assume collision on right side if none else found)
-                    //cout << "Collision" << endl; !!!
                     if (y < boundingH/6 & x < boundingW/2) //hit top left
                         return 1;
                     else if (y < boundingH/6 & x >= boundingW/2) //hit top right
@@ -407,7 +407,6 @@ int Master::checkCollision(Person *person, Level1 *level) {
             }
         }
     }
-    //cout << "No Collision" << endl; !!!
     return 0; // no collision
 }
 
