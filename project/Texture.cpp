@@ -11,6 +11,8 @@ Texture::Texture() {
     Renderer = NULL;
     mTexture = NULL;
     surface = NULL;
+    gFont = NULL;
+    textColor = {0, 0, 0};
 }
 
 Texture::~Texture() {
@@ -52,7 +54,34 @@ void Texture::loadFromFile(string path) {
         mTexture = newTexture;
     }
 }
+void Texture::loadFromRenderedText(string texText) {
+    //set font from file and size
+    gFont = TTF_OpenFont("./clacon.ttf", 16);
+    if(gFont == NULL) {
+        cout << "Failed to load font! Error: " << TTF_GetError() << endl;
 
+    } else {
+        //render text
+        textColor = { 57, 255, 20 }; //Neon green
+        //remove prexisting texture
+        free();
+
+        //render text surface
+        surface = TTF_RenderText_Solid(gFont, texText.c_str(), textColor);
+        if (surface == NULL) {
+            cout << "Unable to render text surface! Error: " << TTF_GetError() << endl;
+        } else {
+            //create texture from surface pixels
+            mTexture = SDL_CreateTextureFromSurface(Renderer, surface);
+
+            mWidth = surface->w;
+            mHeight = surface->h;
+        }
+    
+    }
+    SDL_FreeSurface(surface); //get rid of old surface
+    
+}
 void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double angle, SDL_Point *center) {
     SDL_Rect renderQuad = { x, y, mWidth, mHeight }; // set rendering space and render to screen
     if (clip != NULL) { // set clip rendering dimensions

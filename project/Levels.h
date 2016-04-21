@@ -28,11 +28,14 @@ public:
     void setMusic(Mix_Music *);
     Mix_Music * getMusic();
     virtual void loadMedia() = 0;
+    virtual Texture * getText();
+    void setText(string);
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
     SDL_Texture *Background;
     Texture Foreground[4];
+    Texture *text;
     SDL_Rect Camera;
     Mix_Music *Music;
 };

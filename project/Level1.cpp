@@ -45,7 +45,7 @@ void Level1::loadMedia() {
     Levels::setForeground("imgs/fg/level1_base3.png",2);
     Levels::setForeground("imgs/fg/level1_base4.png",3);
     Levels::setMusic(Mix_LoadMUS("sound/mysterious.wav"));
-
+    //Levels::setText("Level 00 Mission Files: Escape Red Compound" );
     Door1Texture.loadFromFile("imgs/fg/level1_door1.png");
 
     Door2Texture.loadFromFile("imgs/fg/level1_door2.png");
