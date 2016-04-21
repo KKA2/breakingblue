@@ -44,7 +44,7 @@ void Level1::loadMedia() {
     Levels::setForeground("imgs/fg/level1_base2.png",1);
     Levels::setForeground("imgs/fg/level1_base3.png",2);
     Levels::setForeground("imgs/fg/level1_base4.png",3);
-    Levels::setMusic(Mix_LoadMUS("sound/intro.wav"));
+    Levels::setMusic(Mix_LoadMUS("sound/mysterious.wav"));
 
     Door1Texture.loadFromFile("imgs/fg/level1_door1.png");
 

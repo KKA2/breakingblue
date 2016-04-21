@@ -7,3 +7,5 @@ A 2-D multi-stage action adventure game in which you play as a Blue involved in 
 ## Known Issues
 
 - Jumping while running at wall allows teleport through wall (Result of temp fix in checkGround until checkCollision finished)
+- Pressing the down button will allow figure to phase through a wall
+- Figure floats upwards when encountering a border
