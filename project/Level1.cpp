@@ -56,6 +56,8 @@ void Level1::loadMedia() {
     Foreground[2].loadFromFile("imgs/fg/level1_base3.png");
     Foreground[3].loadFromFile("imgs/fg/level1_base4.png");
 
+    //Levels::setText("Level 00 Mission Files: Escape Red Compound" );
+
     Door1Texture.loadFromFile("imgs/fg/level1_door1.png");
     Door2Texture.loadFromFile("imgs/fg/level1_door2.png");
     Door3Texture.loadFromFile("imgs/fg/level1_door3.png");
