@@ -346,7 +346,7 @@ void Master::update() {
 }
 
 void Master::fixCollision(Person *person, int collisionType){
-    // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left;
+    // collision values: 1 = topleft; 2 = topright; 3 = right; 4 = left;
     
     if (collisionType == 3) { // left side
         person->setXPos(person->getXPos() + 5); // kick to the right
@@ -355,7 +355,7 @@ void Master::fixCollision(Person *person, int collisionType){
         person->setXPos(person->getXPos() - 5); // kick to the left
     }
     else { // top
-        if (levels.getCurrLevel() == 1) {
+        if (levels.getCurrLevel() == 1) { //!!! move player to beginning of tunnel, or make them crouch
             reset();
         }
         else
@@ -367,9 +367,10 @@ int Master::checkCollision(Person *person) {
     // compare current player image to foreground and detect collision/collision type
     // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
 
-    int boundingH = 94, boundingW = 75; // height and width of player image
-    Uint8 personAlpha, alpha; // store alpha levels 
-    Uint32 personPixel, pixel; // store current pixel for for loop
+    int boundingH = 94, boundingW = 75, hOffset = 0; // height and width of player image
+
+    Uint8 personAlpha, fgalpha; // store alpha levels 
+    Uint32 personPixel, fgpixel; // store current foreground pixel for for loop
 
     // access current frame value within texture (or access only frame)
     double frame = 0; // current frame in sprite
@@ -378,6 +379,8 @@ int Master::checkCollision(Person *person) {
             frame = person->getCurrRun();
             break;
         case 4: // rolling
+            hOffset = boundingH - 60;
+            boundingH = 60;
             frame = person->getCurrRoll();
             break;
         case 5: // punching
@@ -393,28 +396,35 @@ int Master::checkCollision(Person *person) {
     Texture * personTex = person->getTexture(person->getState());
 
     // loops through bounding box of the player, compares alpha of both char and player
-    for(int y = boundingH; y > 0; y--) { 
+    for(int y = boundingH; y > hOffset; y--) { 
         for(int x = 0; x < boundingW; x++) { 
             personPixel = personTex->getPixel(leftEdge+x,y); // access current pixel
             personAlpha = personTex->getAlpha(personPixel); // access alpha value of pixel (i.e. transparency)
             if (int(personAlpha) > 10) { // if part of player on current pixel
-                pixel = levels.getForeground()->getPixel(person->getXPos()+x,y); // get foreground pixel
-                alpha = levels.getForeground()->getAlpha(pixel); // check foreground transparency
-                if (int(alpha) > 10) { // collision
-                    //cout << "alpha = " << int(alpha) << " personalpha = " << int(personAlpha) << endl;
-                    //cout << " x = " << x << " y = " << y << endl;
-                    if (y < boundingH/6) // top
+                fgpixel = levels.getForeground()->getPixel(person->getXPos()+x,y); // get foreground pixel
+                fgalpha = levels.getForeground()->getAlpha(fgpixel); // check foreground transparency
+                if (int(fgalpha) > 10) { // collision
+                    cout << "fgalpha = " << int(fgalpha) << " personalpha = " << int(personAlpha) << endl;
+                    cout << "frame " << frame << ", state " << person->getState() << endl;
+                    cout << " x = " << x << " y = " << y << endl;
+                    if (y < boundingH/6){ // top
+                        cout << "TOP COL" << endl;
                         return 1;
+                    }    
                     else if (x >= boundingW/2) { // right
+
+                        cout << "RIGHT COL" << endl;
                         return 2;
                     }
                     else if (x <= boundingW/2) { // left
+                        //cout << "LEFT COL" << endl;
                         return 3;
                     }
                 }
             }
         }
     }
+    cout << "none " << endl;
     return 0; // no collision
 }
 
