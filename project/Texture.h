@@ -24,7 +24,6 @@ public:
     void setUp(SDL_Renderer *);
     SDL_Texture * loadTexture(string);
     void loadFromFile(string);
-    void loadFromRenderedText(string);
     void render(int,int,SDL_Rect *,SDL_RendererFlip = SDL_FLIP_NONE,double = 0.0,SDL_Point * = NULL);
 
     Uint8 getAlpha(Uint32);

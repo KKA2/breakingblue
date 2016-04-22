@@ -26,8 +26,6 @@ public:
     void setMusic(Mix_Music *);
     Mix_Music * getMusic();
     virtual void loadMedia() = 0;
-    Texture  getText();
-    void setText(string);
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
