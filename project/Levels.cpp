@@ -85,3 +85,7 @@ Texture * Levels::getForeground() {
     else //not in a level!
         return NULL;
 }
+void Levels::setCurrDir() {
+    if (CurrLevel == 1)
+        level1.setCurrDir();
+}

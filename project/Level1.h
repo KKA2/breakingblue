@@ -25,6 +25,7 @@ public:
     double getCurrDoor(int);
     void setCurrDoor(int,double);
     int getLevelWidth();
+    void setCurrDir();
 
 private:
     Texture Foreground[4];
@@ -37,6 +38,7 @@ private:
     double CurrDoor1; // state of first door
     double CurrDoor2;
     double CurrDoor3;
+    int currentDir; //current text direction to be displayed
 };
 
 #endif

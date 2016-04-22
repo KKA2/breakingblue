@@ -14,6 +14,7 @@ Level1::Level1() {
     CurrDoor1 = 0;
     CurrDoor2 = 0;
     CurrDoor3 = 0;
+    currentDir = 0;
 }
 
 Level1::~Level1() {
@@ -51,7 +52,10 @@ void Level1::display() {
     Door2Texture.render(0,0,&cam);
     cam.y = 400*int(CurrDoor3);
     Door3Texture.render(0,0,&cam);
-    missionParam.display(&cam);
+
+    if(currentDir==1) {
+        missionParam.display(&cam);
+    }
 }
 
 void Level1::loadMedia() {
@@ -104,4 +108,7 @@ void Level1::setCurrDoor(int door, double currDoor) {
 
 int Level1::getLevelWidth() {
     return LEVEL_WIDTH;
+}
+void Level1::setCurrDir() {
+    currentDir++; //move to next direction
 }

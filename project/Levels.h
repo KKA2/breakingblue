@@ -23,6 +23,7 @@ public:
 
     int getCurrLevel();
     void setCurrLevel(int);
+    void setCurrDir();
     void setCameraX(int);
     int getCameraX();
     SDL_Rect * getCamera();

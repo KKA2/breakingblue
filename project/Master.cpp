@@ -12,6 +12,7 @@ Master::Master() {
     person.setUp(Window,Renderer);
     levels.setUp(Window,Renderer);
     loadMedia();
+
 }
 
 Master::~Master() {
@@ -192,6 +193,9 @@ void Master::play() {
                         break;
                     case SDLK_q:
                         quit = true;
+                        break;
+                    case SDLK_c:
+                        levels.setCurrDir();
                         break;
                 }
             }
