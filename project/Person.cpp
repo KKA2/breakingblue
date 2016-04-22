@@ -20,7 +20,6 @@ Person::Person() {
     State = 0;
     JumpDir = 0;
     JumpHeight = 0;
-    CurrLevel = 0;
 }
 
 Person::~Person() {
@@ -215,12 +214,4 @@ double Person::getJumpHeight() const {
 
 void Person::setJumpHeight(const double jumpHeight) {
     JumpHeight = jumpHeight;
-}
-
-int Person::getCurrLevel() const {
-    return CurrLevel;
-}
-
-void Person::setCurrLevel(const int currLevel) {
-    CurrLevel = currLevel;
 }

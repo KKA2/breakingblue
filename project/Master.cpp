@@ -43,6 +43,27 @@ void Master::loadMedia() {
     levels.loadMedia();
 }
 
+void Master::reset() {
+    // reset person
+    person.setXPos(0);
+    person.setYPos(200);
+    person.setState(0);
+    person.setMoveDir(SDL_FLIP_NONE);
+
+    levels.setCameraX(0);
+    if (levels.getCurrLevel() == 1)
+        for (int l=0;l<=3;l++)
+            levels.setCurrDoor(l,0);
+
+    int notOnGround = checkGround(&person);
+    while (notOnGround) { // continue until player hits ground or edge of board
+        // updateCamera();
+        person.setYPos(person.getYPos() + 2); // shift player down
+        notOnGround = checkGround(&person);
+        update();
+    }
+}
+
 void Master::play() {
     bool quit = false;
     SDL_Event e;
@@ -327,19 +348,18 @@ void Master::update() {
 void Master::fixCollision(Person *person, int collisionType){
     // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left;
     
-    if (collisionType == 4){ // left side
+    if (collisionType == 3) { // left side
         person->setXPos(person->getXPos() + 5); // kick to the right
     }
-    else if (collisionType == 3){ // right
+    else if (collisionType == 2) { // right
         person->setXPos(person->getXPos() - 5); // kick to the left
     }
-    else if (collisionType == 2){ // topright
-        person->setYPos(person->getYPos() + 5); // move player back down
-        person->setXPos(person->getXPos() - 10); // kick to the left 
-    }
-    else { // topleft
-        person->setYPos(person->getYPos() + 5); // move player back down
-        person->setXPos(person->getXPos() + 10); // kick to the right
+    else { // top
+        if (levels.getCurrLevel() == 1) {
+            reset();
+        }
+        else
+            person->setYPos(person->getYPos() + 5); // move player back down
     }
 }
 
@@ -350,53 +370,48 @@ int Master::checkCollision(Person *person) {
     int boundingH = 94, boundingW = 75; // height and width of player image
     Uint8 personAlpha, alpha; // store alpha levels 
     Uint32 personPixel, pixel; // store current pixel for for loop
-    
-    // access current player texture
-    int state = person->getState();
-    Texture * playerTex = person->getTexture(state);
 
     // access current frame value within texture (or access only frame)
     double frame = 0; // current frame in sprite
-    switch (state) {
+    switch (person->getState()) {
         case 1: // running
             frame = person->getCurrRun();
             break;
-        case 3: // ducking
-            boundingH = 35; 
-            break;
         case 4: // rolling
-            boundingH = 35; 
             frame = person->getCurrRoll();
             break;
         case 5: // punching
             frame = person->getCurrPunch();
             break;
-        default: // standing, jumping
-            break; // for textures with only one frame
+        default: // standing, jumping, ducking
+            break;
     }
 
-    // set bounds for collisions check (actually denote the current frame)
-    int leftEdge = int(frame) * boundingW;
-    //int rightEdge = leftEdge + boundingW;
+    // set bound for collisions check
+    int leftEdge = int(frame)*boundingW;
+
+    Texture * personTex = person->getTexture(person->getState());
 
     // loops through bounding box of the player, compares alpha of both char and player
     for(int y = boundingH; y > 0; y--) { 
         for(int x = 0; x < boundingW; x++) { 
-            personPixel = playerTex->getPixel(x+leftEdge, y); // access current pixel
-            personAlpha = playerTex->getAlpha(personPixel); // access alpha value of pixel (i.e. transparency)
-            if (personAlpha > 0) { // if part of player on current pixel
-                pixel = levels.getForeground()->getPixel(person->getXPos()+x, y); // get foreground pixel
+            personPixel = personTex->getPixel(leftEdge+x,y); // access current pixel
+            personAlpha = personTex->getAlpha(personPixel); // access alpha value of pixel (i.e. transparency)
+            if (int(personAlpha) > 10) { // if part of player on current pixel
+                pixel = levels.getForeground()->getPixel(person->getXPos()+x,y); // get foreground pixel
                 alpha = levels.getForeground()->getAlpha(pixel); // check foreground transparency
-                if (alpha > 0) { // collision (assume collision on right side if none else found)
-                    if ((y < boundingH/6) && (x < boundingW/2)) // hit top left
+                if (int(alpha) > 10) { // collision
+                    //cout << "alpha = " << int(alpha) << " personalpha = " << int(personAlpha) << endl;
+                    //cout << " x = " << x << " y = " << y << endl;
+                    if (y < boundingH/6) // top
                         return 1;
-                    else if ((y < boundingH/6) && (x >= boundingW/2)) // hit top right
+                    else if (x >= boundingW/2) { // right
                         return 2;
-                    else if (x >= boundingW/2) // just right
+                    }
+                    else if (x <= boundingW/2) { // left
                         return 3;
-                    else // just left
-                        return 4;
-                }   
+                    }
+                }
             }
         }
     }

@@ -74,7 +74,6 @@ private:
     int State;
     int JumpDir;
     double JumpHeight;
-    int CurrLevel;
 };
 
 #endif

@@ -28,6 +28,7 @@ public:
     ~Master();
     void init();
     void loadMedia();
+    void reset();
 
     void play();
 
