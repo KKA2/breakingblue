@@ -4,51 +4,58 @@
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #include "Level.h"
-#include "Master.h"
+#include "Master.h" // include for screen height/width
 
 using namespace std;
 
 Level::Level() {
-    Window = NULL;
+    // initialize to NULL
     Renderer = NULL;
     Background = NULL;
     Music = NULL;
+    // initialize size of screen to 0
+    LevelWidth = 0;
+    LevelHeight = 0;
+    // set bounds of display to allow for side scrolling
     Camera.x = 0;
     Camera.y = 0;
-    Camera.w = SCREEN_WIDTH;
-    Camera.h = SCREEN_HEIGHT;
+    Camera.w = 1000;
+    Camera.h = 400;
 }
 
 Level::~Level() {
     // free loaded images
     SDL_DestroyTexture(Background);
     Background = NULL;
-
+    // free loaded music
     Mix_FreeMusic(Music);
     Music = NULL;
 }
 
 SDL_Texture * Level::loadTexture(string path) {
     SDL_Texture *newTexture = NULL; // optimized surface
-    SDL_Surface *loadedSurface = IMG_Load(path.c_str()); // loaded surface
+    SDL_Surface *loadedSurface = IMG_Load(path.c_str()); // temporary loaded surface
     newTexture = SDL_CreateTextureFromSurface(Renderer,loadedSurface);
-    SDL_FreeSurface(loadedSurface);
-
+    SDL_FreeSurface(loadedSurface); // free temporary loaded surface
+    // return the loaded texture
     return newTexture;
 }
 
-void Level::setUp(SDL_Window *window, SDL_Renderer *renderer) {
-    Window = window;
+void Level::setUp(SDL_Renderer *renderer) {
+    // allow for textures to be rendered onto the screen
     Renderer = renderer;
 }
 
-void Level::display(int f) {
-    SDL_RenderCopy(Renderer,Background,NULL,NULL);
+void Level::playMusic() {
+    // play music on channel
+    Mix_PlayMusic(Music,-1);
+    // set volume of music played to 30
+    Mix_VolumeMusic(30);
 }
 
-void Level::playMusic() {
-    Mix_PlayMusic(Music,-1);
-    Mix_VolumeMusic(30);
+void Level::display() {
+    // draw background image onto screen
+    SDL_RenderCopy(Renderer,Background,NULL,NULL);
 }
 
 void Level::setBackground(string path) {
@@ -57,6 +64,22 @@ void Level::setBackground(string path) {
 
 SDL_Texture * Level::getBackground() {
     return Background;
+}
+
+void Level::setLevelWidth(int levelWidth) {
+    LevelWidth = levelWidth;
+}
+
+int Level::getLevelWidth() {
+    return LevelWidth;
+}
+
+void Level::setLevelHeight(int levelHeight) {
+    LevelHeight = levelHeight;
+}
+
+int Level::getLevelHeight() {
+    return LevelHeight;
 }
 
 void Level::setCameraX(int x) {

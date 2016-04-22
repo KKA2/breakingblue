@@ -17,11 +17,11 @@ class Sound {
 public:
     Sound();
     ~Sound();
-    void loadMedia(int);
-    void playSound(int);
+    void loadMedia(int); // load sound effect
+    void playSound(int); // play sound effect
 private:
-    Mix_Chunk *SoundEffect;
-    int loaded;
+    Mix_Chunk *SoundEffect; // store the currently loaded sound effect
+    int loaded; // store number correlating to the currently loaded sound
 };
 
 #endif

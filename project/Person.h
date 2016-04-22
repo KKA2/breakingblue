@@ -14,12 +14,11 @@ class Person {
 public:
     Person();
     ~Person();
-    void setUp(SDL_Window *,SDL_Renderer *);
-    void loadMedia();
-    void draw(int);
-
+    void setUp(SDL_Renderer *); // set up all textures to render
+    void loadMedia(); // load all textures from path names
+    void draw(int); // draw all textures onto the screen
+    // get/set functions
     Texture * getTexture(const int);
-
     double getXPos() const;
     void setXPos(const double);
     double getYPos() const;
@@ -40,11 +39,11 @@ public:
     void setJumpDir(const int);
     double getJumpHeight() const;
     void setJumpHeight(const double);
+    int getMaxJumpHeight() const;
+    void setMaxJumpHeight(const int);
     
 private:
-    SDL_Window *Window;
-    SDL_Renderer *Renderer;
-
+    // rectangles outlining the sprite frames within each respective texture
     SDL_Rect Running[7];
     Texture RunningTexture;
     SDL_Rect Standing;
@@ -59,19 +58,26 @@ private:
     Texture PunchingTexture;
     SDL_Rect Kicking[11];
     Texture KickingTexture;
-
+    // position of the figure
     double XPos;
     double YPos;
+    // current frame of sprite texture to draw
     double CurrRun;
     double CurrRoll;
     double CurrPunch;
     double CurrKick;
+    // direction of the figure's motion
     SDL_RendererFlip MoveDir;
-    // states:
+    // current state of animation:
     // 0=standing, 1=running, 2=jumping, 3=ducking, 4=rolling, 5=punching, 6=kicking
     int State;
+    // rising or falling in the jump:
+    // 0=not jumping, 1=down, -1=up
     int JumpDir;
+    // height above initial ground level
     double JumpHeight;
+    // maximum height able to jump above initial ground level
+    int MaxJumpHeight;
 };
 
 #endif

@@ -15,12 +15,15 @@ class Levels {
 public:
     Levels();
     ~Levels();
-    void setUp(SDL_Window *,SDL_Renderer *);
-    void loadMedia();
-
-    void display();
-    void playMusic();
-
+    // all levels
+    void setUp(SDL_Renderer *); // set up renderer for all level textures
+    void loadMedia(); // load media from all levels
+    // level specific
+    void display(); // display current level
+    void playMusic(); // play music associated to current level
+    // get/set functions
+    Texture * getForeground(); // get associated foreground to current level
+    void setCurrText(); // mission parameters
     int getCurrLevel();
     void setCurrLevel(int);
     void setCameraX(int);
@@ -29,12 +32,10 @@ public:
     double getCurrDoor(int);
     void setCurrDoor(int,double);
     int getLevelWidth();
-
-    Texture * getForeground();
-
+    int getLevelHeight();
 private:
-    int CurrLevel;
-    Level1 level1;
+    int CurrLevel; // current level of player
+    Level1 level1; // level 1
 };
 
 #endif

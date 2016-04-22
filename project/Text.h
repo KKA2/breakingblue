@@ -6,8 +6,8 @@
 #include "Texture.h"
 #include <vector> 
 
-#ifndef _TEXT_H_
-#define _TEXT_H_
+#ifndef _TEXT
+#define _TEXT
 
 using namespace std;
 class Text {
@@ -16,16 +16,13 @@ public:
 	Text();
 	~Text();
 	void display(SDL_Rect *);
-	void setUp(SDL_Window *,SDL_Renderer *);
+	void setUp(SDL_Renderer *);
     void loadMedia(string);
 private:
-	int xPos;
-	int yPos;
-	int chars;
-	SDL_Window *Window;
-    SDL_Renderer *Renderer;
     Texture text;
     vector<SDL_Rect> Chars;
-
+	int XPos;
+	int YPos;
+	int NumChars;
 };
-#endif //_TEXT_H_
+#endif

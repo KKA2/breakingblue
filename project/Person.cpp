@@ -8,8 +8,7 @@
 using namespace std;
 
 Person::Person() {
-    Window = NULL;
-    Renderer = NULL;
+    // initialize all values to default
     XPos = 0;
     YPos = 200;
     CurrRun = 0;
@@ -20,9 +19,11 @@ Person::Person() {
     State = 0;
     JumpDir = 0;
     JumpHeight = 0;
+    MaxJumpHeight = 120;
 }
 
 Person::~Person() {
+    // free all textures
     RunningTexture.free();
     StandingTexture.free();
     JumpingTexture.free();
@@ -32,10 +33,8 @@ Person::~Person() {
     KickingTexture.free();
 }
 
-void Person::setUp(SDL_Window *window, SDL_Renderer *renderer) {
-    Window = window;
-    Renderer = renderer;
-
+void Person::setUp(SDL_Renderer *renderer) {
+    // allow for textures to render to screen
     RunningTexture.setUp(renderer);
     StandingTexture.setUp(renderer);
     JumpingTexture.setUp(renderer);
@@ -214,4 +213,12 @@ double Person::getJumpHeight() const {
 
 void Person::setJumpHeight(const double jumpHeight) {
     JumpHeight = jumpHeight;
+}
+
+int Person::getMaxJumpHeight() const {
+    return MaxJumpHeight;
+}
+
+void Person::setMaxJumpHeight(const int maxJumpHeight) {
+    MaxJumpHeight = maxJumpHeight;
 }
