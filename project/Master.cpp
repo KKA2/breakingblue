@@ -407,13 +407,13 @@ int Master::checkCollision(Person *person) {
                 if (int(alpha) > 10) { // collision
                     //cout << "alpha = " << int(alpha) << " personalpha = " << int(personAlpha) << endl;
                     //cout << " x = " << x << " y = " << y << endl;
-                    if (y < boundingH/6) // top
-                        return 1;
-                    else if (x >= boundingW/2) { // right
+                    
+                    if (x >= boundingW/2) { // right
                         return 2;
-                    }
-                    else if (x <= boundingW/2) { // left
+                    } else if (x <= boundingW/2) { // left
                         return 3;
+                    } else if (y < boundingH/6) {// top
+                        return 1;
                     }
                 }
             }
