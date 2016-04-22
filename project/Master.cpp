@@ -414,7 +414,7 @@ int Master::checkCollision(Person *person) {
                     //cout << " x = " << x << " y = " << y << endl;
                     if (y < boundingH/6) // top
                         return 1;
-                    else if (x >= boundingW/2) { // right
+                    if (x >= boundingW/2) { // right
                         return 2;
                     }
                     else if (x <= boundingW/2) { // left
