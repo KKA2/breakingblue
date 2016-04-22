@@ -40,8 +40,6 @@ public:
     void setJumpDir(const int);
     double getJumpHeight() const;
     void setJumpHeight(const double);
-    int getCurrLevel() const;
-    void setCurrLevel(const int);
     
 private:
     SDL_Window *Window;
