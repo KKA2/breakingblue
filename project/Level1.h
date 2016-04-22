@@ -31,6 +31,7 @@ private:
     Texture Door1Texture;
     Texture Door2Texture;
     Texture Door3Texture;
+    Text missionParam;
 
     double CurrDoor; // store current relevant door (which one hasn't been knocked down)
     double CurrDoor1; // state of first door

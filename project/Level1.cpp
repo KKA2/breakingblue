@@ -5,6 +5,7 @@
 
 #include "Level1.h"
 #include "Texture.h"
+#include "Text.h"
 
 using namespace std;
 
@@ -33,10 +34,13 @@ void Level1::setUp(SDL_Window *window, SDL_Renderer *renderer) {
     Door1Texture.setUp(renderer);
     Door2Texture.setUp(renderer);
     Door3Texture.setUp(renderer);
+    missionParam.setUp(window, renderer);
+    missionParam.loadMedia("./imgs/lvl1/mission1.png");
 }
 
 void Level1::display() {
     Level::display(int(CurrDoor));
+   
 
     SDL_Rect cam = *Level::getCamera();
 
@@ -47,6 +51,7 @@ void Level1::display() {
     Door2Texture.render(0,0,&cam);
     cam.y = 400*int(CurrDoor3);
     Door3Texture.render(0,0,&cam);
+    missionParam.display(&cam);
 }
 
 void Level1::loadMedia() {

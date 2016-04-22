@@ -7,6 +7,7 @@
 #define _LEVEL
 
 #include "Texture.h"
+#include "Text.h"
 
 using namespace std;
 
@@ -30,7 +31,6 @@ private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
     SDL_Texture *Background;
-    Texture text;
     SDL_Rect Camera;
     Mix_Music *Music;
 };
