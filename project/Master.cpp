@@ -8,11 +8,13 @@
 using namespace std;
 
 Master::Master() {
+    // initialize screen
     init();
-    person.setUp(Window,Renderer);
-    levels.setUp(Window,Renderer);
+    // set up textures in composed classes
+    person.setUp(Renderer);
+    levels.setUp(Renderer);
+    // load all pictures/sounds
     loadMedia();
-
 }
 
 Master::~Master() {
@@ -21,7 +23,6 @@ Master::~Master() {
     SDL_DestroyWindow(Window);
     Window = NULL;
     Renderer = NULL;
-
     // quit SDL subsystems
     Mix_Quit();
     IMG_Quit();
@@ -29,62 +30,66 @@ Master::~Master() {
 }
 
 void Master::init() {
+    // set up window
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY,"1"); // set texture filtering to linear
     Window = SDL_CreateWindow("Breaking Blue", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    
+    // set up renderer for displaying textures
     Renderer = SDL_CreateRenderer(Window,-1,SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); // create renderer for window
     SDL_SetRenderDrawColor(Renderer,0xFF,0xFF,0xFF,0xFF); // initialize renderer color
+    // add support for png images
     IMG_Init(IMG_INIT_PNG);
+    // initialize audio settings
     Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
 }
 
 void Master::loadMedia() {
+    // call composed class functions to load images/audio
     person.loadMedia();
     levels.loadMedia();
 }
 
 void Master::reset() {
-    // reset person
+    // reset person to initial position
     person.setXPos(0);
     person.setYPos(200);
     person.setState(0);
     person.setMoveDir(SDL_FLIP_NONE);
-
+    person.setJumpDir(0);
+    person.setJumpHeight(0);
+    // reset camera/display
     levels.setCameraX(0);
     if (levels.getCurrLevel() == 1)
         for (int l=0;l<=3;l++)
             levels.setCurrDoor(l,0);
-
+    // move figure to the ground to restart gameplay
     int notOnGround = checkGround(&person);
     while (notOnGround) { // continue until player hits ground or edge of board
-        // updateCamera();
         person.setYPos(person.getYPos() + 2); // shift player down
-        notOnGround = checkGround(&person);
-        update();
+        notOnGround = checkGround(&person); // check if player is on the ground
+        update(); // redraw the change in position
     }
 }
 
 void Master::play() {
-    bool quit = false;
-    SDL_Event e;
-
-    double maxJumpHeight = 120;
-    int speed = 30;
-
+    // initialize local variables
+    bool quit = false; // boolean of whether the player has chosen to quit or not
+    SDL_Event e; // store key pressed
+    int jumpSpeed = 30; // adjust for early termination of jumps
+    // set initial level to first level
     levels.setCurrLevel(1);
-
+    // move display to center over figure
     updateCamera();
+    // redraw screen images
     update();
-
+    // start music
     levels.playMusic();
-
+    // move figure to the ground to restart gameplay
     int notOnGround = checkGround(&person);
     while (notOnGround) { // continue until player hits ground or edge of board
-        // updateCamera();
         person.setYPos(person.getYPos() + 2); // shift player down
-        notOnGround = checkGround(&person);
-        update();
+        notOnGround = checkGround(&person); // check if player is on the ground
+        update(); // redraw the change in position
     }
 
     while (!quit) {
@@ -195,23 +200,23 @@ void Master::play() {
                         quit = true;
                         break;
                     case SDLK_c:
-                        levels.setCurrDir();
+                        levels.setCurrText();
                         break;
                 }
             }
         }
 
-        double changeY =  person.getJumpDir() * ((maxJumpHeight+10 - person.getJumpHeight())/(maxJumpHeight+10)) * speed;    
+        double changeY =  person.getJumpDir() * ((person.getMaxJumpHeight()+10 - person.getJumpHeight())/(person.getMaxJumpHeight()+10)) * jumpSpeed;    
         person.setJumpHeight(person.getJumpHeight() - changeY);
         if (person.getJumpDir() == -1) {
             moveFigure(0,changeY);
             person.setState(2);
-            if (person.getJumpHeight() >= maxJumpHeight)
+            if (person.getJumpHeight() >= person.getMaxJumpHeight())
                 person.setJumpDir(1);
             else if (person.getYPos() < 5) { // hit ceiling
                 person.setJumpDir(1);
                 if (person.getJumpHeight() < 50) // if short fall
-                    speed = 5; // temp adjust speed
+                    jumpSpeed = 5; // temp adjust jumpSpeed
             }
 
         }
@@ -222,7 +227,7 @@ void Master::play() {
                 person.setState(0);
                 person.setJumpDir(0);
                 person.setJumpHeight(0);
-                speed = 30;
+                jumpSpeed = 30;
                 while (moveFigure(0,5) == 1); // move to ground if above ground
             }
             else { // if can still jump down
@@ -310,12 +315,12 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
         }
     }
     
-    if (person.getXPos() > LEVEL_WIDTH - 75)
-        person.setXPos(LEVEL_WIDTH - 75);
+    if (person.getXPos() > levels.getLevelWidth() - 75)
+        person.setXPos(levels.getLevelWidth()  - 75);
     else if (person.getXPos() < 0)
         person.setXPos(0);
 
-    if (person.getYPos() > LEVEL_HEIGHT)
+    if (person.getYPos() > levels.getLevelHeight())
         exit(1);
     else if (person.getYPos() < 0)
         person.setYPos(0);

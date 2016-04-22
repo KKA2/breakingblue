@@ -15,24 +15,33 @@ class Level {
 public:
     Level();
     ~Level();
+    void playMusic(); // play level music
+    // virtual functions to be expanded
+    virtual void display(); // draw all textures onto the screen
     virtual SDL_Texture * loadTexture(string);
-    virtual void setUp(SDL_Window *,SDL_Renderer *);
-    void display(int);
-    void playMusic();
+    virtual void setUp(SDL_Renderer *); // set up all textures/music to render
+    // get/set functions
     void setBackground(string);
     SDL_Texture * getBackground();
+    void setLevelWidth(int);
+    int getLevelWidth();
+    void setLevelHeight(int);
+    int getLevelHeight();
     void setCameraX(int);
     int getCameraX();
     SDL_Rect * getCamera();
     void setMusic(Mix_Music *);
     Mix_Music * getMusic();
+    // pure virtual function to be implemented lower in the hierarchy
     virtual void loadMedia() = 0;
 private:
-    SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
-    SDL_Texture *Background;
-    SDL_Rect Camera;
-    Mix_Music *Music;
+    SDL_Texture *Background; // base background texture image
+    SDL_Rect Camera; // current screen on texture to be rendered
+    Mix_Music *Music; // level music
+
+    int LevelWidth;
+    int LevelHeight;
 };
 
 #endif

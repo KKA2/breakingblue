@@ -4,8 +4,6 @@
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #include "Levels.h"
-#include "Texture.h"
-#include "Level1.h"
 
 using namespace std;
 
@@ -15,8 +13,8 @@ Levels::Levels() {
 
 Levels::~Levels() {}
 
-void Levels::setUp(SDL_Window *window, SDL_Renderer *renderer) {
-    level1.setUp(window,renderer);
+void Levels::setUp(SDL_Renderer *renderer) {
+    level1.setUp(renderer);
 }
 
 void Levels::loadMedia() {
@@ -31,6 +29,18 @@ void Levels::display() {
 void Levels::playMusic() {
     if (CurrLevel == 1)
         level1.playMusic();
+}
+
+Texture * Levels::getForeground() {
+    if (CurrLevel == 1)
+        return level1.getForeground();
+    else //not in a level
+        return NULL;
+}
+
+void Levels::setCurrText() {
+    if (CurrLevel == 1)
+        level1.setCurrText();
 }
 
 int Levels::getCurrLevel() {
@@ -49,22 +59,22 @@ void Levels::setCameraX(int x) {
 int Levels::getCameraX() {
     if (CurrLevel == 1)
         return level1.getCameraX();
-    else //not in a level!
-        return 1;
+    else //not in a level
+        return 0;
 }
 
 SDL_Rect * Levels::getCamera() {
     if (CurrLevel == 1)
         return level1.getCamera();
-    else //not in a level!
+    else //not in a level
         return NULL;
 }
 
 double Levels::getCurrDoor(int door) {
     if (CurrLevel == 1)
         return level1.getCurrDoor(door);
-    else //not in a level!
-        return 1;
+    else //not in a level
+        return 0;
 }
 
 void Levels::setCurrDoor(int door, double currDoor) {
@@ -75,17 +85,13 @@ void Levels::setCurrDoor(int door, double currDoor) {
 int Levels::getLevelWidth() {
     if (CurrLevel == 1)
         return level1.getLevelWidth();
-    else //not in a level!
-        return 1;
+    else //not in a level
+        return 0;
 }
 
-Texture * Levels::getForeground() {
+int Levels::getLevelHeight() {
     if (CurrLevel == 1)
-        return level1.getForeground();
-    else //not in a level!
-        return NULL;
-}
-void Levels::setCurrDir() {
-    if (CurrLevel == 1)
-        level1.setCurrDir();
+        return level1.getLevelHeight();
+    else //not in a level
+        return 0;
 }

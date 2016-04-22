@@ -10,18 +10,23 @@ using namespace std;
 Texture::Texture() {
     Renderer = NULL;
     mTexture = NULL;
-    surface = NULL;
+    Surface = NULL;
     
 }
 
 Texture::~Texture() {
+    // free the texture
     free();
-    SDL_FreeSurface(surface);
+    // free the surface
+    SDL_FreeSurface(Surface);
 }
 
 void Texture::free() {
+    // check if the texture exists
     if (mTexture != NULL) {
+        // destroy the previous texture
         SDL_DestroyTexture(mTexture);
+        // reset to null
         mTexture = NULL;
     }
 }
@@ -31,31 +36,34 @@ void Texture::setUp(SDL_Renderer *renderer) {
 }
 
 void Texture::loadFromFile(string path) {
+    // free the previously loaded texture, if exists
     free();
-    IMG_Init(IMG_INIT_PNG); // adds PNG support
+    // initialize to NULL to allow for error checking
     SDL_Texture* newTexture = NULL;
-    surface = IMG_Load(path.c_str()); // load image
-    if (surface == NULL)
+    // load image
+    Surface = IMG_Load(path.c_str());
+    if (Surface == NULL) // error check
         printf("Unable to load image %s! SDL_image Error: %s",path.c_str(),IMG_GetError());
     else {
         // color key image
-        SDL_SetColorKey(surface,SDL_TRUE,SDL_MapRGB(surface->format,0,0xFF,0xFF));
-        
+        SDL_SetColorKey(Surface,SDL_TRUE,SDL_MapRGB(Surface->format,0,0xFF,0xFF));
         // create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface(Renderer,surface); // create texture from surface pixels
+        newTexture = SDL_CreateTextureFromSurface(Renderer,Surface); // create texture from Surface pixels
         if (newTexture == NULL)
             printf("Unable to create texture from %s! SDL Error: %s\n",path.c_str(),SDL_GetError());
         else {
-            mWidth = surface->w;
-            mHeight = surface->h;
+            mWidth = Surface->w;
+            mHeight = Surface->h;
         }
-        
+        // set the class texture as the loaded texture
         mTexture = newTexture;
     }
 }
 void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double angle, SDL_Point *center) {
-    SDL_Rect renderQuad = { x, y, mWidth, mHeight }; // set rendering space and render to screen
-    if (clip != NULL) { // set clip rendering dimensions
+    // set rendering space and render to screen
+    SDL_Rect renderQuad = { x, y, mWidth, mHeight };
+    // set clip rendering dimensions
+    if (clip != NULL) {
         renderQuad.w = clip->w;
         renderQuad.h = clip->h;
     }
@@ -64,18 +72,23 @@ void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double
 }
 
 Uint8 Texture::getAlpha(Uint32 pixel) {
+    // initialize all necessary values to call GetRGBA
     Uint8 red,green,blue,alpha;
-    SDL_GetRGBA(pixel,surface->format,&red,&green,&blue,&alpha);
+    // call function to find the alpha value
+    SDL_GetRGBA(pixel,Surface->format,&red,&green,&blue,&alpha);
     return alpha;
 }
 
 Uint32 Texture::getPixel(int x, int y) {
-    int bpp = surface->format->BytesPerPixel;
-
-    SDL_LockSurface(surface);
-    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-    SDL_UnlockSurface(surface);
-
+    // get the format of the surface to be analyzed
+    int bpp = Surface->format->BytesPerPixel;
+    // make the surface read-only
+    SDL_LockSurface(Surface);
+    // take a sample of the specific pixel
+    Uint8 *p = (Uint8 *)Surface->pixels + y * Surface->pitch + x * bpp;
+    // unlock the surface
+    SDL_UnlockSurface(Surface);
+    // check the format and return the associated pixel vaue
     switch (bpp) {
         case 1:
             return *p;

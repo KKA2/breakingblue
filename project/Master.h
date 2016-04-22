@@ -35,11 +35,10 @@ public:
     int moveFigure(const double,const double,bool=true);
     void update();
     void updateCamera();
-
+    // collision detection
     int checkCollision(Person * person); // checks for right/left/top collisions with foreground
     void fixCollision(Person *person, int collisionType); // respond to collision
     int checkGround(Person * person);
-
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer

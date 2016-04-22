@@ -19,22 +19,21 @@ class Texture {
 public:
     Texture();
     ~Texture();
-
-    void free();
-    void setUp(SDL_Renderer *);
-    SDL_Texture * loadTexture(string);
-    void loadFromFile(string);
+    // utility functions
+    void free(); // destroy texture to free space
+    void setUp(SDL_Renderer *); // set Renderer
+    void loadFromFile(string); // load texture image from a specified path
     void render(int,int,SDL_Rect *,SDL_RendererFlip = SDL_FLIP_NONE,double = 0.0,SDL_Point * = NULL);
-
-    Uint8 getAlpha(Uint32);
-    Uint32 getPixel(int,int);
-
+    // get values from the texture
+    Uint8 getAlpha(Uint32); // get alpha value of a specific pixel
+    Uint32 getPixel(int,int); // get pixel of a specific location
+    // get functions
     int getWidth();
     int getHeight();
 private:
     SDL_Renderer *Renderer;
+    SDL_Surface *Surface;
     SDL_Texture *mTexture;
-    SDL_Surface *surface;
     int mWidth;
     int mHeight;
 };
