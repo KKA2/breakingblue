@@ -12,7 +12,7 @@ Text::Text() {
     XPos = 0;
     YPos = 25;
     // number of characters in image to display (52 in 00)
-    NumChars = 50;
+    NumChars = 49;
 }
 Text::~Text() {
 	text.free();
