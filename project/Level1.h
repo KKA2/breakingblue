@@ -8,6 +8,7 @@
 
 #include "Level.h"
 #include "Texture.h"
+#include <vector>
 
 using namespace std;
 
@@ -34,7 +35,8 @@ private:
     Texture Door1Texture;
     Texture Door2Texture;
     Texture Door3Texture;
-    Text MissionParam; // text for mission parameters
+    vector<Text> LevelOneText;
+    //Text MissionParam; // text for mission parameters
 
     double CurrDoor; // current relevant door (which one hasn't been knocked down)
     // state of respective door (how many hits landed - 0.25 added for each hit)

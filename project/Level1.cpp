@@ -23,6 +23,7 @@ Level1::~Level1() {
     Door1Texture.free();
     Door2Texture.free();
     Door3Texture.free();
+    LevelOneText.clear();
 }
 
 void Level1::setUp(SDL_Renderer *renderer) {
@@ -33,7 +34,28 @@ void Level1::setUp(SDL_Renderer *renderer) {
     Door1Texture.setUp(renderer);
     Door2Texture.setUp(renderer);
     Door3Texture.setUp(renderer);
-    MissionParam.setUp(renderer);
+
+    //used to create objects
+    Text tempText;
+    Text temp4(64);
+    Text temp5(62);
+    Text tempText2(22);
+    Text temp3(31);
+    Text temp6(42);
+
+    //add text displays to  (in order of display)
+    LevelOneText.push_back(tempText);
+    LevelOneText.push_back(temp4);
+    LevelOneText.push_back(temp5);
+    LevelOneText.push_back(tempText2);
+    LevelOneText.push_back(temp3);
+    LevelOneText.push_back(temp6);
+
+
+    for(unsigned int i=0; i<LevelOneText.size();i++) {
+        LevelOneText[i].setUp(renderer);   
+    }
+    
 
     Level::setLevelWidth(4000);
     Level::setLevelHeight(400);
@@ -54,8 +76,15 @@ void Level1::display() {
     cam.y = 400*int(CurrDoor3);
     Door3Texture.render(0,0,&cam);
     // display the mission parameters
-    if(CurrText == 0) {
-        MissionParam.display(&cam);
+    if(CurrText==0) {
+        LevelOneText[0].display(&cam, 0);
+        LevelOneText[1].display(&cam, 1);
+        LevelOneText[2].display(&cam, 2);
+        LevelOneText[3].display(&cam, 3);
+    } else if(CurrText == 1) {
+        LevelOneText[4].display(&cam, 0);
+    } else if(CurrText == 2) {
+        LevelOneText[5].display(&cam, 0);
     }
 }
 
@@ -64,7 +93,15 @@ void Level1::loadMedia() {
     Level::setBackground("imgs/bg/level1.png");
     Level::setMusic(Mix_LoadMUS("sound/mysterious.wav"));
     // load mission parameters texture
-    MissionParam.loadMedia("imgs/lvl1/missionParam.png");
+
+    //load images for text display
+    LevelOneText[0].loadMedia("./imgs/lvl1/text/missionParam.png"); //image file
+    LevelOneText[1].loadMedia("./imgs/lvl1/text/intro1.png");
+    LevelOneText[2].loadMedia("./imgs/lvl1/text/intro2.png");
+    LevelOneText[3].loadMedia("./imgs/lvl1/text/pressC.png");
+    LevelOneText[4].loadMedia("./imgs/lvl1/text/howToMove.png");
+    LevelOneText[5].loadMedia("./imgs/lvl1/text/howToPunch.png");
+    
     // load all foreground textures
     Foreground[0].loadFromFile("imgs/lvl1/base1.png");
     Foreground[1].loadFromFile("imgs/lvl1/base2.png");

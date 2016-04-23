@@ -16,7 +16,7 @@ public:
 	Text();
 	Text(int num);
 	~Text();
-	void display(SDL_Rect *);
+	void display(SDL_Rect *, int);
 	void setUp(SDL_Renderer *);
     void loadMedia(string);
 private:
@@ -25,5 +25,6 @@ private:
 	int XPos;
 	int YPos;
 	int NumChars;
+	bool first;
 };
 #endif
