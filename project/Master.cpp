@@ -355,15 +355,18 @@ void Master::update() {
 }
 
 void Master::fixCollision(Person *person, int collisionType){
-    // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left;
+    // return values: 3 = left, 2 = right, 1 = top
     
     if (collisionType == 3) { // left side
+        cout << "left collision" << endl;
         person->setXPos(person->getXPos() + 5); // kick to the right
     }
     else if (collisionType == 2) { // right
+        cout << "right collision" << endl;
         person->setXPos(person->getXPos() - 5); // kick to the left
     }
     else { // top
+        cout << "top collision" << endl;
         if (levels.getCurrLevel() == 1) {
             reset();
         }
@@ -399,13 +402,17 @@ int Master::checkCollision(Person *person) {
     // set bound for collisions check
     int leftEdge = int(frame)*boundingW;
 
+    //need to check MoveDir of person and flip image if moving left before checking collision !!!
     Texture * personTex = person->getTexture(person->getState());
 
     // loops through bounding box of the player, compares alpha of both char and player
     int personXPos = person->getXPos(), personYPos = person->getYPos();
     for(int y = boundingH/3; y > 0; y--) { //DO NOT REMOVE /3. DOES NOT WORK WITHOUT IT
         for(int x = 0; x < boundingW; x++) { 
-            personPixel = personTex->getPixel(leftEdge+x,y); // access current pixel
+            if (person.MoveDir == /*left*/)
+                personPixel = personTex->getPixel(leftEdge+(boundingH-x),y); // access current pixel
+            else
+                personPixel = personTex->getPixel(leftEdge+x,y); // access current pixel
             personAlpha = personTex->getAlpha(personPixel); // access alpha value of pixel (i.e. transparency)
             if (int(personAlpha) > 10) { // if part of player on current pixel
                 pixel = levels.getForeground()->getPixel(personXPos+x, personYPos+y); // get foreground pixel
@@ -413,16 +420,15 @@ int Master::checkCollision(Person *person) {
                 if (int(alpha) > 10) { // collision
                     if (y < boundingH/6) // top
                         return 1;
-                    if (x >= boundingW/2) { // right
-                        return 2;
-                    }
-                    else if (x < boundingW/2) { // left
+                    if (x < boundingW/2)
                         return 3;
-                    }
+                    else // right
+                        return 2;
                 }
             }
         }
     }
+    cout << "none" << endl;
     return 0; // no collision
 }
 
