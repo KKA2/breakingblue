@@ -12,7 +12,7 @@ Text::Text() {
     XPos = 0;
     YPos = 25;
     // number of characters in image to display (52 in 00)
-    NumChars = 52;
+    NumChars = 50;
 }
 Text::~Text() {
 	text.free();
@@ -26,8 +26,8 @@ void Text::loadMedia(string file) {
     for (int i=1;i<=NumChars;i++) {
         temp.x = 0;
         temp.y = 0;
-        temp.w = 10*i;
-        temp.h = 25;
+        temp.w = 11*i;
+        temp.h = 34;
         Chars.push_back(temp);
     }
     return;
