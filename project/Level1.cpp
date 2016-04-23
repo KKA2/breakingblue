@@ -23,6 +23,7 @@ Level1::~Level1() {
     Door1Texture.free();
     Door2Texture.free();
     Door3Texture.free();
+    LevelOneText.clear();
 }
 
 void Level1::setUp(SDL_Renderer *renderer) {
@@ -33,7 +34,15 @@ void Level1::setUp(SDL_Renderer *renderer) {
     Door1Texture.setUp(renderer);
     Door2Texture.setUp(renderer);
     Door3Texture.setUp(renderer);
-    MissionParam.setUp(renderer);
+    Text tempText;
+    Text tempText2(22);
+    LevelOneText.push_back(tempText);
+    LevelOneText.push_back(tempText2);
+    
+    for(unsigned int i=0; i<LevelOneText.size();i++) {
+        LevelOneText[i].setUp(renderer);   
+    }
+    
 
     Level::setLevelWidth(4000);
     Level::setLevelHeight(400);
@@ -55,7 +64,8 @@ void Level1::display() {
     Door3Texture.render(0,0,&cam);
     // display the mission parameters
     if(CurrText==0) {
-        MissionParam.display(&cam);
+        LevelOneText[0].display(&cam, 0);
+        LevelOneText[1].display(&cam, 1);
     }
 }
 
@@ -64,7 +74,8 @@ void Level1::loadMedia() {
     Level::setBackground("imgs/bg/level1.png");
     Level::setMusic(Mix_LoadMUS("sound/mysterious.wav"));
     // load mission parameters texture
-    MissionParam.loadMedia("./imgs/lvl1/missionParam.png");
+    LevelOneText[0].loadMedia("./imgs/lvl1/missionParam.png"); //image file and "line" on screen
+    LevelOneText[1].loadMedia("./imgs/lvl1/pressC.png");
     // load all foreground textures
     Foreground[0].loadFromFile("imgs/lvl1/base1.png");
     Foreground[1].loadFromFile("imgs/lvl1/base2.png");
