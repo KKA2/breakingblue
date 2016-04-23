@@ -36,8 +36,10 @@ void Text::display(SDL_Rect * cam) {
     int camX = cam->x;
     static bool first = true; // display animation when first loading
     if (first) {
-        for(int i=0;i<NumChars;i++) {
+        for(int i=0;i<NumChars-1;i++) {
+            SDL_RenderPresent(text.getRenderer());
             text.render(XPos-camX,YPos,&Chars[i],SDL_FLIP_NONE);
+            
         }
         first = false;
     }
