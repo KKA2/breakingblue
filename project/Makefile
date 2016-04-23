@@ -12,4 +12,4 @@ main: $(ALL)
 	$(CC) -c $(CXXFLAGS) -o %@ @^
 
 clean:
-	rm *.o main &>/dev/null
+	rm -rf *.o main *.dSYM &>/dev/null

@@ -28,12 +28,13 @@ public:
     ~Master();
     void init();
     void loadMedia();
-    void reset();
 
+    void reset(); // reset/initially set all game attributes
     void animate(); // play any sequential animations
+    void checkKeyboard(); // check keyboard for motion
     void play(); // play game
 
-    int moveFigure(const double,const double,bool=true);
+    int moveFigure(const double,const double,bool=true); // change figure position, only check new position if bool set to false
     void update();
     void updateCamera();
     // collision detection

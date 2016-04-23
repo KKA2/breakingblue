@@ -60,8 +60,8 @@ protected:
     Texture KickingTexture;
 private:
     // position of the figure
-    double XPos;
-    double YPos;
+    int XPos;
+    int YPos;
     // current frame of sprite texture to draw
     double CurrRun;
     double CurrRoll;

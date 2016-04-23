@@ -50,9 +50,13 @@ void Master::loadMedia() {
 }
 
 void Master::reset() {
-    // reset player to initial position
-    player.setXPos(0);
-    player.setYPos(200);
+    // set player's initial position
+    player.setInitialPos(levels.getLevelWidth(),levels.getLevelHeight());
+    // move display to center over figure
+    updateCamera();
+    // redraw screen images
+    update();
+    // set player stats
     player.setState(0);
     player.setMoveDir(SDL_FLIP_NONE);
     player.setJumpDir(0);
@@ -157,6 +161,47 @@ void Master::animate() {
         }
     }
 }
+
+void Master::checkKeyboard() {
+    const Uint8 *state = SDL_GetKeyboardState(NULL);
+
+    if (state[SDL_SCANCODE_DOWN]) { // duck
+        if (player.getState() != 2) {
+            player.setState(3);
+            if (state[SDL_SCANCODE_LEFT]) {
+                player.setMoveDir(SDL_FLIP_HORIZONTAL);
+                player.setState(4);
+            }
+            else if (state[SDL_SCANCODE_RIGHT]) {
+                player.setMoveDir(SDL_FLIP_NONE);
+                player.setState(4);
+            }
+        }
+    }
+    else if (state[SDL_SCANCODE_LEFT]) { // run left
+        player.setMoveDir(SDL_FLIP_HORIZONTAL);
+        if (player.getState() != 2) { // if not jumping
+            sound.playSound(2);
+            player.setState(1);
+        }
+        moveFigure(-10,0);
+        if (player.getJumpHeight() == 0)
+            player.setCurrRun(player.getCurrRun() + .3);
+    }
+    else if (state[SDL_SCANCODE_RIGHT]) { // run right
+        player.setMoveDir(SDL_FLIP_NONE);
+        if (player.getState() != 2) {
+            sound.playSound(2);
+            player.setState(1);
+        }
+        moveFigure(10,0);
+        if (player.getJumpHeight() == 0)
+            player.setCurrRun(player.getCurrRun() + .3);
+    }
+    else {
+        player.setCurrRun(0);
+    }
+}
 void Master::play() {
     // initialize local variables
     bool quit = false; // boolean of whether the player has chosen to quit or not
@@ -164,27 +209,14 @@ void Master::play() {
     int jumpSpeed = 30; // adjust for early termination of jumps
     // set initial level to first level
     levels.setCurrLevel(1);
-    // set player's initial position
-    player.setInitialPos(levels.getLevelWidth(),levels.getLevelHeight());
-    // move display to center over figure
-    updateCamera();
-    // redraw screen images
-    update();
     // start music
     levels.playMusic();
-    // move figure to the ground to restart gameplay
-    int notOnGround = checkGround();
-    while (notOnGround == 1) { // continue until player hits ground or edge of board
-        player.setYPos(player.getYPos() + 5); // shift player down
-        notOnGround = checkGround(); // check if player is on the ground
-        update(); // redraw the change in position
-    }
+    // set all initial values
+    reset();
 
     while (!quit) {
         animate();
-
         player.setState(0);
-
         while (SDL_PollEvent(&e) != 0) {
             if(e.type == SDL_QUIT)
                 quit = true;
@@ -240,44 +272,7 @@ void Master::play() {
             }
         }
 
-        const Uint8 *state = SDL_GetKeyboardState(NULL);
-
-        if (state[SDL_SCANCODE_DOWN]) { // duck
-            if (player.getState() != 2) {
-                player.setState(3);
-                if (state[SDL_SCANCODE_LEFT]) {
-                    player.setMoveDir(SDL_FLIP_HORIZONTAL);
-                    player.setState(4);
-                }
-                else if (state[SDL_SCANCODE_RIGHT]) {
-                    player.setMoveDir(SDL_FLIP_NONE);
-                    player.setState(4);
-                }
-            }
-        }
-        else if (state[SDL_SCANCODE_LEFT]) { // run left
-            player.setMoveDir(SDL_FLIP_HORIZONTAL);
-            if (player.getState() != 2) { // if not jumping
-                sound.playSound(2);
-                player.setState(1);
-            }
-            moveFigure(-10,0);
-            if (player.getJumpHeight() == 0)
-                player.setCurrRun(player.getCurrRun() + .3);
-        }
-        else if (state[SDL_SCANCODE_RIGHT]) { // run right
-            player.setMoveDir(SDL_FLIP_NONE);
-            if (player.getState() != 2) {
-                sound.playSound(2);
-                player.setState(1);
-            }
-            moveFigure(10,0);
-            if (player.getJumpHeight() == 0)
-                player.setCurrRun(player.getCurrRun() + .3);
-        }
-        else {
-            player.setCurrRun(0);
-        }
+        checkKeyboard();
 
         if (player.getCurrRun() >= 7) // keep in bounds of array for running
             player.setCurrRun(0);
