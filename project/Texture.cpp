@@ -69,6 +69,7 @@ void Texture::render(int x, int y, SDL_Rect *clip, SDL_RendererFlip flip, double
     }
     // render to screen
     SDL_RenderCopyEx(Renderer,mTexture,clip,&renderQuad,angle,center,flip);
+
 }
 
 Uint8 Texture::getAlpha(Uint32 pixel) {
@@ -116,4 +117,7 @@ int Texture::getWidth() {
 
 int Texture::getHeight() {
     return mHeight;
+}
+SDL_Renderer * Texture::getRenderer() {
+    return Renderer;
 }

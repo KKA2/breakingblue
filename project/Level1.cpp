@@ -54,7 +54,7 @@ void Level1::display() {
     cam.y = 400*int(CurrDoor3);
     Door3Texture.render(0,0,&cam);
     // display the mission parameters
-    if(CurrText==1) {
+    if(CurrText==0) {
         MissionParam.display(&cam);
     }
 }
