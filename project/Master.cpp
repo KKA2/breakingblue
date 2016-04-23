@@ -301,15 +301,17 @@ int Master::moveFigure(const double chX, const double chY, bool move) {
                 person.setState(2); // draw falling figure
 
             if (notOnGround == 1) { // is in air
-                if (move == true)
+                if (move == true){
                     person.setYPos(person.getYPos() + 5); // shift player down (falling)
+                }
                 notOnGround = checkGround();
                 if (!notOnGround)
                     sound.playSound(1);
             }
             else { // is in the ground
-                if (move == true)
+                if (move == true){
                     person.setYPos(person.getYPos() - 2); // shift player up (rising)
+                }
                 notOnGround = checkGround();
             } 
         }
@@ -354,24 +356,6 @@ void Master::update() {
     SDL_RenderPresent(Renderer);
 }
 
-void Master::fixCollision(int collisionType){
-    // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left;
-    
-    if (collisionType == 3) { // left side
-        person.setXPos(person.getXPos() + 5); // kick to the right
-    }
-    else if (collisionType == 2) { // right
-        person.setXPos(person.getXPos() - 5); // kick to the left
-    }
-    else { // top
-        if (levels.getCurrLevel() == 1) {
-            reset();
-        }
-        else
-            person.setYPos(person.getYPos() + 5); // move player back down
-    }
-}
-
 int Master::checkCollision() {
     // compare current player image to foreground and detect collision/collision type
     // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
@@ -397,32 +381,67 @@ int Master::checkCollision() {
 
     // set bound for collisions check
     int leftEdge = int(frame)*boundingW;
+    SDL_RendererFlip MoveDir = person.getMoveDir();
 
     Texture * personTex = person.getTexture(person.getState());
 
     // loops through bounding box of the player, compares alpha of both char and player
     int personXPos = person.getXPos(), personYPos = person.getYPos();
-    for(int y = boundingH/3; y > 0; y--) { //DO NOT REMOVE /3. DOES NOT WORK WITHOUT IT
+    for(int y = 2*boundingH/3; y > 0; y--) { 
         for(int x = 0; x < boundingW; x++) { 
-            personPixel = personTex->getPixel(leftEdge+x,y); // access current pixel
-            personAlpha = personTex->getAlpha(personPixel); // access alpha value of pixel (i.e. transparency)
-            if (int(personAlpha) > 10) { // if part of player on current pixel
-                pixel = levels.getForeground()->getPixel(personXPos+x, personYPos+y); // get foreground pixel
-                alpha = levels.getForeground()->getAlpha(pixel); // check foreground transparency
+            //get current person pixel 
+            if(MoveDir == SDL_FLIP_HORIZONTAL) //if facing left
+                personPixel = personTex->getPixel(leftEdge+boundingH-x,y);
+            else 
+                personPixel = personTex->getPixel(leftEdge+x,y); // access current pixel
+            // access alpha value of pixel (i.e. transparency)
+            personAlpha = personTex->getAlpha(personPixel); 
+            
+            if (int(personAlpha) > 10) { //if player is present, check for overlap with foreground
+                //get foreground pixel
+                if (MoveDir == SDL_FLIP_HORIZONTAL) //facing left
+                    pixel = levels.getForeground()->getPixel(personXPos+boundingH-x, personYPos+y);
+                else //facing right
+                    pixel = levels.getForeground()->getPixel(personXPos+x, personYPos+y);
+                // check foreground transparency
+                alpha = levels.getForeground()->getAlpha(pixel);
                 if (int(alpha) > 10) { // collision
-                    if (y < boundingH/6) // top
+                    if (y < boundingH/6)// top
                         return 1;
-                    if (x >= boundingW/2) { // right
-                        return 2;
-                    }
-                    else if (x < boundingW/2) { // left
-                        return 3;
+                    if (MoveDir == SDL_FLIP_HORIZONTAL){ //return response for left facing person
+                        if (x < boundingW/2) //right col
+                            return 2;
+                        else //left col
+                            return 3;
+                    } else { //return response for right facing person
+                        if (x > boundingW/2) // right
+                            return 2;
+                        else // left
+                            return 3;
                     }
                 }
             }
         }
     }
     return 0; // no collision
+}
+
+void Master::fixCollision(int collisionType){
+    // return values: 3 = left, 2 = right, 1 = top
+    
+    if (collisionType == 3) { // left side
+        person.setXPos(person.getXPos() + 5); // kick to the right
+    }
+    else if (collisionType == 2) { // right
+        person.setXPos(person.getXPos() - 5); // kick to the left
+    }
+    else { // top
+        if (levels.getCurrLevel() == 1) {
+            reset();
+        }
+        else
+            person.setYPos(person.getYPos() + 8); // move player back down
+    }
 }
 
 int Master::checkGround() {
