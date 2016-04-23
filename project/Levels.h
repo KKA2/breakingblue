@@ -8,7 +8,7 @@
 
 #include "Texture.h"
 #include "Level1.h"
-#include "Level2.h"
+#include "Level3.h"
 
 using namespace std;
 
@@ -39,7 +39,7 @@ public:
 private:
     int CurrLevel; // current level of player
     Level1 level1; // level 1
-    Level2 level2;
+    Level3 level3;
 };
 
 #endif

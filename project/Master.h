@@ -31,10 +31,11 @@ public:
 
     void reset(); // reset/initially set all game attributes
     void animate(); // play any sequential animations
-    void checkKeyboard(); // check keyboard for motion
+    void checkKeyboard(); // check keyboard for held motion
+    void checkKeyPress(); // check keyboard for short motion
     void play(); // play game
 
-    int moveFigure(const double,const double,bool=true); // change figure position, only check new position if bool set to false
+    int moveFigure(double,double,bool=true); // change figure position, only check new position if bool set to false
     void update();
     void updateCamera();
     // collision detection
@@ -44,6 +45,7 @@ public:
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
+    bool Quit; // boolean to quit, false = do not quit, true = quit
     Sound sound;
     Player player;
     Levels levels;

@@ -23,8 +23,8 @@ void Level2::setUp(SDL_Renderer *renderer) {
     Foreground.setUp(renderer);
     MissionParam.setUp(renderer);
 
-    Level::setLevelWidth(1000);
-    Level::setLevelHeight(4000);
+    Level::setLevelWidth(4000);
+    Level::setLevelHeight(400);
 }
 
 void Level2::display() {
@@ -42,10 +42,10 @@ void Level2::display() {
 
 void Level2::loadMedia() {
     // set up media from Level class
-    Level::setBackground("imgs/bg/level1.png");
-    Level::setMusic(Mix_LoadMUS("sound/mysterious.wav"));
+    Level::setBackground("imgs/bg/level1.png"); // PLACEHOLDER
+    Level::setMusic(Mix_LoadMUS("sound/suspense.wav"));
     // load all foreground textures
-    Foreground.loadFromFile("imgs/lvl2/base1.png");
+    Foreground.loadFromFile("imgs/lvl1/base1.png"); // PLACEHOLDER
 
     MissionParam.loadMedia("imgs/lvl1/text/missionParam.png"); // PLACEHOLDER
 }

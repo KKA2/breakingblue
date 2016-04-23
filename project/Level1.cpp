@@ -55,7 +55,6 @@ void Level1::setUp(SDL_Renderer *renderer) {
     for(unsigned int i=0; i<LevelOneText.size();i++) {
         LevelOneText[i].setUp(renderer);   
     }
-    
 
     Level::setLevelWidth(4000);
     Level::setLevelHeight(400);
@@ -76,14 +75,16 @@ void Level1::display() {
     cam.y = 400*int(CurrDoor3);
     Door3Texture.render(0,0,&cam);
     // display the mission parameters
-    if(CurrText==0) {
+    if (CurrText == 0) {
         LevelOneText[0].display(&cam, 0);
         LevelOneText[1].display(&cam, 1);
         LevelOneText[2].display(&cam, 2);
         LevelOneText[3].display(&cam, 3);
-    } else if(CurrText == 1) {
+    }
+    else if (CurrText == 1) {
         LevelOneText[4].display(&cam, 0);
-    } else if(CurrText == 2) {
+    }
+    else if (CurrText == 2) {
         LevelOneText[5].display(&cam, 0);
     }
 }
@@ -95,7 +96,7 @@ void Level1::loadMedia() {
     // load mission parameters texture
 
     //load images for text display
-    LevelOneText[0].loadMedia("./imgs/lvl1/text/missionParam.png"); //image file
+    LevelOneText[0].loadMedia("./imgs/lvl1/text/missionParam.png"); // image file
     LevelOneText[1].loadMedia("./imgs/lvl1/text/intro1.png");
     LevelOneText[2].loadMedia("./imgs/lvl1/text/intro2.png");
     LevelOneText[3].loadMedia("./imgs/lvl1/text/pressC.png");

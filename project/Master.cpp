@@ -8,6 +8,7 @@
 using namespace std;
 
 Master::Master() {
+    Quit = false;
     // initialize screen
     init();
     // set up textures in composed classes
@@ -202,10 +203,37 @@ void Master::checkKeyboard() {
         player.setCurrRun(0);
     }
 }
+
+void Master::checkKeyPress() {
+    SDL_Event e; // store key pressed
+    while (SDL_PollEvent(&e) != 0) {
+        if(e.type == SDL_QUIT)
+            Quit = true;
+        else if(e.type == SDL_KEYDOWN) {
+            switch(e.key.keysym.sym) {
+                case SDLK_UP: 
+                    player.setState(2);
+                    if (player.getJumpHeight() == 0)
+                        player.setJumpDir(-1);
+                    break;
+                case SDLK_SPACE:
+                    player.setState(5);
+                    break;
+                case SDLK_RETURN:
+                    player.setState(6);
+                    break;
+                case SDLK_q:
+                    Quit = true;
+                    break;
+                case SDLK_c:
+                    levels.setCurrText();
+                    break;
+            }
+        }
+    }
+}
 void Master::play() {
     // initialize local variables
-    bool quit = false; // boolean of whether the player has chosen to quit or not
-    SDL_Event e; // store key pressed
     int jumpSpeed = 30; // adjust for early termination of jumps
     // set initial level to first level
     levels.setCurrLevel(1);
@@ -214,34 +242,11 @@ void Master::play() {
     // set all initial values
     reset();
 
-    while (!quit) {
+    while (!Quit) {
         animate();
         player.setState(0);
-        while (SDL_PollEvent(&e) != 0) {
-            if(e.type == SDL_QUIT)
-                quit = true;
-            else if(e.type == SDL_KEYDOWN) {
-                switch(e.key.keysym.sym) {
-                    case SDLK_UP: 
-                        player.setState(2);
-                        if (player.getJumpHeight() == 0)
-                            player.setJumpDir(-1);
-                        break;
-                    case SDLK_SPACE:
-                        player.setState(5);
-                        break;
-                    case SDLK_RETURN:
-                        player.setState(6);
-                        break;
-                    case SDLK_q:
-                        quit = true;
-                        break;
-                    case SDLK_c:
-                        levels.setCurrText();
-                        break;
-                }
-            }
-        }
+
+        checkKeyPress();
 
         double changeY =  player.getJumpDir() * ((player.getMaxJumpHeight()+10 - player.getJumpHeight())/(player.getMaxJumpHeight()+10)) * jumpSpeed;    
         player.setJumpHeight(player.getJumpHeight() - changeY);
@@ -282,7 +287,7 @@ void Master::play() {
     }
 }
 
-int Master::moveFigure(const double chX, const double chY, bool move) {
+int Master::moveFigure(double chX, double chY, bool move) {
     player.setXPos(player.getXPos() + chX);
     player.setYPos(player.getYPos() + chY);
 
