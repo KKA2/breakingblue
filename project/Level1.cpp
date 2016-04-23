@@ -74,6 +74,7 @@ void Level1::loadMedia() {
     Level::setBackground("imgs/bg/level1.png");
     Level::setMusic(Mix_LoadMUS("sound/mysterious.wav"));
     // load mission parameters texture
+    
     LevelOneText[0].loadMedia("./imgs/lvl1/missionParam.png"); //image file and "line" on screen
     LevelOneText[1].loadMedia("./imgs/lvl1/pressC.png");
     // load all foreground textures

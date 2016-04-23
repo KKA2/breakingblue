@@ -4,13 +4,14 @@
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #include "Person.h"
+#include "Master.h"
 
 using namespace std;
 
 Person::Person() {
     // initialize all values to default
     XPos = 0;
-    YPos = 200;
+    YPos = 0;
     CurrRun = 0;
     CurrRoll = 0;
     CurrPunch = 0;
@@ -44,25 +45,29 @@ void Person::setUp(SDL_Renderer *renderer) {
     KickingTexture.setUp(renderer);
 }
 
-void Person::draw(int camX) {
+void Person::draw(int camX, int camY) {
     if (State == 0)
-        StandingTexture.render(XPos-camX,YPos,&Standing,MoveDir);
+        StandingTexture.render(XPos-camX,YPos+camY,&Standing,MoveDir);
     else if (State == 1)
-        RunningTexture.render(XPos-camX,YPos,&Running[int(CurrRun)],MoveDir);
+        RunningTexture.render(XPos-camX,YPos+camY,&Running[int(CurrRun)],MoveDir);
     else if (State == 2)
-        JumpingTexture.render(XPos-camX,YPos,&Jumping,MoveDir);
+        JumpingTexture.render(XPos-camX,YPos+camY,&Jumping,MoveDir);
     else if (State == 3)
-        DuckingTexture.render(XPos-camX,YPos,&Ducking,MoveDir);
+        DuckingTexture.render(XPos-camX,YPos+camY,&Ducking,MoveDir);
     else if (State == 4)
-        RollingTexture.render(XPos-camX,YPos,&Rolling[int(CurrRoll)],MoveDir);
+        RollingTexture.render(XPos-camX,YPos+camY,&Rolling[int(CurrRoll)],MoveDir);
     else if (State == 5)
-        PunchingTexture.render(XPos-camX,YPos,&Punching[int(CurrPunch)],MoveDir);
+        PunchingTexture.render(XPos-camX,YPos+camY,&Punching[int(CurrPunch)],MoveDir);
     else if (State == 6)
-        KickingTexture.render(XPos-camX,YPos,&Kicking[int(CurrKick)],MoveDir);
+        KickingTexture.render(XPos-camX,YPos+camY,&Kicking[int(CurrKick)],MoveDir);
+}
+
+void Person::setInitialPos(int width, int height) {
+    XPos = 0;
+    YPos = height - SCREEN_HEIGHT;
 }
 
 Texture * Person::getTexture(const int state) {
-
     Texture * texture;
     switch (state) {
         case 0: // standing

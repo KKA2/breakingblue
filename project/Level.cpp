@@ -90,6 +90,14 @@ int Level::getCameraX() {
     return Camera.x;
 }
 
+void Level::setCameraY(int y) {
+    Camera.y = y;
+}
+
+int Level::getCameraY() {
+    return Camera.y;
+}
+
 SDL_Rect * Level::getCamera() {
     return &Camera;
 }

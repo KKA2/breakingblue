@@ -71,6 +71,92 @@ void Master::reset() {
     }
 }
 
+void Master::animate() {
+    // check if a door is hit down
+    if (levels.getCurrLevel() == 1) {
+        if (levels.getCurrDoor(0) == 1) { // hit down first door
+            while (levels.getCurrDoor(1) < 6) {
+                levels.setCurrDoor(1,levels.getCurrDoor(1) + .2);
+                update();
+            }
+            levels.setCurrDoor(1,6); // error check
+        }
+        else if (levels.getCurrDoor(0) == 2) { // hit down second door
+            while (levels.getCurrDoor(2) < 6) {
+                levels.setCurrDoor(2,levels.getCurrDoor(2) + .2);
+                update();
+            }
+            levels.setCurrDoor(2,6); // error check
+        }
+        else if (levels.getCurrDoor(0) == 3) { // hit down third door
+            while (levels.getCurrDoor(3) < 6) {
+                levels.setCurrDoor(3,levels.getCurrDoor(3) + .2);
+                update();
+            }
+            levels.setCurrDoor(3,6); // error check
+        }
+    }
+    while (player.getState() == 4) { // rolling
+        player.setCurrRoll(player.getCurrRoll() + .5);
+        if (player.getMoveDir() == SDL_FLIP_NONE) // check direction for movement
+            moveFigure(8,0);
+        else
+            moveFigure(-8,0);
+        
+        if (player.getCurrRoll() < 8)
+            update();
+        else {
+            player.setCurrRoll(0);
+            player.setState(3);
+        }
+    }
+    while (player.getState() == 5) { // punching
+        // check for collision
+        int hasCollided = checkCollision();
+        if (hasCollided) { // add to punch only once (four punches must collide)
+            if (levels.getCurrLevel() == 1)
+                levels.setCurrDoor(0,levels.getCurrDoor(0) + .25);
+            sound.playSound(3);
+
+            do { // fix collision
+                fixCollision(hasCollided);
+                hasCollided = checkCollision();
+            } while (hasCollided);
+        }
+
+        if (player.getCurrPunch() == 0)
+            moveFigure(4,0);
+        if (player.getCurrPunch() < 6)
+            player.setCurrPunch(player.getCurrPunch() + .4);
+        else if (player.getCurrPunch() < 8)
+            player.setCurrPunch(player.getCurrPunch() + .25);
+        else
+            player.setCurrPunch(player.getCurrPunch() + 1);
+
+        if (player.getCurrPunch() < 13)
+            update();
+        else {
+            player.setCurrPunch(0);
+            player.setState(0);
+        }
+    }
+
+    while (player.getState() == 6) { // kicking
+        if (player.getCurrKick() < 5)
+            player.setCurrKick(player.getCurrKick() + .45);
+        else if (player.getCurrKick() < 6)
+            player.setCurrKick(player.getCurrKick() + .1);
+        else
+            player.setCurrKick(player.getCurrKick() + .8);
+
+        if (player.getCurrKick() < 11)
+            update();
+        else {
+            player.setCurrKick(0);
+            player.setState(0);
+        }
+    }
+}
 void Master::play() {
     // initialize local variables
     bool quit = false; // boolean of whether the player has chosen to quit or not
@@ -78,6 +164,8 @@ void Master::play() {
     int jumpSpeed = 30; // adjust for early termination of jumps
     // set initial level to first level
     levels.setCurrLevel(1);
+    // set player's initial position
+    player.setInitialPos(levels.getLevelWidth(),levels.getLevelHeight());
     // move display to center over figure
     updateCamera();
     // redraw screen images
@@ -86,97 +174,14 @@ void Master::play() {
     levels.playMusic();
     // move figure to the ground to restart gameplay
     int notOnGround = checkGround();
-    while (notOnGround) { // continue until player hits ground or edge of board
-        player.setYPos(player.getYPos() + 2); // shift player down
+    while (notOnGround == 1) { // continue until player hits ground or edge of board
+        player.setYPos(player.getYPos() + 5); // shift player down
         notOnGround = checkGround(); // check if player is on the ground
         update(); // redraw the change in position
     }
 
     while (!quit) {
-        // check if a door is hit down
-        if (levels.getCurrLevel() == 1) {
-            if (levels.getCurrDoor(0) == 1) { // hit down first door
-                while (levels.getCurrDoor(1) < 6) {
-                    levels.setCurrDoor(1,levels.getCurrDoor(1) + .2);
-                    update();
-                }
-                levels.setCurrDoor(1,6); // error check
-            }
-            else if (levels.getCurrDoor(0) == 2) { // hit down second door
-                while (levels.getCurrDoor(2) < 6) {
-                    levels.setCurrDoor(2,levels.getCurrDoor(2) + .2);
-                    update();
-                }
-                levels.setCurrDoor(2,6); // error check
-            }
-            else if (levels.getCurrDoor(0) == 3) { // hit down third door
-                while (levels.getCurrDoor(3) < 6) {
-                    levels.setCurrDoor(3,levels.getCurrDoor(3) + .2);
-                    update();
-                }
-                levels.setCurrDoor(3,6); // error check
-            }
-        }
-        while (player.getState() == 4) { // rolling
-            player.setCurrRoll(player.getCurrRoll() + .5);
-            if (player.getMoveDir() == SDL_FLIP_NONE) // check direction for movement
-                moveFigure(8,0);
-            else
-                moveFigure(-8,0);
-            
-            if (player.getCurrRoll() < 8)
-                update();
-            else {
-                player.setCurrRoll(0);
-                player.setState(3);
-            }
-        }
-        while (player.getState() == 5) { // punching
-            // check for collision
-            int hasCollided = checkCollision();
-            if (hasCollided) { // add to punch only once (four punches must collide)
-                if (levels.getCurrLevel() == 1)
-                    levels.setCurrDoor(0,levels.getCurrDoor(0) + .25);
-                sound.playSound(3);
-
-                do { // fix collision
-                    fixCollision(hasCollided);
-                    hasCollided = checkCollision();
-                } while (hasCollided);
-            }
-
-            if (player.getCurrPunch() == 0)
-                moveFigure(4,0);
-            if (player.getCurrPunch() < 6)
-                player.setCurrPunch(player.getCurrPunch() + .4);
-            else if (player.getCurrPunch() < 8)
-                player.setCurrPunch(player.getCurrPunch() + .25);
-            else
-                player.setCurrPunch(player.getCurrPunch() + 1);
-
-            if (player.getCurrPunch() < 13)
-                update();
-            else {
-                player.setCurrPunch(0);
-                player.setState(0);
-            }
-        }
-
-        while (player.getState() == 6) { // kicking
-            if (player.getCurrKick() < 5)
-                player.setCurrKick(player.getCurrKick() + .45);
-            else if (player.getCurrKick() < 6)
-                player.setCurrKick(player.getCurrKick() + .1);
-            else
-                player.setCurrKick(player.getCurrKick() + .8);
-
-            if (player.getCurrKick() < 11)
-                update();
-            else {
-                player.setCurrKick(0);
-                player.setState(0);
-            }
-        }
+        animate();
 
         player.setState(0);
 
@@ -222,12 +227,12 @@ void Master::play() {
         }
         else if (player.getJumpDir() == 1) {
             player.setState(2);
-            if (moveFigure(0,changeY,false) == 2) { // jump below ground
+            if (moveFigure(0,changeY,false) == 2) { // check if will jump below ground
                 sound.playSound(1);
                 player.setState(0);
                 player.setJumpDir(0);
                 player.setJumpHeight(0);
-                jumpSpeed = 30;
+                jumpSpeed = 30; // readjust jump speed
                 while (moveFigure(0,5) == 1); // move to ground if above ground
             }
             else { // if can still jump down
@@ -349,7 +354,7 @@ void Master::update() {
     SDL_RenderClear(Renderer);
     levels.display();
     // foreground
-    player.draw(levels.getCameraX());
+    player.draw(levels.getCameraX(),levels.getCameraY());
     // update screen
     SDL_RenderPresent(Renderer);
 }
@@ -386,7 +391,7 @@ int Master::checkCollision() {
     // loops through bounding box of the player, compares alpha of both char and player
     int playerXPos = player.getXPos(), playerYPos = player.getYPos();
     for(int y = 2*boundingH/3; y > 0; y--) { 
-        for(int x = 0; x < boundingW; x++) { 
+        for(int x = boundingW; x > 0; x--) { 
             //get current player pixel 
             if(MoveDir == SDL_FLIP_HORIZONTAL) //if facing left
                 playerPixel = playerTex->getPixel(leftEdge+boundingH-x,y);
