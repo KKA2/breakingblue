@@ -440,7 +440,7 @@ void Master::fixCollision(int collisionType){
             reset();
         }
         else
-            person.setYPos(person.getYPos() + 8); // move player back down
+            person.setYPos(person.getYPos() + 5); // move player back down
     }
 }
 
