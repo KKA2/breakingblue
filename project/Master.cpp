@@ -403,7 +403,7 @@ int Master::checkCollision(Person *person) {
 
     // loops through bounding box of the player, compares alpha of both char and player
     int personXPos = person->getXPos(), personYPos = person->getYPos();
-    for(int y = boundingH-15; y > 0; y--) { //DO NOT REMOVE -15. DOES NOT WORK WITHOUT IT
+    for(int y = boundingH/3; y > 0; y--) { //DO NOT REMOVE /3. DOES NOT WORK WITHOUT IT
         for(int x = 0; x < boundingW; x++) { 
             personPixel = personTex->getPixel(leftEdge+x,y); // access current pixel
             personAlpha = personTex->getAlpha(personPixel); // access alpha value of pixel (i.e. transparency)
@@ -416,7 +416,7 @@ int Master::checkCollision(Person *person) {
                     if (x >= boundingW/2) { // right
                         return 2;
                     }
-                    else if (x <= boundingW/2) { // left
+                    else if (x < boundingW/2) { // left
                         return 3;
                     }
                 }
