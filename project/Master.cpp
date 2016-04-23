@@ -354,24 +354,6 @@ void Master::update() {
     SDL_RenderPresent(Renderer);
 }
 
-void Master::fixCollision(int collisionType){
-    // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left;
-    
-    if (collisionType == 3) { // left side
-        player.setXPos(player.getXPos() + 5); // kick to the right
-    }
-    else if (collisionType == 2) { // right
-        player.setXPos(player.getXPos() - 5); // kick to the left
-    }
-    else { // top
-        if (levels.getCurrLevel() == 1) {
-            reset();
-        }
-        else
-            player.setYPos(player.getYPos() + 5); // move player back down
-    }
-}
-
 int Master::checkCollision() {
     // compare current player image to foreground and detect collision/collision type
     // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
@@ -397,32 +379,67 @@ int Master::checkCollision() {
 
     // set bound for collisions check
     int leftEdge = int(frame)*boundingW;
+    SDL_RendererFlip MoveDir = player.getMoveDir();
 
     Texture * playerTex = player.getTexture(player.getState());
 
     // loops through bounding box of the player, compares alpha of both char and player
     int playerXPos = player.getXPos(), playerYPos = player.getYPos();
-    for(int y = boundingH/3; y > 0; y--) { //DO NOT REMOVE /3. DOES NOT WORK WITHOUT IT
+    for(int y = 2*boundingH/3; y > 0; y--) { 
         for(int x = 0; x < boundingW; x++) { 
-            playerPixel = playerTex->getPixel(leftEdge+x,y); // access current pixel
-            playerAlpha = playerTex->getAlpha(playerPixel); // access alpha value of pixel (i.e. transparency)
-            if (int(playerAlpha) > 10) { // if part of player on current pixel
-                pixel = levels.getForeground()->getPixel(playerXPos+x, playerYPos+y); // get foreground pixel
-                alpha = levels.getForeground()->getAlpha(pixel); // check foreground transparency
+            //get current player pixel 
+            if(MoveDir == SDL_FLIP_HORIZONTAL) //if facing left
+                playerPixel = playerTex->getPixel(leftEdge+boundingH-x,y);
+            else 
+                playerPixel = playerTex->getPixel(leftEdge+x,y); // access current pixel
+            // access alpha value of pixel (i.e. transparency)
+            playerAlpha = playerTex->getAlpha(playerPixel); 
+            
+            if (int(playerAlpha) > 10) { //if player is present, check for overlap with foreground
+                //get foreground pixel
+                if (MoveDir == SDL_FLIP_HORIZONTAL) //facing left
+                    pixel = levels.getForeground()->getPixel(playerXPos+boundingH-x, playerYPos+y);
+                else //facing right
+                    pixel = levels.getForeground()->getPixel(playerXPos+x, playerYPos+y);
+                // check foreground transparency
+                alpha = levels.getForeground()->getAlpha(pixel);
                 if (int(alpha) > 10) { // collision
-                    if (y < boundingH/6) // top
+                    if (y < boundingH/6)// top
                         return 1;
-                    if (x >= boundingW/2) { // right
-                        return 2;
-                    }
-                    else if (x < boundingW/2) { // left
-                        return 3;
+                    if (MoveDir == SDL_FLIP_HORIZONTAL){ //return response for left facing player
+                        if (x < boundingW/2) //right col
+                            return 2;
+                        else //left col
+                            return 3;
+                    } else { //return response for right facing player
+                        if (x > boundingW/2) // right
+                            return 2;
+                        else // left
+                            return 3;
                     }
                 }
             }
         }
     }
     return 0; // no collision
+}
+
+void Master::fixCollision(int collisionType){
+    // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left;
+    
+    if (collisionType == 3) { // left side
+        player.setXPos(player.getXPos() + 5); // kick to the right
+    }
+    else if (collisionType == 2) { // right
+        player.setXPos(player.getXPos() - 5); // kick to the left
+    }
+    else { // top
+        if (levels.getCurrLevel() == 1) {
+            reset();
+        }
+        else
+            player.setYPos(player.getYPos() + 5); // move player back down
+    }
 }
 
 int Master::checkGround() {
