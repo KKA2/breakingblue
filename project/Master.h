@@ -30,7 +30,8 @@ public:
     void loadMedia();
     void reset();
 
-    void play();
+    void animate(); // play any sequential animations
+    void play(); // play game
 
     int moveFigure(const double,const double,bool=true);
     void update();

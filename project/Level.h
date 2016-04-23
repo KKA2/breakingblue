@@ -29,6 +29,8 @@ public:
     int getLevelHeight();
     void setCameraX(int);
     int getCameraX();
+    void setCameraY(int);
+    int getCameraY();
     SDL_Rect * getCamera();
     void setMusic(Mix_Music *);
     Mix_Music * getMusic();

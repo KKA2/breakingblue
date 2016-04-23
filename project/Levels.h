@@ -8,6 +8,7 @@
 
 #include "Texture.h"
 #include "Level1.h"
+#include "Level2.h"
 
 using namespace std;
 
@@ -28,6 +29,8 @@ public:
     void setCurrLevel(int);
     void setCameraX(int);
     int getCameraX();
+    void setCameraY(int);
+    int getCameraY();
     SDL_Rect * getCamera();
     double getCurrDoor(int);
     void setCurrDoor(int,double);
@@ -36,6 +39,7 @@ public:
 private:
     int CurrLevel; // current level of player
     Level1 level1; // level 1
+    Level2 level2;
 };
 
 #endif

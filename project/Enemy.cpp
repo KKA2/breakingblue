@@ -53,4 +53,3 @@ void Enemy::loadMedia() {
         Kicking[i].h = 94;
     }
 }
-
