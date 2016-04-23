@@ -64,7 +64,7 @@ void Level1::loadMedia() {
     Level::setBackground("imgs/bg/level1.png");
     Level::setMusic(Mix_LoadMUS("sound/mysterious.wav"));
     // load mission parameters texture
-    MissionParam.loadMedia("./imgs/lvl1/mission1.png");
+    MissionParam.loadMedia("./imgs/lvl1/missionParam.png");
     // load all foreground textures
     Foreground[0].loadFromFile("imgs/lvl1/base1.png");
     Foreground[1].loadFromFile("imgs/lvl1/base2.png");

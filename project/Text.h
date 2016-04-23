@@ -14,6 +14,7 @@ class Text {
 
 public:
 	Text();
+	Text(int num);
 	~Text();
 	void display(SDL_Rect *);
 	void setUp(SDL_Renderer *);

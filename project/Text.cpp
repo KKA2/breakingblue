@@ -11,8 +11,15 @@ Text::Text() {
     // position to display
     XPos = 0;
     YPos = 25;
-    // number of characters in image to display (52 in 00)
+
     NumChars = 49;
+}
+Text::Text(int num) {
+    // position to display
+    XPos = 0;
+    YPos = 25;
+    // number of characters in image to display (49 in 00)
+    NumChars = num;
 }
 Text::~Text() {
 	text.free();
@@ -27,7 +34,7 @@ void Text::loadMedia(string file) {
         temp.x = 0;
         temp.y = 0;
         temp.w = 11*i;
-        temp.h = 34;
+        temp.h = 26;
         Chars.push_back(temp);
     }
     return;
