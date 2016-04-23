@@ -401,16 +401,15 @@ int Master::checkCollision(Person *person) {
     Texture * personTex = person->getTexture(person->getState());
 
     // loops through bounding box of the player, compares alpha of both char and player
-    for(int y = boundingH; y > 0; y--) { 
+    int personXPos = person->getXPos(), personYPos = person->getYPos();
+    for(int y = boundingH-15; y > 0; y--) { //DO NOT REMOVE -15. DOES NOT WORK WITHOUT IT
         for(int x = 0; x < boundingW; x++) { 
             personPixel = personTex->getPixel(leftEdge+x,y); // access current pixel
             personAlpha = personTex->getAlpha(personPixel); // access alpha value of pixel (i.e. transparency)
             if (int(personAlpha) > 10) { // if part of player on current pixel
-                pixel = levels.getForeground()->getPixel(person->getXPos()+x,y); // get foreground pixel
+                pixel = levels.getForeground()->getPixel(personXPos+x, personYPos+y); // get foreground pixel
                 alpha = levels.getForeground()->getAlpha(pixel); // check foreground transparency
                 if (int(alpha) > 10) { // collision
-                    //cout << "alpha = " << int(alpha) << " personalpha = " << int(personAlpha) << endl;
-                    //cout << " x = " << x << " y = " << y << endl;
                     if (y < boundingH/6) // top
                         return 1;
                     if (x >= boundingW/2) { // right
