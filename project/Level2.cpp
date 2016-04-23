@@ -36,7 +36,7 @@ void Level2::display() {
     getForeground()->render(0,0,&cam);
     // display the mission parameters
     if(CurrText == 1) {
-        MissionParam.display(&cam); // PLACEHOLDER
+        MissionParam.display(&cam, 0); // PLACEHOLDER
     }
 }
 
