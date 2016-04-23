@@ -12,7 +12,7 @@ Text::Text() {
     XPos = 0;
     YPos = 25;
     first = true;
-    NumChars = 49;
+    NumChars = 50;
 }
 Text::Text(int num) {
     // position to display

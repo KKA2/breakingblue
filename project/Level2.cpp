@@ -47,7 +47,7 @@ void Level2::loadMedia() {
     // load all foreground textures
     Foreground.loadFromFile("imgs/lvl2/base1.png");
 
-    MissionParam.loadMedia("imgs/lvl1/missionParam.png"); // PLACEHOLDER
+    MissionParam.loadMedia("imgs/lvl1/text/missionParam.png"); // PLACEHOLDER
 }
 
 Texture * Level2::getForeground() {
