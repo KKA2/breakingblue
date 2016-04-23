@@ -15,7 +15,7 @@ public:
     Person();
     ~Person();
     void setUp(SDL_Renderer *); // set up all textures to render
-    void loadMedia(); // load all textures from path names
+    virtual void loadMedia() = 0; // load all textures from path names
     void draw(int); // draw all textures onto the screen
     // get/set functions
     Texture * getTexture(const int);
@@ -41,8 +41,7 @@ public:
     void setJumpHeight(const double);
     int getMaxJumpHeight() const;
     void setMaxJumpHeight(const int);
-    
-private:
+protected:
     // rectangles outlining the sprite frames within each respective texture
     SDL_Rect Running[7];
     Texture RunningTexture;
@@ -58,6 +57,7 @@ private:
     Texture PunchingTexture;
     SDL_Rect Kicking[11];
     Texture KickingTexture;
+private:
     // position of the figure
     double XPos;
     double YPos;

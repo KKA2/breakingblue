@@ -13,7 +13,7 @@
 #include <iostream>
 #include <string>
 #include <cmath>
-#include "Person.h"
+#include "Player.h"
 #include "Sound.h"
 #include "Levels.h"
 
@@ -43,7 +43,7 @@ private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
     Sound sound;
-    Person person;
+    Player player;
     Levels levels;
 };
 
