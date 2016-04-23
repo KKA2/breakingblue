@@ -386,7 +386,7 @@ int Master::checkCollision() {
     // loops through bounding box of the player, compares alpha of both char and player
     int playerXPos = player.getXPos(), playerYPos = player.getYPos();
     for(int y = 2*boundingH/3; y > 0; y--) { 
-        for(int x = 0; x < boundingW; x++) { 
+        for(int x = boundingW; x > 0; x--) { 
             //get current player pixel 
             if(MoveDir == SDL_FLIP_HORIZONTAL) //if facing left
                 playerPixel = playerTex->getPixel(leftEdge+boundingH-x,y);
