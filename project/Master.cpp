@@ -375,7 +375,6 @@ void Master::fixCollision(Person *person, int collisionType){
 int Master::checkCollision(Person *person) {
     // compare current player image to foreground and detect collision/collision type
     // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
-
     int boundingH = 94, boundingW = 75; // height and width of player image
     Uint8 personAlpha, alpha; // store alpha levels 
     Uint32 personPixel, pixel; // store current pixel for for loop
