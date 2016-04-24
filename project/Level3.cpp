@@ -46,7 +46,7 @@ void Level3::display() {
 void Level3::loadMedia() {
     // set up media from Level class
     Level::setBackground("imgs/bg/level1.png"); // PLACEHOLDER
-    Level::setMusic(Mix_LoadMUS("sound/suspense.wav"));
+    Level::setMusic(Mix_LoadMUS("sound/electronic.wav"));
     // load all foreground textures
     Foreground.loadFromFile("imgs/lvl3/base1.png");
 

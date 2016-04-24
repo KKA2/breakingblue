@@ -17,12 +17,14 @@ void Levels::setUp(SDL_Renderer *renderer) {
     level1.setUp(renderer);
     level2.setUp(renderer);
     level3.setUp(renderer);
+    level4.setUp(renderer);
 }
 
 void Levels::loadMedia() {
     level1.loadMedia();
     level2.loadMedia();
     level3.loadMedia();
+    level4.loadMedia();
 }
 
 void Levels::display() {
@@ -32,6 +34,8 @@ void Levels::display() {
         level2.display();
     else if (CurrLevel == 3)
         level3.display();
+    else // if (CurrLevel == 4)
+        level4.display();
 }
 
 void Levels::playMusic() {
@@ -41,6 +45,8 @@ void Levels::playMusic() {
         level2.playMusic();
     else if (CurrLevel == 3)
         level3.playMusic();
+    else // if (CurrLevel == 4)
+        level4.playMusic();
 }
 
 Texture * Levels::getForeground() {
@@ -50,8 +56,8 @@ Texture * Levels::getForeground() {
         return level2.getForeground();
     else if (CurrLevel == 3)
         return level3.getForeground();
-    else //not in a level
-        return NULL;
+    else // if (CurrLevel == 4)
+        return level4.getForeground();
 }
 
 void Levels::setCurrText() {
@@ -74,6 +80,8 @@ void Levels::setCameraX(int x) {
         level2.setCameraX(x);
     else if (CurrLevel == 3)
         level3.setCameraX(x);
+    else // if (CurrLevel == 4)
+        level4.setCameraX(x);
 }
 
 int Levels::getCameraX() {
@@ -83,8 +91,8 @@ int Levels::getCameraX() {
         return level2.getCameraX();
     else if (CurrLevel == 3)
         return level3.getCameraX();
-    else
-        return 0;
+    else // if (CurrLevel == 4)
+        return level4.getCameraX();
 }
 
 void Levels::setCameraY(int y) {
@@ -94,6 +102,8 @@ void Levels::setCameraY(int y) {
         level2.setCameraY(y);
     else if (CurrLevel == 3)
         level3.setCameraY(y);
+    else // if (CurrLevel == 4)
+        level4.setCameraY(y);
 }
 
 int Levels::getCameraY() {
@@ -103,8 +113,8 @@ int Levels::getCameraY() {
         return level2.getCameraY();
     else if (CurrLevel == 3)
         return level3.getCameraY();
-    else //not in a level
-        return 0;
+    else // if (CurrLevel == 4)
+        return level4.getCameraY();
 }
 
 SDL_Rect * Levels::getCamera() {
@@ -114,8 +124,8 @@ SDL_Rect * Levels::getCamera() {
         return level2.getCamera();
     else if (CurrLevel == 3)
         return level3.getCamera();
-    else //not in a level
-        return NULL;
+    else // if (CurrLevel == 4)
+        return level4.getCamera();
 }
 
 double Levels::getCurrDoor(int door) {
@@ -137,8 +147,8 @@ int Levels::getLevelWidth() {
         return level2.getLevelWidth();
     else if (CurrLevel == 3)
         return level3.getLevelWidth();
-    else //not in a level
-        return 0;
+    else // if (CurrLevel == 4)
+        return level4.getLevelWidth();
 }
 
 int Levels::getLevelHeight() {
@@ -148,6 +158,6 @@ int Levels::getLevelHeight() {
         return level2.getLevelHeight();
     else if (CurrLevel == 3)
         return level3.getLevelHeight();
-    else //not in a level
-        return 0;
+    else // if (CurrLevel == 4)
+        return level4.getLevelHeight();
 }

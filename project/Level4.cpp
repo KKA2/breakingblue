@@ -1,19 +1,19 @@
-// Level2.cpp
-// Implementation of Level2 derived class
+// Level4.cpp
+// Implementation of Level4 derived class
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
-#include "Level2.h"
+#include "Level4.h"
 
 using namespace std;
 
-Level2::Level2() {}
+Level4::Level4() {}
 
-Level2::~Level2() {
+Level4::~Level4() {
     Foreground.free();
 }
 
-void Level2::setUp(SDL_Renderer *renderer) {
+void Level4::setUp(SDL_Renderer *renderer) {
     // set up renderer on all textures
     Level::setUp(renderer);
     Foreground.setUp(renderer);
@@ -24,7 +24,7 @@ void Level2::setUp(SDL_Renderer *renderer) {
     Level::setCameraY(0);
 }
 
-void Level2::display() {
+void Level4::display() {
     // call display of Level class
     Level::display();
     // get current camera display
@@ -33,23 +33,23 @@ void Level2::display() {
     getForeground()->render(0,0,&cam);
 }
 
-void Level2::loadMedia() {
+void Level4::loadMedia() {
     // set up media from Level class
     Level::setBackground("imgs/bg/level1.png"); // PLACEHOLDER
-    Level::setMusic(Mix_LoadMUS("sound/techno.wav"));
+    Level::setMusic(Mix_LoadMUS("sound/suspense.wav"));
     // load all foreground textures
     Foreground.loadFromFile("imgs/lvl1/base4.png"); // PLACEHOLDER
 }
 
-Texture * Level2::getForeground() {
+Texture * Level4::getForeground() {
     // get foreground
     return &Foreground;
 }
 
-int Level2::getLevelWidth() {
+int Level4::getLevelWidth() {
     return Level::getLevelWidth();
 }
 
-int Level2::getLevelHeight() {
+int Level4::getLevelHeight() {
     return Level::getLevelHeight();
 }

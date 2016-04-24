@@ -59,6 +59,8 @@ void Master::play() {
             levels.playMusic(); // start music
             reset(); // set all initial values
             NextLevel = false; // reset value of next level to play in the new level
+            if (levels.getCurrLevel() > 2) // double jump height
+                player.setMaxJumpHeight(240);
         }
         animate(); // run through any animations
         player.setState(0); // reset state (draw standing if not changed)
@@ -194,7 +196,12 @@ void Master::animate() {
 }
 
 void Master::jump() {
-    int jumpSpeed = 30; // adjust for early termination of jumps
+    int jumpSpeed; // adjust for early termination of jumps/higher jumps
+    if (levels.getCurrLevel() > 2)
+        jumpSpeed = 40;
+    else
+        jumpSpeed = 30;
+
     double changeY =  player.getJumpDir() * ((player.getMaxJumpHeight()+10 - player.getJumpHeight())/(player.getMaxJumpHeight()+10)) * jumpSpeed;    
     player.setJumpHeight(player.getJumpHeight() - changeY);
     if (player.getJumpDir() == -1) {
@@ -204,8 +211,12 @@ void Master::jump() {
             player.setJumpDir(1);
         else if (player.getYPos() < 5) { // hit ceiling
             player.setJumpDir(1);
-            if (player.getJumpHeight() < 50) // if short fall
-                jumpSpeed = 5; // temp adjust jumpSpeed
+            if (player.getJumpHeight() < 50) { // if short fall
+                if (levels.getCurrLevel() > 2)
+                    jumpSpeed = 10;
+                else
+                    jumpSpeed = 5;
+            }
         }
 
     }
@@ -216,7 +227,10 @@ void Master::jump() {
             player.setState(0);
             player.setJumpDir(0);
             player.setJumpHeight(0);
-            jumpSpeed = 30; // readjust jump speed
+            if (levels.getCurrLevel() > 2)
+                jumpSpeed = 40;
+            else
+                jumpSpeed = 30;
             while (moveFigure(0,5) == 1); // move to ground if above ground
         }
         else { // if can still jump down
@@ -327,23 +341,27 @@ int Master::moveFigure(double chX, double chY, bool move) {
             } 
         }
     }
-    
-    if (player.getXPos() > levels.getLevelWidth() - 75)
-        //player.setXPos(levels.getLevelWidth()  - 75);
-        NextLevel = true; // move to next level
-    else if (player.getXPos() < 0)
-        player.setXPos(0);
 
-    if (player.getYPos() > levels.getLevelHeight())
-        exit(1);
-    else if (player.getYPos() < 0)
-        player.setYPos(0);
-
-    if (move == false) {
+    if (move == false) { // if not actually moving the character
         player.setXPos(player.getXPos() - chX);
         player.setYPos(player.getYPos() - chY);
     }
     else {
+        if (player.getXPos() > levels.getLevelWidth() - 75) { // overstep right boundary
+            //player.setXPos(levels.getLevelWidth()  - 75);
+            if (levels.getCurrLevel() < 3) // if in first or second level
+                NextLevel = true; // move to next level when hit end
+        }
+        else if (player.getXPos() < 0) // overstep left boundary
+            player.setXPos(0);
+
+        if (player.getYPos() > levels.getLevelHeight()) { // overstep bottom boundary
+            cout << "uh oh" << endl;
+            cout << player.getYPos() << endl;
+            exit(1);
+        }
+        else if (player.getYPos() < 0) // overstep top boundary
+            player.setYPos(0);
         updateCamera();
     }
     return notOnGround;

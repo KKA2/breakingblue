@@ -10,6 +10,7 @@
 #include "Level1.h"
 #include "Level2.h"
 #include "Level3.h"
+#include "Level4.h"
 
 using namespace std;
 
@@ -42,6 +43,7 @@ private:
     Level1 level1; // level 1
     Level2 level2;
     Level3 level3;
+    Level4 level4;
 };
 
 #endif
