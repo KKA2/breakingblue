@@ -93,7 +93,7 @@ void Master::play() {
             if (player.getCurrRun() >= 7) // keep in bounds of array for running
                 player.setCurrRun(0);
 
-            moveFigure(0,0); // check for collisions and adjust accordingly
+            moveFigure(0,0); // check for collisions/ground and adjust accordingly
             update();
         }
     }
@@ -291,8 +291,15 @@ void Master::jump() {
 void Master::checkKeyboard() {
     const Uint8 *state = SDL_GetKeyboardState(NULL);
 
+    if (levels.getCurrLevel() == 3) { // in third level (add flying)
+        if (state[SDL_SCANCODE_UP]) {
+            player.setState(7);
+            moveFigure(0,-5);
+        }
+    }
+
     if (state[SDL_SCANCODE_DOWN]) { // duck
-        if (player.getState() != 2) {
+        if (player.getState() != 2 && player.getState() != 7) { // if not jumping or flying
             player.setState(3); // set to ducking state
             if (state[SDL_SCANCODE_LEFT]) { // left key pressed
                 player.setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left
@@ -306,23 +313,25 @@ void Master::checkKeyboard() {
     }
     else if (state[SDL_SCANCODE_LEFT]) { // run left
         player.setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left
-        if (player.getState() != 2) { // if not jumping
+        if (player.getState() != 2 && player.getState() != 7) { // if not jumping or flying
             sound.playSound(2); // play running sound effect
-            player.setState(1); // set to running state
+            if (moveFigure(0,0,false) != 1) { // if not above ground
+                player.setState(1); // set to running state
+                player.setCurrRun(player.getCurrRun() + .3); // change frame
+            }
         }
         moveFigure(-10,0); // move to the left
-        if (player.getJumpHeight() == 0) // if at ground level
-            player.setCurrRun(player.getCurrRun() + .3);
     }
     else if (state[SDL_SCANCODE_RIGHT]) { // run right
         player.setMoveDir(SDL_FLIP_NONE); // turn to the right
-        if (player.getState() != 2) {
+        if (player.getState() != 2 && player.getState() != 7) {
             sound.playSound(2);
-            player.setState(1);
+            if (moveFigure(0,0,false) != 1) { // if not above ground
+                player.setState(1);
+                player.setCurrRun(player.getCurrRun() + .3);
+            }
         }
         moveFigure(10,0); // move to the right
-        if (player.getJumpHeight() == 0)
-            player.setCurrRun(player.getCurrRun() + .3);
     }
     else {
         player.setCurrRun(0); // reset frame count
@@ -337,9 +346,11 @@ void Master::checkKeyPress() {
         else if (e.type == SDL_KEYDOWN) {
             switch(e.key.keysym.sym) {
                 case SDLK_UP: 
-                    player.setState(2); // jump
-                    if (player.getJumpHeight() == 0) // if not already jumping
-                        player.setJumpDir(-1); // start moving upwards
+                    if (levels.getCurrLevel() != 3) { // not in third level (flying instead)
+                        player.setState(2); // jump
+                        if (player.getJumpHeight() == 0) // if not already jumping
+                            player.setJumpDir(-1); // start moving upwards
+                    }
                     break;
                 case SDLK_SPACE:
                     player.setState(5); // punch
@@ -370,7 +381,7 @@ int Master::moveFigure(double chX, double chY, bool move) {
     }
 
     int notOnGround = checkGround();
-    if (player.getJumpHeight() == 0) { // not jumping
+    if (player.getJumpHeight() == 0 && player.getState() != 7) { // not jumping or flying
         // ensure player is on ground
         if (notOnGround) { // continue until player hits ground or edge of board
             if (player.getState() != 1)
@@ -378,7 +389,7 @@ int Master::moveFigure(double chX, double chY, bool move) {
 
             if (notOnGround == 1) { // is in air
                 if (move == true)
-                    player.setYPos(player.getYPos() + 5); // shift player down (falling)
+                    player.setYPos(player.getYPos() + 6); // shift player down (falling)
                 notOnGround = checkGround();
                 if (!notOnGround)
                     sound.playSound(1);
@@ -410,6 +421,7 @@ int Master::moveFigure(double chX, double chY, bool move) {
         }
         else if (player.getYPos() < 0) // overstep top boundary
             player.setYPos(0);
+
         updateCamera();
     }
     return notOnGround;

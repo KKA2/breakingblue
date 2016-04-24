@@ -60,6 +60,8 @@ void Person::draw(int camX, int camY) {
         PunchingTexture.render(XPos-camX,YPos-camY,&Punching[int(CurrPunch)],MoveDir);
     else if (State == 6)
         KickingTexture.render(XPos-camX,YPos-camY,&Kicking[int(CurrKick)],MoveDir);
+    else if (State == 7) // flying
+        JumpingTexture.render(XPos-camX,YPos-camY,&Jumping,MoveDir); // WILL CHANGE
 }
 
 void Person::setInitialPos(int width, int height) {
@@ -90,6 +92,8 @@ Texture * Person::getTexture(const int state) {
             break;
         case 6: // kicking
             texture = &KickingTexture;
+        case 7: // flying
+            texture = &JumpingTexture;
         default: // assume standing
             texture = &StandingTexture;
             break;

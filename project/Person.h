@@ -70,7 +70,7 @@ private:
     // direction of the figure's motion
     SDL_RendererFlip MoveDir;
     // current state of animation:
-    // 0=standing, 1=running, 2=jumping, 3=ducking, 4=rolling, 5=punching, 6=kicking
+    // 0=standing, 1=running, 2=jumping, 3=ducking, 4=rolling, 5=punching, 6=kicking, 7=flying
     int State;
     // rising or falling in the jump:
     // 0=not jumping, 1=down, -1=up
