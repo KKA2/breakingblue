@@ -93,17 +93,17 @@ void Level1::display() {
 
 void Level1::loadMedia() {
     // set up media from Level class
-    Level::setBackground("imgs/bg/level1.png");
+    Level::setBackground("imgs/bg/lvl1.png");
     Level::setMusic(Mix_LoadMUS("sound/mysterious.wav"));
     // load mission parameters texture
 
     //load images for text display
-    LevelOneText[0].loadMedia("./imgs/lvl1/text/missionParam.png"); // image file
-    LevelOneText[1].loadMedia("./imgs/lvl1/text/intro1.png");
-    LevelOneText[2].loadMedia("./imgs/lvl1/text/intro2.png");
-    LevelOneText[3].loadMedia("./imgs/lvl1/text/pressC.png");
-    LevelOneText[4].loadMedia("./imgs/lvl1/text/howToMove.png");
-    LevelOneText[5].loadMedia("./imgs/lvl1/text/howToPunch.png");
+    LevelOneText[0].loadMedia("imgs/lvl1/text/missionParam.png"); // image file
+    LevelOneText[1].loadMedia("imgs/lvl1/text/intro1.png");
+    LevelOneText[2].loadMedia("imgs/lvl1/text/intro2.png");
+    LevelOneText[3].loadMedia("imgs/lvl1/text/pressC.png");
+    LevelOneText[4].loadMedia("imgs/lvl1/text/howToMove.png");
+    LevelOneText[5].loadMedia("imgs/lvl1/text/howToPunch.png");
     
     // load all foreground textures
     Foreground[0].loadFromFile("imgs/lvl1/base1.png");
@@ -149,14 +149,6 @@ void Level1::setCurrDoor(int door, double currDoor) {
         CurrDoor2 = currDoor;
     else if (door == 3)
         CurrDoor3 = currDoor;
-}
-
-int Level1::getLevelWidth() {
-    return Level::getLevelWidth();
-}
-
-int Level1::getLevelHeight() {
-    return Level::getLevelHeight();
 }
 
 void Level1::setCurrText() {

@@ -8,12 +8,13 @@
 using namespace std;
 
 Levels::Levels() {
-    CurrLevel = 0;
+    CurrLevel = -1; // set to before any level
 }
 
 Levels::~Levels() {}
 
 void Levels::setUp(SDL_Renderer *renderer) {
+    menu.setUp(renderer);
     level1.setUp(renderer);
     level2.setUp(renderer);
     level3.setUp(renderer);
@@ -21,14 +22,25 @@ void Levels::setUp(SDL_Renderer *renderer) {
 }
 
 void Levels::loadMedia() {
+    menu.loadMedia();
     level1.loadMedia();
     level2.loadMedia();
     level3.loadMedia();
     level4.loadMedia();
 }
 
+int Levels::getCurrLevel() {
+    return CurrLevel;
+}
+
+void Levels::setCurrLevel(int currLevel) {
+    CurrLevel = currLevel;
+}
+
 void Levels::display() {
-    if (CurrLevel == 1)
+    if (CurrLevel == 0)
+        menu.display();
+    else if (CurrLevel == 1)
         level1.display();
     else if (CurrLevel == 2)
         level2.display();
@@ -39,7 +51,9 @@ void Levels::display() {
 }
 
 void Levels::playMusic() {
-    if (CurrLevel == 1)
+    if (CurrLevel == 0)
+        menu.playMusic();
+    else if (CurrLevel == 1)
         level1.playMusic();
     else if (CurrLevel == 2)
         level2.playMusic();
@@ -50,6 +64,7 @@ void Levels::playMusic() {
 }
 
 Texture * Levels::getForeground() {
+    // menu does not have a foreground
     if (CurrLevel == 1)
         return level1.getForeground();
     else if (CurrLevel == 2)
@@ -65,16 +80,10 @@ void Levels::setCurrText() {
         level1.setCurrText();
 }
 
-int Levels::getCurrLevel() {
-    return CurrLevel;
-}
-
-void Levels::setCurrLevel(int currLevel) {
-    CurrLevel = currLevel;
-}
-
 void Levels::setCameraX(int x) {
-    if (CurrLevel == 1)
+    if (CurrLevel == 0)
+        menu.setCameraX(x);
+    else if (CurrLevel == 1)
         level1.setCameraX(x);
     else if (CurrLevel == 2)
         level2.setCameraX(x);
@@ -85,7 +94,9 @@ void Levels::setCameraX(int x) {
 }
 
 int Levels::getCameraX() {
-    if (CurrLevel == 1)
+    if (CurrLevel == 0)
+        return menu.getCameraX();
+    else if (CurrLevel == 1)
         return level1.getCameraX();
     else if (CurrLevel == 2)
         return level2.getCameraX();
@@ -96,7 +107,9 @@ int Levels::getCameraX() {
 }
 
 void Levels::setCameraY(int y) {
-    if (CurrLevel == 1)
+    if (CurrLevel == 0)
+        menu.setCameraY(y);
+    else if (CurrLevel == 1)
         level1.setCameraY(y);
     else if (CurrLevel == 2)
         level2.setCameraY(y);
@@ -107,7 +120,9 @@ void Levels::setCameraY(int y) {
 }
 
 int Levels::getCameraY() {
-    if (CurrLevel == 1)
+    if (CurrLevel == 0)
+        return menu.getCameraY();
+    else if (CurrLevel == 1)
         return level1.getCameraY();
     else if (CurrLevel == 2)
         return level2.getCameraY();
@@ -118,7 +133,9 @@ int Levels::getCameraY() {
 }
 
 SDL_Rect * Levels::getCamera() {
-    if (CurrLevel == 1)
+    if (CurrLevel == 0)
+        return menu.getCamera();
+    else if (CurrLevel == 1)
         return level1.getCamera();
     else if (CurrLevel == 2)
         return level2.getCamera();
@@ -141,7 +158,9 @@ void Levels::setCurrDoor(int door, double currDoor) {
 }
 
 int Levels::getLevelWidth() {
-    if (CurrLevel == 1)
+    if (CurrLevel == 0)
+        return menu.getLevelWidth();
+    else if (CurrLevel == 1)
         return level1.getLevelWidth();
     else if (CurrLevel == 2)
         return level2.getLevelWidth();
@@ -152,7 +171,9 @@ int Levels::getLevelWidth() {
 }
 
 int Levels::getLevelHeight() {
-    if (CurrLevel == 1)
+    if (CurrLevel == 0)
+        return menu.getLevelHeight();
+    else if (CurrLevel == 1)
         return level1.getLevelHeight();
     else if (CurrLevel == 2)
         return level2.getLevelHeight();

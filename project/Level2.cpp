@@ -35,8 +35,8 @@ void Level2::display() {
 
 void Level2::loadMedia() {
     // set up media from Level class
-    Level::setBackground("imgs/bg/level1.png"); // PLACEHOLDER
-    Level::setMusic(Mix_LoadMUS("sound/techno.wav"));
+    Level::setBackground("imgs/bg/lvl1.png"); // PLACEHOLDER
+    Level::setMusic(Mix_LoadMUS("sound/electronic.wav"));
     // load all foreground textures
     Foreground.loadFromFile("imgs/lvl1/base4.png"); // PLACEHOLDER
 }
@@ -44,12 +44,4 @@ void Level2::loadMedia() {
 Texture * Level2::getForeground() {
     // get foreground
     return &Foreground;
-}
-
-int Level2::getLevelWidth() {
-    return Level::getLevelWidth();
-}
-
-int Level2::getLevelHeight() {
-    return Level::getLevelHeight();
 }

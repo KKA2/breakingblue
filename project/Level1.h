@@ -24,8 +24,6 @@ public:
     Texture * getForeground();
     double getCurrDoor(int);
     void setCurrDoor(int,double);
-    int getLevelWidth();
-    int getLevelHeight();
     void setCurrText();
 private:
     // foregrounds containing or mission each door
@@ -35,6 +33,7 @@ private:
     Texture Door1Texture;
     Texture Door2Texture;
     Texture Door3Texture;
+
     vector<Text> LevelOneText;
     //Text MissionParam; // text for mission parameters
 

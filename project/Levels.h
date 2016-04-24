@@ -7,6 +7,7 @@
 #define _LEVELS
 
 #include "Texture.h"
+#include "Menu.h"
 #include "Level1.h"
 #include "Level2.h"
 #include "Level3.h"
@@ -25,10 +26,10 @@ public:
     void display(); // display current level
     void playMusic(); // play music associated to current level
     // get/set functions
-    Texture * getForeground(); // get associated foreground to current level
-    void setCurrText(); // mission parameters
     int getCurrLevel();
     void setCurrLevel(int);
+    Texture * getForeground(); // get associated foreground to current level
+    void setCurrText(); // mission parameters
     void setCameraX(int);
     int getCameraX();
     void setCameraY(int);
@@ -40,6 +41,7 @@ public:
     int getLevelHeight();
 private:
     int CurrLevel; // current level of player
+    Menu menu;
     Level1 level1; // level 1
     Level2 level2;
     Level3 level3;

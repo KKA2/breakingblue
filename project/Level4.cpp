@@ -35,8 +35,8 @@ void Level4::display() {
 
 void Level4::loadMedia() {
     // set up media from Level class
-    Level::setBackground("imgs/bg/level1.png"); // PLACEHOLDER
-    Level::setMusic(Mix_LoadMUS("sound/suspense.wav"));
+    Level::setBackground("imgs/bg/lvl1.png"); // PLACEHOLDER
+    Level::setMusic(Mix_LoadMUS("sound/thunderous.wav"));
     // load all foreground textures
     Foreground.loadFromFile("imgs/lvl1/base4.png"); // PLACEHOLDER
 }
@@ -44,12 +44,4 @@ void Level4::loadMedia() {
 Texture * Level4::getForeground() {
     // get foreground
     return &Foreground;
-}
-
-int Level4::getLevelWidth() {
-    return Level::getLevelWidth();
-}
-
-int Level4::getLevelHeight() {
-    return Level::getLevelHeight();
 }

@@ -33,13 +33,13 @@ public:
     void play(); // play game
     // utility functions
     void reset(); // reset/initially set all game attributes
+    void update(bool=true);
+    void updateCamera();
     void animate(); // play any sequential animations
     void jump();
     void checkKeyboard(); // check keyboard for held motion
     void checkKeyPress(); // check keyboard for short motion
     int moveFigure(double,double,bool=true); // change figure position, only check new position if bool set to false
-    void update();
-    void updateCamera();
     // collision detection
     int checkCollision(); // checks for right/left/top collisions with foreground
     void fixCollision(int collisionType); // respond to collision
