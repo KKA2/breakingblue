@@ -11,7 +11,6 @@ Texture::Texture() {
     Renderer = NULL;
     mTexture = NULL;
     Surface = NULL;
-    
 }
 
 Texture::~Texture() {
@@ -117,7 +116,4 @@ int Texture::getWidth() {
 
 int Texture::getHeight() {
     return mHeight;
-}
-SDL_Renderer * Texture::getRenderer() {
-    return Renderer;
 }

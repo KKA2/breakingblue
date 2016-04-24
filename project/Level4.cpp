@@ -18,7 +18,7 @@ void Level4::setUp(SDL_Renderer *renderer) {
     Level::setUp(renderer);
     Foreground.setUp(renderer);
 
-    Level::setLevelWidth(4000);
+    Level::setLevelWidth(1000);
     Level::setLevelHeight(400);
     Level::setCameraX(0);
     Level::setCameraY(0);
@@ -38,7 +38,7 @@ void Level4::loadMedia() {
     Level::setBackground("imgs/bg/lvl1.png"); // PLACEHOLDER
     Level::setMusic(Mix_LoadMUS("sound/thunderous.wav"));
     // load all foreground textures
-    Foreground.loadFromFile("imgs/lvl1/base4.png"); // PLACEHOLDER
+    Foreground.loadFromFile("imgs/lvl4/base1.png"); // PLACEHOLDER
 }
 
 Texture * Level4::getForeground() {

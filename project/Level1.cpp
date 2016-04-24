@@ -78,16 +78,16 @@ void Level1::display() {
     Door3Texture.render(0,0,&cam);
     // display the mission parameters
     if (CurrText == 0) {
-        LevelOneText[0].display(&cam, 0);
-        LevelOneText[1].display(&cam, 1);
-        LevelOneText[2].display(&cam, 2);
-        LevelOneText[3].display(&cam, 3);
+        LevelOneText[0].display(&cam,0);
+        LevelOneText[1].display(&cam,1);
+        LevelOneText[2].display(&cam,2);
+        LevelOneText[3].display(&cam,3);
     }
     else if (CurrText == 1) {
-        LevelOneText[4].display(&cam, 0);
+        LevelOneText[4].display(&cam,0);
     }
     else if (CurrText == 2) {
-        LevelOneText[5].display(&cam, 0);
+        LevelOneText[5].display(&cam,0);
     }
 }
 

@@ -3,13 +3,13 @@
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
-#include "Person.h"
+#include "Enemy.h"
 
 using namespace std;
 
-Enemy::Enemy();
+Enemy::Enemy() {}
 
-Enemy::~Enemy();
+Enemy::~Enemy() {}
 
 void Enemy::loadMedia() {
     RunningTexture.loadFromFile("imgs/figs/purple/running.png");
@@ -52,4 +52,12 @@ void Enemy::loadMedia() {
         Kicking[i].w = 75;
         Kicking[i].h = 94;
     }
+}
+
+void Enemy::setInitialPos(int height, int width) {
+    Person::setXPos(0);
+    Person::setYPos(width-75);
+}
+void Enemy::move(int playerXPos, int playerYPos) {
+
 }

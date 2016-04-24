@@ -30,7 +30,6 @@ public:
     // get functions
     int getWidth();
     int getHeight();
-    SDL_Renderer * getRenderer();
 private:
     SDL_Renderer *Renderer;
     SDL_Surface *Surface;

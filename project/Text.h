@@ -20,6 +20,7 @@ public:
 	void setUp(SDL_Renderer *);
     void loadMedia(string);
 private:
+    SDL_Renderer *Renderer;
     Texture text;
     vector<SDL_Rect> Chars;
 	int XPos;

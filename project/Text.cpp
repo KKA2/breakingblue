@@ -27,6 +27,7 @@ Text::~Text() {
     Chars.clear();
 }
 void Text::setUp(SDL_Renderer *renderer) {
+    Renderer = renderer;
     text.setUp(renderer);
 }
 void Text::loadMedia(string file) {
@@ -47,8 +48,8 @@ void Text::display(SDL_Rect * cam, int line) { //line to display on
     //static bool first = true; // display animation when first loading
     if (first) {
         for(int i=0;i<NumChars-1;i++) {
-            SDL_RenderPresent(text.getRenderer());
             text.render(XPos-camX,YPos+26*line,&Chars[i],SDL_FLIP_NONE);
+            SDL_RenderPresent(Renderer);
         }
         first = false;
     }

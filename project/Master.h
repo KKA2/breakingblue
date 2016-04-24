@@ -14,6 +14,7 @@
 #include <string>
 #include <cmath>
 #include "Player.h"
+#include "Enemy.h"
 #include "Sound.h"
 #include "Levels.h"
 
@@ -51,6 +52,7 @@ private:
     bool NextLevel; // true = move on to next level
     Sound sound;
     Player player;
+    Enemy enemy;
     Levels levels;
 };
 

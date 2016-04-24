@@ -17,7 +17,7 @@ public:
     void setUp(SDL_Renderer *); // set up all textures to render
     virtual void loadMedia() = 0; // load all textures from path names
     void draw(int,int); // draw all textures onto the screen
-    void setInitialPos(int,int); // set initial position based on level dimensions
+    virtual void setInitialPos(int,int); // set initial position based on level dimensions
     // get/set functions
     Texture * getTexture(const int);
     double getXPos() const;

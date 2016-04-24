@@ -49,7 +49,6 @@ void Level3::loadMedia() {
     Level::setMusic(Mix_LoadMUS("sound/suspense.wav"));
     // load all foreground textures
     Foreground.loadFromFile("imgs/lvl3/base1.png");
-
     MissionParam.loadMedia("imgs/lvl1/text/missionParam.png"); // PLACEHOLDER
 }
 
