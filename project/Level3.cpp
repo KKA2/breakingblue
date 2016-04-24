@@ -4,6 +4,7 @@
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
 #include "Level3.h"
+#include "Master.h" // include for screen height/width
 
 using namespace std;
 
@@ -25,6 +26,8 @@ void Level3::setUp(SDL_Renderer *renderer) {
 
     Level::setLevelWidth(1000);
     Level::setLevelHeight(4000);
+    Level::setCameraX(0);
+    Level::setCameraY(Level::getLevelHeight()-SCREEN_HEIGHT);
 }
 
 void Level3::display() {

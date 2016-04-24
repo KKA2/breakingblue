@@ -21,10 +21,11 @@ void Level2::setUp(SDL_Renderer *renderer) {
     // set up renderer on all textures
     Level::setUp(renderer);
     Foreground.setUp(renderer);
-    MissionParam.setUp(renderer);
 
     Level::setLevelWidth(4000);
     Level::setLevelHeight(400);
+    Level::setCameraX(0);
+    Level::setCameraY(0);
 }
 
 void Level2::display() {
@@ -34,10 +35,6 @@ void Level2::display() {
     SDL_Rect cam = *Level::getCamera();
     // render foreground onto screen
     getForeground()->render(0,0,&cam);
-    // display the mission parameters
-    if(CurrText == 1) {
-        MissionParam.display(&cam, 0); // PLACEHOLDER
-    }
 }
 
 void Level2::loadMedia() {
@@ -45,9 +42,7 @@ void Level2::loadMedia() {
     Level::setBackground("imgs/bg/level1.png"); // PLACEHOLDER
     Level::setMusic(Mix_LoadMUS("sound/suspense.wav"));
     // load all foreground textures
-    Foreground.loadFromFile("imgs/lvl1/base1.png"); // PLACEHOLDER
-
-    MissionParam.loadMedia("imgs/lvl1/text/missionParam.png"); // PLACEHOLDER
+    Foreground.loadFromFile("imgs/lvl1/base4.png"); // PLACEHOLDER
 }
 
 Texture * Level2::getForeground() {
@@ -61,8 +56,4 @@ int Level2::getLevelWidth() {
 
 int Level2::getLevelHeight() {
     return Level::getLevelHeight();
-}
-
-void Level2::setCurrText() {
-    CurrText++; // move to next direction for mission parameter text
 }

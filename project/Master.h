@@ -26,15 +26,17 @@ class Master {
 public:
     Master();
     ~Master();
+    // initial functions
     void init();
     void loadMedia();
-
+    // main function
+    void play(); // play game
+    // utility functions
     void reset(); // reset/initially set all game attributes
     void animate(); // play any sequential animations
+    void jump();
     void checkKeyboard(); // check keyboard for held motion
     void checkKeyPress(); // check keyboard for short motion
-    void play(); // play game
-
     int moveFigure(double,double,bool=true); // change figure position, only check new position if bool set to false
     void update();
     void updateCamera();
@@ -46,6 +48,7 @@ private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
     bool Quit; // boolean to quit, false = do not quit, true = quit
+    bool NextLevel; // true = move on to next level
     Sound sound;
     Player player;
     Levels levels;

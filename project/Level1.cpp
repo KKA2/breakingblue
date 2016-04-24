@@ -43,7 +43,7 @@ void Level1::setUp(SDL_Renderer *renderer) {
     Text temp3(31);
     Text temp6(42);
 
-    //add text displays to  (in order of display)
+    //add text displays to (in order of display)
     LevelOneText.push_back(tempText);
     LevelOneText.push_back(temp4);
     LevelOneText.push_back(temp5);
@@ -58,6 +58,8 @@ void Level1::setUp(SDL_Renderer *renderer) {
 
     Level::setLevelWidth(4000);
     Level::setLevelHeight(400);
+    Level::setCameraX(0);
+    Level::setCameraY(0);
 }
 
 void Level1::display() {

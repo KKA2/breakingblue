@@ -17,9 +17,12 @@ public:
     ~Level();
     void playMusic(); // play level music
     // virtual functions to be expanded
-    virtual void display(); // draw all textures onto the screen
-    virtual SDL_Texture * loadTexture(string);
     virtual void setUp(SDL_Renderer *); // set up all textures/music to render
+    virtual void display(); // draw all textures onto the screen
+    // pure virtual function to be implemented lower in the hierarchy
+    virtual void loadMedia() = 0;
+    // utility functions
+    SDL_Texture * loadTexture(string);
     // get/set functions
     void setBackground(string);
     SDL_Texture * getBackground();
@@ -34,8 +37,6 @@ public:
     SDL_Rect * getCamera();
     void setMusic(Mix_Music *);
     Mix_Music * getMusic();
-    // pure virtual function to be implemented lower in the hierarchy
-    virtual void loadMedia() = 0;
 private:
     SDL_Renderer *Renderer; // window renderer
     SDL_Texture *Background; // base background texture image

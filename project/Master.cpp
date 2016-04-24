@@ -9,6 +9,7 @@ using namespace std;
 
 Master::Master() {
     Quit = false;
+    NextLevel = true; // start game by moving to first level
     // initialize screen
     init();
     // set up textures in composed classes
@@ -50,6 +51,30 @@ void Master::loadMedia() {
     levels.loadMedia();
 }
 
+void Master::play() {
+    while (!Quit) {
+        if (NextLevel) { // check if new/next level
+            levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
+            //levels.setCurrLevel(3); // TESTING LEVEL 3
+            levels.playMusic(); // start music
+            reset(); // set all initial values
+            NextLevel = false; // reset value of next level to play in the new level
+        }
+        animate(); // run through any animations
+        player.setState(0); // reset state (draw standing if not changed)
+
+        checkKeyPress(); // check short key presses
+        jump(); // jumping animation
+        checkKeyboard(); // check for held key presses
+
+        if (player.getCurrRun() >= 7) // keep in bounds of array for running
+            player.setCurrRun(0);
+
+        moveFigure(0,0); // check for collisions and adjust accordingly
+        update();
+    }
+}
+
 void Master::reset() {
     // set player's initial position
     player.setInitialPos(levels.getLevelWidth(),levels.getLevelHeight());
@@ -58,6 +83,10 @@ void Master::reset() {
     // redraw screen images
     update();
     // set player stats
+    player.setCurrRun(0);
+    player.setCurrRoll(0);
+    player.setCurrPunch(0);
+    player.setCurrKick(0);
     player.setState(0);
     player.setMoveDir(SDL_FLIP_NONE);
     player.setJumpDir(0);
@@ -68,11 +97,12 @@ void Master::reset() {
         for (int l=0;l<=3;l++)
             levels.setCurrDoor(l,0);
     // move figure to the ground to restart gameplay
-    int notOnGround = checkGround();
-    while (notOnGround) { // continue until player hits ground or edge of board
-        player.setYPos(player.getYPos() + 2); // shift player down
-        notOnGround = checkGround(); // check if player is on the ground
+    while (moveFigure(0,15,false) == 2) { // continue until player hits ground or edge of board
+        moveFigure(0,15);
         update(); // redraw the change in position
+    }
+    while (moveFigure(0,1) == 1) { // move to ground if above ground
+        update();
     }
 }
 
@@ -163,44 +193,76 @@ void Master::animate() {
     }
 }
 
+void Master::jump() {
+    int jumpSpeed = 30; // adjust for early termination of jumps
+    double changeY =  player.getJumpDir() * ((player.getMaxJumpHeight()+10 - player.getJumpHeight())/(player.getMaxJumpHeight()+10)) * jumpSpeed;    
+    player.setJumpHeight(player.getJumpHeight() - changeY);
+    if (player.getJumpDir() == -1) {
+        moveFigure(0,changeY);
+        player.setState(2);
+        if (player.getJumpHeight() >= player.getMaxJumpHeight())
+            player.setJumpDir(1);
+        else if (player.getYPos() < 5) { // hit ceiling
+            player.setJumpDir(1);
+            if (player.getJumpHeight() < 50) // if short fall
+                jumpSpeed = 5; // temp adjust jumpSpeed
+        }
+
+    }
+    else if (player.getJumpDir() == 1) {
+        player.setState(2);
+        if (moveFigure(0,changeY,false) == 2) { // check if will jump below ground
+            sound.playSound(1);
+            player.setState(0);
+            player.setJumpDir(0);
+            player.setJumpHeight(0);
+            jumpSpeed = 30; // readjust jump speed
+            while (moveFigure(0,5) == 1); // move to ground if above ground
+        }
+        else { // if can still jump down
+            moveFigure(0,changeY);
+        }
+    }
+}
+
 void Master::checkKeyboard() {
     const Uint8 *state = SDL_GetKeyboardState(NULL);
 
     if (state[SDL_SCANCODE_DOWN]) { // duck
         if (player.getState() != 2) {
-            player.setState(3);
-            if (state[SDL_SCANCODE_LEFT]) {
-                player.setMoveDir(SDL_FLIP_HORIZONTAL);
-                player.setState(4);
+            player.setState(3); // set to ducking state
+            if (state[SDL_SCANCODE_LEFT]) { // left key pressed
+                player.setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left
+                player.setState(4); // set to rolling state
             }
-            else if (state[SDL_SCANCODE_RIGHT]) {
-                player.setMoveDir(SDL_FLIP_NONE);
+            else if (state[SDL_SCANCODE_RIGHT]) { // right key pressed
+                player.setMoveDir(SDL_FLIP_NONE); // turn to the right
                 player.setState(4);
             }
         }
     }
     else if (state[SDL_SCANCODE_LEFT]) { // run left
-        player.setMoveDir(SDL_FLIP_HORIZONTAL);
+        player.setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left
         if (player.getState() != 2) { // if not jumping
-            sound.playSound(2);
-            player.setState(1);
+            sound.playSound(2); // play running sound effect
+            player.setState(1); // set to running state
         }
-        moveFigure(-10,0);
-        if (player.getJumpHeight() == 0)
+        moveFigure(-10,0); // move to the left
+        if (player.getJumpHeight() == 0) // if at ground level
             player.setCurrRun(player.getCurrRun() + .3);
     }
     else if (state[SDL_SCANCODE_RIGHT]) { // run right
-        player.setMoveDir(SDL_FLIP_NONE);
+        player.setMoveDir(SDL_FLIP_NONE); // turn to the right
         if (player.getState() != 2) {
             sound.playSound(2);
             player.setState(1);
         }
-        moveFigure(10,0);
+        moveFigure(10,0); // move to the right
         if (player.getJumpHeight() == 0)
             player.setCurrRun(player.getCurrRun() + .3);
     }
     else {
-        player.setCurrRun(0);
+        player.setCurrRun(0); // reset frame count
     }
 }
 
@@ -212,15 +274,15 @@ void Master::checkKeyPress() {
         else if(e.type == SDL_KEYDOWN) {
             switch(e.key.keysym.sym) {
                 case SDLK_UP: 
-                    player.setState(2);
-                    if (player.getJumpHeight() == 0)
-                        player.setJumpDir(-1);
+                    player.setState(2); // jump
+                    if (player.getJumpHeight() == 0) // if not already jumping
+                        player.setJumpDir(-1); // start moving upwards
                     break;
                 case SDLK_SPACE:
-                    player.setState(5);
+                    player.setState(5); // punch
                     break;
                 case SDLK_RETURN:
-                    player.setState(6);
+                    player.setState(6); // kick
                     break;
                 case SDLK_q:
                     Quit = true;
@@ -232,60 +294,6 @@ void Master::checkKeyPress() {
         }
     }
 }
-void Master::play() {
-    // initialize local variables
-    int jumpSpeed = 30; // adjust for early termination of jumps
-    // set initial level to first level
-    levels.setCurrLevel(1);
-    // start music
-    levels.playMusic();
-    // set all initial values
-    reset();
-
-    while (!Quit) {
-        animate();
-        player.setState(0);
-
-        checkKeyPress();
-
-        double changeY =  player.getJumpDir() * ((player.getMaxJumpHeight()+10 - player.getJumpHeight())/(player.getMaxJumpHeight()+10)) * jumpSpeed;    
-        player.setJumpHeight(player.getJumpHeight() - changeY);
-        if (player.getJumpDir() == -1) {
-            moveFigure(0,changeY);
-            player.setState(2);
-            if (player.getJumpHeight() >= player.getMaxJumpHeight())
-                player.setJumpDir(1);
-            else if (player.getYPos() < 5) { // hit ceiling
-                player.setJumpDir(1);
-                if (player.getJumpHeight() < 50) // if short fall
-                    jumpSpeed = 5; // temp adjust jumpSpeed
-            }
-
-        }
-        else if (player.getJumpDir() == 1) {
-            player.setState(2);
-            if (moveFigure(0,changeY,false) == 2) { // check if will jump below ground
-                sound.playSound(1);
-                player.setState(0);
-                player.setJumpDir(0);
-                player.setJumpHeight(0);
-                jumpSpeed = 30; // readjust jump speed
-                while (moveFigure(0,5) == 1); // move to ground if above ground
-            }
-            else { // if can still jump down
-                moveFigure(0,changeY);
-            }
-        }
-
-        checkKeyboard();
-
-        if (player.getCurrRun() >= 7) // keep in bounds of array for running
-            player.setCurrRun(0);
-
-        moveFigure(0,0);
-        update();
-    }
-}
 
 int Master::moveFigure(double chX, double chY, bool move) {
     player.setXPos(player.getXPos() + chX);
@@ -293,7 +301,7 @@ int Master::moveFigure(double chX, double chY, bool move) {
 
     // check for/respond to collision
     int hasCollided = checkCollision();
-    while(hasCollided){  // hasCollided: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
+    while(hasCollided){ // hasCollided: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
         fixCollision(hasCollided);
         hasCollided = checkCollision();
     }
@@ -321,7 +329,8 @@ int Master::moveFigure(double chX, double chY, bool move) {
     }
     
     if (player.getXPos() > levels.getLevelWidth() - 75)
-        player.setXPos(levels.getLevelWidth()  - 75);
+        //player.setXPos(levels.getLevelWidth()  - 75);
+        NextLevel = true; // move to next level
     else if (player.getXPos() < 0)
         player.setXPos(0);
 
@@ -343,20 +352,25 @@ int Master::moveFigure(double chX, double chY, bool move) {
 void Master::updateCamera() {
     // center camera over the player
     levels.setCameraX(player.getXPos() + 75 - SCREEN_WIDTH/2);
+    levels.setCameraY(player.getYPos() + 94 - SCREEN_HEIGHT/2);
     // keep camera in bounds
+    // horizontal bounds
     if (levels.getCameraX() < 0)
         levels.setCameraX(0);
     else if (levels.getCameraX() > levels.getLevelWidth() - SCREEN_WIDTH)
         levels.setCameraX(levels.getLevelWidth() - SCREEN_WIDTH);
+    // vertical bounds
+    if (levels.getCameraY() < 0)
+        levels.setCameraY(0);
+    else if (levels.getCameraY() > levels.getLevelHeight() - SCREEN_HEIGHT)
+        levels.setCameraY(levels.getLevelHeight() - SCREEN_HEIGHT);
 }
 
 void Master::update() {
-    SDL_RenderClear(Renderer);
-    levels.display();
-    // foreground
-    player.draw(levels.getCameraX(),levels.getCameraY());
-    // update screen
-    SDL_RenderPresent(Renderer);
+    SDL_RenderClear(Renderer); // clear screen to redraw
+    levels.display(); // draw background/foreground
+    player.draw(levels.getCameraX(),levels.getCameraY()); // draw player
+    SDL_RenderPresent(Renderer); // update screen
 }
 
 int Master::checkCollision() {
@@ -416,7 +430,8 @@ int Master::checkCollision() {
                             return 2;
                         else //left col
                             return 3;
-                    } else { //return response for right facing player
+                    }
+                    else { //return response for right facing player
                         if (x > boundingW/2) // right
                             return 2;
                         else // left
@@ -439,9 +454,8 @@ void Master::fixCollision(int collisionType){
         player.setXPos(player.getXPos() - 5); // kick to the left
     }
     else { // top
-        if (levels.getCurrLevel() == 1) {
+        if (levels.getCurrLevel() == 1)
             reset();
-        }
         else
             player.setYPos(player.getYPos() + 5); // move player back down
     }
