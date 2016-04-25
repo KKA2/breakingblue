@@ -56,8 +56,8 @@ void Master::loadMedia() {
 void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
-            //levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
-            levels.setCurrLevel(1); // TESTING LEVEL
+            levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
+            //levels.setCurrLevel(2); // TESTING LEVEL
             levels.playMusic(); // start music
             reset(); // set all initial values
             NextLevel = false; // reset value of next level to play in the new level
@@ -119,7 +119,7 @@ void Master::reset() {
         player.setYPos(levels.getLevelHeight() - SCREEN_HEIGHT);
     }
     else {
-        player.setXPos(2142);
+        player.setXPos(2122);
         player.setYPos(0);
     }
     // move display to center over figure
@@ -277,6 +277,7 @@ void Master::animate(Person *person) {
     }
 
     if (person->getState() == 6) { // kicking
+
         // check for collision
         int hasCollided = checkCollision(person);
         if (hasCollided) { // five must collide
@@ -289,7 +290,12 @@ void Master::animate(Person *person) {
                 hasCollided = checkCollision(person);
             } while (hasCollided);
         }
-
+        if (person->getCurrKick() == 0) { // if beginning kick
+            if (person->getMoveDir() == SDL_FLIP_NONE) // move in direction kicking
+                moveFigure(person,4,0);
+            else
+                moveFigure(person,-4,0);
+        }
         if (person->getCurrKick() < 5)
             person->setCurrKick(person->getCurrKick() + .8);
         else if (person->getCurrKick() < 6)
@@ -457,7 +463,7 @@ int Master::moveFigure(Person *person, double chX, double chY, bool move) {
 
     // check for/respond to collision
     int hasCollided = checkCollision(person);
-    while(hasCollided){ // hasCollided: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
+    if (hasCollided) { // hasCollided: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
         fixCollision(person,hasCollided);
         hasCollided = checkCollision(person);
     }
@@ -504,8 +510,9 @@ int Master::moveFigure(Person *person, double chX, double chY, bool move) {
         if (person->getYPos() > levels.getLevelHeight()) { // overstep bottom boundary
             if (levels.getCurrLevel() == 3) // if in third level
                 NextLevel = true;
-            else
+            else {
                 reset();
+            }
         }
         else if (person->getYPos() < 0) { // overstep top boundary
             if (levels.getCurrLevel() == 2) // if in second level
@@ -563,27 +570,17 @@ int Master::checkCollision(Person *person) {
             
             if (int(personAlpha) > 10) { // if person is present, check for overlap with foreground
                 // get foreground pixel
-                pixel = levels.getForeground()->getPixel( person->getXPos()+x,person->getYPos()+y);
+                pixel = levels.getForeground()->getPixel(person->getXPos()+x,person->getYPos()+y);
                 // check foreground transparency
                 alpha = levels.getForeground()->getAlpha(pixel);
                 if (int(alpha) > 10) { // collision
                     if (y < boundingH/6) // top
                         return 1;
-                    if (person->getMoveDir() == SDL_FLIP_HORIZONTAL) { // return response for left facing person
-                        /*if (x < boundingW/2) // right col
-                            return 2;
-                        else // left col
-                            return 3;
-                            */
-                        return 3;
-                    }
-                    else { // return response for right facing person
-                        /*if (x > boundingW/2) // right
-                            return 2;
-                        else // left
-                            return 3;
-                            */
+                    if (person->getMoveDir() == SDL_FLIP_NONE) { // return response for right facing person
                         return 2;
+                    }
+                    else { // return response for left facing person
+                        return 3;
                     }
                 }
             }
@@ -592,22 +589,45 @@ int Master::checkCollision(Person *person) {
     return 0; // no collision
 }
 
-void Master::fixCollision(Person *person, int collisionType){
-    // return values: 1 = topleft; 2 = topright; 3 = right; 4 = left;
-    if (collisionType == 3) { // left side
-        person->setXPos(person->getXPos() + 5); // kick to the right
+void Master::fixCollision(Person *person, int collisionType) {
+    if (collisionType == 3) { // left side, kick to right
+        if (person->getState() == 1 || person->getState() == 2 || person->getState() == 7) // if running/jumping/flying
+            person->setXPos(person->getXPos() + 10);
+        else if (person->getState() == 4) // if rolling
+            person->setXPos(person->getXPos() + 16);
+        else if (person->getState() == 5 || person->getState() == 6) // punching/kicking
+            person->setXPos(person->getXPos() + 2);
+        else { // catch exception (standing)
+            person->setState(3); // force to duck
+            person->setXPos(person->getXPos() + 1);
+        }
     }
-    else if (collisionType == 2) { // right
-        person->setXPos(person->getXPos() - 5); // kick to the left
+    else if (collisionType == 2) { // right, kick to left
+        if (person->getState() == 1 || person->getState() == 2) // if running/jumping
+            person->setXPos(person->getXPos() - 10);
+        else if (person->getState() == 4) // if rolling
+            person->setXPos(person->getXPos() - 16);
+        else if (person->getState() == 5 || person->getState() == 6)  // if punching/kicking
+            person->setXPos(person->getXPos() - 2);
+        else { // catch exception (standing)
+            person->setState(3); // force to duck
+            person->setXPos(person->getXPos() - 1);
+        }
     }
     else { // top
-        reset();
-        /*
-        if (levels.getCurrLevel() == 1)
-            reset();
-        else
-            person->setYPos(person->getYPos() + 5); // move person back down
-            */
+        if (person->getState() == 7) // if flying
+            person->setYPos(person->getYPos() + 11); // move opposing force down
+        else if (person->getState() == 1) // if jumping
+            person->setYPos(person->getYPos() + 5); // move down
+        else if (person->getState() == 0) // if standing
+            person->setState(3);
+        else {
+            person->setYPos(person->getYPos() + 1); // move slightly down
+            if (person->getMoveDir() == SDL_FLIP_NONE) // right
+                person->setXPos(person->getXPos() + 5); // kick to the left
+            else
+                person->setXPos(person->getXPos() - 5); // kick to the right
+        }
     }
 }
 
