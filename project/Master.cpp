@@ -56,8 +56,8 @@ void Master::loadMedia() {
 void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
-            //levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
-            levels.setCurrLevel(4); // TESTING LEVEL
+            levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
+            //levels.setCurrLevel(4); // TESTING LEVEL
             levels.playMusic(); // start music
             reset(); // set all initial values
             NextLevel = false; // reset value of next level to play in the new level
@@ -538,7 +538,7 @@ int Master::checkCollision(Person *person) {
 
     // loops through bounding box of the person, compares alpha of both char and person
     for(int y = 2*boundingH/3; y > 0; y--) { 
-        for(int x = boundingW; x > 0; x--) { 
+        for(int x = 0; x < boundingW; x++) { 
             // get current person pixel 
             if (person->getMoveDir() == SDL_FLIP_HORIZONTAL) // if facing left
                 personPixel = personTex->getPixel(leftEdge+boundingW-x,y);
@@ -550,7 +550,7 @@ int Master::checkCollision(Person *person) {
             if (int(personAlpha) > 10) { // if person is present, check for overlap with foreground
                 // get foreground pixel
                 if (person->getMoveDir() == SDL_FLIP_HORIZONTAL) // facing left
-                    pixel = levels.getForeground()->getPixel(person->getXPos()+boundingW-x,person->getYPos()+y);
+                    pixel = levels.getForeground()->getPixel(person->getXPos()+x,person->getYPos()+y);
                 else //facing right
                     pixel = levels.getForeground()->getPixel( person->getXPos()+x,person->getYPos()+y);
                 // check foreground transparency
@@ -559,16 +559,20 @@ int Master::checkCollision(Person *person) {
                     if (y < boundingH/6) // top
                         return 1;
                     if (person->getMoveDir() == SDL_FLIP_HORIZONTAL) { // return response for left facing person
-                        if (x < boundingW/2) // right col
+                        /*if (x < boundingW/2) // right col
                             return 2;
                         else // left col
                             return 3;
+                            */
+                        return 3;
                     }
                     else { // return response for right facing person
-                        if (x > boundingW/2) // right
+                        /*if (x > boundingW/2) // right
                             return 2;
                         else // left
                             return 3;
+                            */
+                        return 2;
                     }
                 }
             }
