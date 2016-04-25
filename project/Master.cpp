@@ -10,6 +10,7 @@ using namespace std;
 Master::Master() {
     Quit = false;
     NextLevel = true; // start game by moving to first level
+    MoveEnemy = 0; // pass into move function of enemy class to be updated
     // initialize screen
     init();
     // set up textures in composed classes
@@ -87,6 +88,7 @@ void Master::play() {
         if (levels.getCurrLevel() != 0) { // if not menu screen (i.e. gameplay)
             animate(&player); // run through any animations
             player.setState(0); // reset state (draw standing if not changed)
+            enemy.setState(0); // reset enemy state
 
             checkKeyPress(); // check short key presses
             jump(&player); // jumping animation
@@ -96,7 +98,13 @@ void Master::play() {
                 player.setCurrRun(0);
 
             moveFigure(&player,0,0); // check for collisions/ground and adjust accordingly
-            update();
+            
+            if (levels.getCurrLevel() == 4) { // move enemy if exists
+                enemy.move(player.getXPos(),MoveEnemy);
+                moveFigure(&enemy,MoveEnemy,0);
+            }
+            
+            update(); // update screen animation
         }
     }
 }
@@ -104,9 +112,6 @@ void Master::play() {
 void Master::reset() {
     // set player's initial position
     player.setInitialPos(levels.getLevelWidth(),levels.getLevelHeight());
-    // set enemy initial position
-    if (levels.getCurrLevel() == 4) // in final level
-        enemy.setInitialPos(levels.getLevelWidth(),levels.getLevelHeight());
     // move display to center over figure
     updateCamera();
     // redraw screen images
@@ -145,6 +150,11 @@ void Master::reset() {
         while (moveFigure(&player,0,1) == 1) { // move to ground if above ground
             update();
         }
+    }
+    // set enemy initial position based on player
+    if (levels.getCurrLevel() == 4) { // in final level
+        enemy.setXPos(levels.getLevelWidth()-75);
+        enemy.setYPos(player.getYPos());
     }
 }
 
@@ -210,8 +220,13 @@ void Master::animate(Person *person) {
         else
             moveFigure(person,-8,0);
         
-        if (person->getCurrRoll() < 8)
+        if (person->getCurrRoll() < 8) {
+            if (levels.getCurrLevel() == 4) {
+                enemy.move(person->getXPos(),MoveEnemy); // update enemy
+                moveFigure(&enemy,MoveEnemy,0);
+            }
             update();
+        }
         else {
             person->setCurrRoll(0);
             person->setState(3);
@@ -246,8 +261,13 @@ void Master::animate(Person *person) {
         else
             person->setCurrPunch(person->getCurrPunch() + 1);
 
-        if (person->getCurrPunch() < 13)
+        if (person->getCurrPunch() < 13) {
+            if (levels.getCurrLevel() == 4) {
+                enemy.move(person->getXPos(),MoveEnemy); // update enemy
+                moveFigure(&enemy,MoveEnemy,0);
+            }
             update();
+        }
         else {
             person->setCurrPunch(0);
             person->setState(0);
@@ -275,8 +295,13 @@ void Master::animate(Person *person) {
         else
             person->setCurrKick(person->getCurrKick() + .7);
 
-        if (person->getCurrKick() < 11)
+        if (person->getCurrKick() < 11) {
+            if (levels.getCurrLevel() == 4) {
+                enemy.move(person->getXPos(),MoveEnemy); // update enemy
+                moveFigure(&enemy,MoveEnemy,0);
+            }
             update();
+        }
         else {
             person->setCurrKick(0);
             person->setState(0);
@@ -427,14 +452,14 @@ int Master::moveFigure(Person *person, double chX, double chY, bool move) {
     person->setYPos(person->getYPos() + chY);
 
     // check for/respond to collision
-    int hasCollided = checkCollision(&player);
+    int hasCollided = checkCollision(person);
     while(hasCollided){ // hasCollided: 1 = topleft; 2 = topright; 3 = right; 4 = left; 0 = no collide
-        fixCollision(&player,hasCollided);
-        hasCollided = checkCollision(&player);
+        fixCollision(person,hasCollided);
+        hasCollided = checkCollision(person);
     }
 
     // check relationship to the ground
-    int notOnGround = checkGround(&player);
+    int notOnGround = checkGround(person);
     if (person->getJumpHeight() == 0 && person->getState() != 7) { // not jumping or flying
         // ensure person is on ground
         if (notOnGround) { // continue until person hits ground or edge of board
@@ -444,14 +469,14 @@ int Master::moveFigure(Person *person, double chX, double chY, bool move) {
             if (notOnGround == 1) { // is in air
                 if (move == true)
                     person->setYPos(person->getYPos() + 6); // shift person down (falling)
-                notOnGround = checkGround(&player);
+                notOnGround = checkGround(person);
                 if (!notOnGround)
                     sound.playSound(1);
             }
             else { // is in the ground
                 if (move == true)
                     person->setYPos(person->getYPos() - 2); // shift person up (rising)
-                notOnGround = checkGround(&player);
+                notOnGround = checkGround(person);
             } 
         }
     }

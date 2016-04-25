@@ -51,6 +51,7 @@ private:
     bool Quit; // boolean to quit, false = do not quit, true = quit
     bool NextLevel; // true = move on to next level
     bool FlyingEnabled;
+    int MoveEnemy;
     Sound sound;
     Player player;
     Enemy enemy;
