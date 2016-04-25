@@ -42,6 +42,7 @@ void Level1::setUp(SDL_Renderer *renderer) {
     Text tempText2(22);
     Text temp3(31);
     Text temp6(42);
+    Text temp7(29);
 
     //add text displays to (in order of display)
     LevelOneText.push_back(tempText);
@@ -50,6 +51,7 @@ void Level1::setUp(SDL_Renderer *renderer) {
     LevelOneText.push_back(tempText2);
     LevelOneText.push_back(temp3);
     LevelOneText.push_back(temp6);
+    LevelOneText.push_back(temp7);
 
 
     for(unsigned int i=0; i<LevelOneText.size();i++) {
@@ -88,6 +90,8 @@ void Level1::display() {
     }
     else if (CurrText == 2) {
         LevelOneText[5].display(&cam,0);
+    } else if (CurrText == 3) {
+        LevelOneText[6].display(&cam, 0);
     }
 }
 
@@ -104,6 +108,7 @@ void Level1::loadMedia() {
     LevelOneText[3].loadMedia("imgs/lvl1/text/pressC.png");
     LevelOneText[4].loadMedia("imgs/lvl1/text/howToMove.png");
     LevelOneText[5].loadMedia("imgs/lvl1/text/howToPunch.png");
+    LevelOneText[6].loadMedia("imgs/lvl1/text/howToJump.png");
     
     // load all foreground textures
     Foreground[0].loadFromFile("imgs/lvl1/base1.png");
@@ -153,4 +158,8 @@ void Level1::setCurrDoor(int door, double currDoor) {
 
 void Level1::setCurrText() {
     CurrText++; // move to next direction for mission parameter text
+}
+int Level1::getCurrText() {
+
+    return CurrText;
 }
