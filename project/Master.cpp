@@ -564,14 +564,11 @@ int Master::checkCollision(Person *person) {
                     if (y < boundingH/6) // top
                         return 1;
                     if (person->getMoveDir() == SDL_FLIP_HORIZONTAL) { // return response for left facing person
-                        /*if (x < boundingW/2){ // right col
-                            cout << "L, Rcol" << endl;
+                        /*if (x < boundingW/2) // right col
                             return 2;
-                        }
-                        else{ // left col
-                            cout << "L, Lcol" << endl;
+                        else // left col
                             return 3;
-                        }*/
+                            */
                         return 3;
                     }
                     else { // return response for right facing person
