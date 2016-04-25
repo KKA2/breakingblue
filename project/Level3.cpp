@@ -25,7 +25,7 @@ void Level3::setUp(SDL_Renderer *renderer) {
     MissionParam.setUp(renderer);
 
     Level::setLevelWidth(1000);
-    Level::setLevelHeight(4000);
+    Level::setLevelHeight(711);
     Level::setCameraX(0);
     Level::setCameraY(Level::getLevelHeight()-SCREEN_HEIGHT);
 }
@@ -48,7 +48,7 @@ void Level3::loadMedia() {
     Level::setBackground("imgs/bg/lvl1.png"); // PLACEHOLDER
     Level::setMusic(Mix_LoadMUS("sound/suspense.wav"));
     // load all foreground textures
-    Foreground.loadFromFile("imgs/lvl3/base1.png");
+    Foreground.loadFromFile("imgs/lvl3/maze.png");
     MissionParam.loadMedia("imgs/lvl1/text/missionParam.png"); // PLACEHOLDER
 }
 
