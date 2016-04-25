@@ -54,8 +54,8 @@ void Master::loadMedia() {
 void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
-            //levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
-            levels.setCurrLevel(2); // TESTING LEVEL
+            levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
+            //levels.setCurrLevel(2); // TESTING LEVEL
             levels.playMusic(); // start music
             reset(); // set all initial values
             NextLevel = false; // reset value of next level to play in the new level
@@ -380,11 +380,13 @@ void Master::checkKeyPress() {
                     break;
                 case SDLK_RSHIFT:
                     if (levels.getCurrLevel() >= 2) { // if flying ability enabled
-                        // change mode
-                        if (FlyingEnabled)
-                            FlyingEnabled = false;
-                        else
-                            FlyingEnabled = true;
+                        if (levels.getCurrLevel() == 2 && levels.getCurrDoor(0) > 3) { // unlock door past the third door in level 2
+                            // change mode
+                            if (FlyingEnabled)
+                                FlyingEnabled = false;
+                            else
+                                FlyingEnabled = true;
+                        }
                     }
                     break;
                 case SDLK_q:
@@ -439,7 +441,7 @@ int Master::moveFigure(double chX, double chY, bool move) {
     }
     else {
         if (player.getXPos() > levels.getLevelWidth() - 75) { // overstep right boundary
-            if (levels.getCurrLevel() < 3) // if in first or second level
+            if (levels.getCurrLevel() == 1) // if in first level
                 NextLevel = true; // move to next level when hit end
             else
                 player.setXPos(levels.getLevelWidth()  - 75); // fix overstep
@@ -451,7 +453,7 @@ int Master::moveFigure(double chX, double chY, bool move) {
             reset();
         }
         else if (player.getYPos() < 0) { // overstep top boundary
-            if (levels.getCurrLevel() == 3) // if in third level
+            if (levels.getCurrLevel() == 2 || levels.getCurrLevel() == 3) // if in third level
                 NextLevel = true;
             else
                 player.setYPos(0);

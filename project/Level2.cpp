@@ -27,7 +27,7 @@ void Level2::setUp(SDL_Renderer *renderer) {
     Door3Texture.setUp(renderer);
 
     Level::setLevelWidth(2000);
-    Level::setLevelHeight(400);
+    Level::setLevelHeight(800);
     Level::setCameraX(0);
     Level::setCameraY(0);
 }
