@@ -18,6 +18,8 @@ public:
     void setInitialPos(int,int);
     void move(int,int);
 private:
+    int NumSteps;
+    double Life;
 };
 
 #endif

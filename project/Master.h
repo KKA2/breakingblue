@@ -36,15 +36,15 @@ public:
     void reset(); // reset/initially set all game attributes
     void update(bool=true);
     void updateCamera();
-    void animate(); // play any sequential animations
-    void jump();
+    void animate(Person *); // play any sequential animations
+    void jump(Person *);
     void checkKeyboard(); // check keyboard for held motion
     void checkKeyPress(); // check keyboard for short motion
-    int moveFigure(double,double,bool=true); // change figure position, only check new position if bool set to false
+    int moveFigure(Person *,double,double,bool=true); // change figure position, only check new position if bool set to false
     // collision detection
-    int checkCollision(); // checks for right/left/top collisions with foreground
-    void fixCollision(int collisionType); // respond to collision
-    int checkGround();
+    int checkCollision(Person *); // checks for right/left/top collisions with foreground
+    void fixCollision(Person *,int collisionType); // respond to collision
+    int checkGround(Person *);
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer

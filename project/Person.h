@@ -15,7 +15,7 @@ public:
     Person();
     ~Person();
     void setUp(SDL_Renderer *); // set up all textures to render
-    virtual void loadMedia() = 0; // load all textures from path names
+    virtual void loadMedia(); // load all textures from path names
     void draw(int,int); // draw all textures onto the screen
     virtual void setInitialPos(int,int); // set initial position based on level dimensions
     // get/set functions
