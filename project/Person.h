@@ -17,7 +17,6 @@ public:
     void setUp(SDL_Renderer *); // set up all textures to render
     virtual void loadMedia(); // load all textures from path names
     void draw(int,int); // draw all textures onto the screen
-    virtual void setInitialPos(int,int); // set initial position based on level dimensions
     // get/set functions
     Texture * getTexture(const int);
     double getXPos() const;
@@ -42,6 +41,8 @@ public:
     void setJumpHeight(const double);
     int getMaxJumpHeight() const;
     void setMaxJumpHeight(const int);
+    bool getFlyingEnabled() const;
+    void setFlyingEnabled(const bool);
 protected:
     // rectangles outlining the sprite frames within each respective texture
     SDL_Rect Running[7];
@@ -58,6 +59,8 @@ protected:
     Texture PunchingTexture;
     SDL_Rect Kicking[11];
     Texture KickingTexture;
+    SDL_Rect Flying;
+    Texture FlyingTexture;
 private:
     // position of the figure
     int XPos;
@@ -79,6 +82,7 @@ private:
     double JumpHeight;
     // maximum height able to jump above initial ground level
     int MaxJumpHeight;
+    bool FlyingEnabled;
 };
 
 #endif

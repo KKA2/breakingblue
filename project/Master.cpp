@@ -56,13 +56,13 @@ void Master::loadMedia() {
 void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
-            levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
-            //levels.setCurrLevel(4); // TESTING LEVEL
+            //levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
+            levels.setCurrLevel(3); // TESTING LEVEL
             levels.playMusic(); // start music
             reset(); // set all initial values
             NextLevel = false; // reset value of next level to play in the new level
-            if (levels.getCurrLevel() > 2) // increase jump height
-                player.setMaxJumpHeight(180);
+            if (levels.getCurrLevel() >= 2) // increase jump height
+                player.setMaxJumpHeight(200);
         }
 
         while (levels.getCurrLevel() == 0) { // while in menu screen
@@ -86,7 +86,7 @@ void Master::play() {
         }
         if (levels.getCurrLevel() != 0) { // if not menu screen (i.e. gameplay)
             animate(&player); // run through any animations
-            if (player.getState() == 1 || player.getState() == 2) // if running or jumping animation
+            if (player.getState() <= 3 || player.getState() == 7) // if running, jumping, ducking, or flying animation
                 player.setState(0); // reset state just in case
             if (enemy.getState() == 2) // if jumping
                 enemy.setState(0);
@@ -98,7 +98,8 @@ void Master::play() {
             if (player.getCurrRun() >= 7) // keep in bounds of array for running
                 player.setCurrRun(0);
 
-            moveFigure(&player,0,0); // check for collisions/ground and adjust accordingly
+            if (player.getState() != 5 && player.getState() != 6) // not punching/kicking (fixed within function)
+                moveFigure(&player,0,0); // check for collisions/ground and adjust accordingly
             
             if (levels.getCurrLevel() == 4) { // move enemy if exists
                 moveFigure(&enemy,enemy.move(player.getXPos(),player.getState()),0); // move x position
@@ -113,7 +114,14 @@ void Master::play() {
 
 void Master::reset() {
     // set player's initial position
-    player.setInitialPos(levels.getLevelWidth(),levels.getLevelHeight());
+    if (levels.getCurrLevel() != 3) {
+        player.setXPos(0);
+        player.setYPos(levels.getLevelHeight() - SCREEN_HEIGHT);
+    }
+    else {
+        player.setXPos(2142);
+        player.setYPos(0);
+    }
     // move display to center over figure
     updateCamera();
     // redraw screen images
@@ -127,6 +135,7 @@ void Master::reset() {
     player.setMoveDir(SDL_FLIP_NONE);
     player.setJumpDir(0);
     player.setJumpHeight(0);
+    player.setFlyingEnabled(false);
     // set enemy stats
     if (levels.getCurrLevel() == 4) {
         enemy.setCurrRun(0);
@@ -345,7 +354,7 @@ void Master::jump(Person *person) {
 void Master::checkKeyboard() {
     const Uint8 *state = SDL_GetKeyboardState(NULL);
 
-    if (FlyingEnabled) { // in third level (add flying)
+    if (player.getFlyingEnabled()) { // in third level (add flying)
         if (state[SDL_SCANCODE_UP]) {
             player.setState(7);
             moveFigure(&player,0,-10);
@@ -353,16 +362,22 @@ void Master::checkKeyboard() {
     }
 
     if (state[SDL_SCANCODE_DOWN]) { // duck
-        if (player.getState() != 2 && player.getState() != 7) { // if not jumping or flying
-            player.setState(3); // set to ducking state
-            if (state[SDL_SCANCODE_LEFT]) { // left key pressed
-                player.setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left
-                player.setState(4); // set to rolling state
+        if (moveFigure(&player,0,0,false) != 1) { // if not in the air
+            if (player.getState() != 2 && player.getState() != 7) { // if not jumping or flying
+                player.setState(3); // set to ducking state
+                if (state[SDL_SCANCODE_LEFT]) { // left key pressed
+                    player.setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left
+                    player.setState(4); // set to rolling state
+                }
+                else if (state[SDL_SCANCODE_RIGHT]) { // right key pressed
+                    player.setMoveDir(SDL_FLIP_NONE); // turn to the right
+                    player.setState(4);
+                }
             }
-            else if (state[SDL_SCANCODE_RIGHT]) { // right key pressed
-                player.setMoveDir(SDL_FLIP_NONE); // turn to the right
-                player.setState(4);
-            }
+        }
+        else if (player.getFlyingEnabled()) { // if flying is enabled
+            player.setState(7);
+            moveFigure(&player,0,10);
         }
     }
     else if (state[SDL_SCANCODE_LEFT]) { // run left
@@ -392,10 +407,6 @@ void Master::checkKeyboard() {
     }
 }
 
-void Master::run(Person *, SDL_RendererFlip direction) {
-
-} 
-
 void Master::checkKeyPress() {
     SDL_Event e; // store key pressed
     while (SDL_PollEvent(&e) != 0) {
@@ -404,10 +415,12 @@ void Master::checkKeyPress() {
         else if (e.type == SDL_KEYDOWN) {
             switch(e.key.keysym.sym) {
                 case SDLK_UP:
-                    if (!FlyingEnabled) {
-                        player.setState(2); // jump
-                        if (player.getJumpHeight() == 0) // if not already jumping
-                            player.setJumpDir(-1); // start moving upwards
+                    if (!player.getFlyingEnabled()) {
+                        if (moveFigure(&player,0,0,false) != 1) { // if not in the air
+                            player.setState(2); // jump
+                            if (player.getJumpHeight() == 0) // if not already jumping
+                                player.setJumpDir(-1); // start moving upwards
+                        }
                     }
                     break;
                 case SDLK_SPACE:
@@ -419,13 +432,11 @@ void Master::checkKeyPress() {
                     break;
                 case SDLK_RSHIFT:
                     if (levels.getCurrLevel() >= 2) { // if flying ability enabled
-                        if (levels.getCurrLevel() == 2 && levels.getCurrDoor(0) > 3) { // unlock door past the third door in level 2
-                            // change mode
-                            if (FlyingEnabled)
-                                FlyingEnabled = false;
-                            else
-                                FlyingEnabled = true;
-                        }
+                        // change mode
+                        if (player.getFlyingEnabled()==true)
+                            player.setFlyingEnabled(false);
+                        else
+                            player.setFlyingEnabled(true);
                     }
                     break;
                 case SDLK_q:
@@ -491,10 +502,13 @@ int Master::moveFigure(Person *person, double chX, double chY, bool move) {
             person->setXPos(0);
 
         if (person->getYPos() > levels.getLevelHeight()) { // overstep bottom boundary
-            reset();
+            if (levels.getCurrLevel() == 3) // if in third level
+                NextLevel = true;
+            else
+                reset();
         }
         else if (person->getYPos() < 0) { // overstep top boundary
-            if (levels.getCurrLevel() == 2 || levels.getCurrLevel() == 3) // if in third level
+            if (levels.getCurrLevel() == 2) // if in second level
                 NextLevel = true;
             else
                 person->setYPos(0);
@@ -527,7 +541,7 @@ int Master::checkCollision(Person *person) {
         case 6: // kicking
             frame = person->getCurrKick();
             break;
-        default: // standing, jumping, ducking
+        default: // standing, jumping, ducking,flying
             break;
     }
 
@@ -549,10 +563,7 @@ int Master::checkCollision(Person *person) {
             
             if (int(personAlpha) > 10) { // if person is present, check for overlap with foreground
                 // get foreground pixel
-                if (person->getMoveDir() == SDL_FLIP_HORIZONTAL) // facing left
-                    pixel = levels.getForeground()->getPixel(person->getXPos()+x,person->getYPos()+y);
-                else //facing right
-                    pixel = levels.getForeground()->getPixel( person->getXPos()+x,person->getYPos()+y);
+                pixel = levels.getForeground()->getPixel( person->getXPos()+x,person->getYPos()+y);
                 // check foreground transparency
                 alpha = levels.getForeground()->getAlpha(pixel);
                 if (int(alpha) > 10) { // collision
@@ -590,10 +601,13 @@ void Master::fixCollision(Person *person, int collisionType){
         person->setXPos(person->getXPos() - 5); // kick to the left
     }
     else { // top
+        reset();
+        /*
         if (levels.getCurrLevel() == 1)
             reset();
         else
             person->setYPos(person->getYPos() + 5); // move person back down
+            */
     }
 }
 

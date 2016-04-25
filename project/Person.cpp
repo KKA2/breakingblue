@@ -20,7 +20,8 @@ Person::Person() {
     State = 0;
     JumpDir = 0;
     JumpHeight = 0;
-    MaxJumpHeight = 120;
+    MaxJumpHeight = 140;
+    FlyingEnabled = false;
 }
 
 Person::~Person() {
@@ -32,6 +33,7 @@ Person::~Person() {
     RollingTexture.free();
     PunchingTexture.free();
     KickingTexture.free();
+    FlyingTexture.free();
 }
 
 void Person::setUp(SDL_Renderer *renderer) {
@@ -43,6 +45,7 @@ void Person::setUp(SDL_Renderer *renderer) {
     RollingTexture.setUp(renderer);
     PunchingTexture.setUp(renderer);
     KickingTexture.setUp(renderer);
+    FlyingTexture.setUp(renderer);
 }
 
 void Person::loadMedia() {
@@ -74,6 +77,7 @@ void Person::loadMedia() {
         Kicking[i].w = 75;
         Kicking[i].h = 94;
     }
+    Flying.x = 0; Flying.y = 0; Flying.w = 75; Flying.h = 94;
 }
 
 void Person::draw(int camX, int camY) {
@@ -92,12 +96,7 @@ void Person::draw(int camX, int camY) {
     else if (State == 6)
         KickingTexture.render(XPos-camX,YPos-camY,&Kicking[int(CurrKick)],MoveDir);
     else if (State == 7) // flying
-        JumpingTexture.render(XPos-camX,YPos-camY,&Jumping,MoveDir); // WILL CHANGE
-}
-
-void Person::setInitialPos(int width, int height) {
-    XPos = 0;
-    YPos = height - SCREEN_HEIGHT;
+        FlyingTexture.render(XPos-camX,YPos-camY,&Flying,MoveDir);
 }
 
 Texture * Person::getTexture(const int state) {
@@ -124,7 +123,7 @@ Texture * Person::getTexture(const int state) {
         case 6: // kicking
             texture = &KickingTexture;
         case 7: // flying
-            texture = &JumpingTexture;
+            texture = &FlyingTexture;
         default: // assume standing
             texture = &StandingTexture;
             break;
@@ -218,4 +217,12 @@ int Person::getMaxJumpHeight() const {
 
 void Person::setMaxJumpHeight(const int maxJumpHeight) {
     MaxJumpHeight = maxJumpHeight;
+}
+
+bool Person::getFlyingEnabled() const {
+    return FlyingEnabled;
+}
+
+void Person::setFlyingEnabled(const bool flyingEnabled) {
+    FlyingEnabled = flyingEnabled;
 }

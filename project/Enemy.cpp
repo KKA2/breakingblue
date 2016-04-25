@@ -25,6 +25,7 @@ void Enemy::loadMedia() {
     RollingTexture.loadFromFile("imgs/figs/red/rolling.png");
     PunchingTexture.loadFromFile("imgs/figs/red/punching.png");
     KickingTexture.loadFromFile("imgs/figs/red/kicking.png");
+    FlyingTexture.loadFromFile("imgs/figs/red/flying.png");
 }
 
 int Enemy::move(int playerXPos, int playerState) {

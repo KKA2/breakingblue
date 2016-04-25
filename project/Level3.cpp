@@ -24,10 +24,10 @@ void Level3::setUp(SDL_Renderer *renderer) {
     Foreground.setUp(renderer);
     MissionParam.setUp(renderer);
 
-    Level::setLevelWidth(1506);
-    Level::setLevelHeight(1033);
-    Level::setCameraX(0);
-    Level::setCameraY(Level::getLevelHeight()-SCREEN_HEIGHT);
+    Level::setLevelWidth(3400);
+    Level::setLevelHeight(3400);
+    Level::setCameraX(1642);
+    Level::setCameraY(0);
 }
 
 void Level3::display() {

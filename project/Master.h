@@ -38,7 +38,6 @@ public:
     void updateCamera();
     void animate(Person *); // play any sequential animations (doors,roll,punch,kick)
     void jump(Person *);
-    void run(Person *,SDL_RendererFlip);
     void checkKeyboard(); // check keyboard for held motion
     void checkKeyPress(); // check keyboard for short motion
     int moveFigure(Person *,double,double,bool=true); // change figure position, only check new position if bool set to false
@@ -51,7 +50,6 @@ private:
     SDL_Renderer *Renderer; // window renderer
     bool Quit; // boolean to quit, false = do not quit, true = quit
     bool NextLevel; // true = move on to next level
-    bool FlyingEnabled;
     Sound sound;
     Player player;
     Enemy enemy;

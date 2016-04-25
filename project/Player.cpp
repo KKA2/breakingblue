@@ -20,4 +20,5 @@ void Player::loadMedia() {
     RollingTexture.loadFromFile("imgs/figs/blue/rolling.png");
     PunchingTexture.loadFromFile("imgs/figs/blue/punching.png");
     KickingTexture.loadFromFile("imgs/figs/blue/kicking.png");
+    FlyingTexture.loadFromFile("imgs/figs/blue/flying.png");
 }
