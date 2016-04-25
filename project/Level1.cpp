@@ -42,7 +42,7 @@ void Level1::setUp(SDL_Renderer *renderer) {
     Text tempText2(22);
     Text temp3(31);
     Text temp6(42);
-    Text temp7(29);
+    Text temp7(33);
 
     //add text displays to (in order of display)
     LevelOneText.push_back(tempText);
@@ -66,6 +66,8 @@ void Level1::setUp(SDL_Renderer *renderer) {
 
 void Level1::display() {
     // call display of Level class
+    static bool lineOne = false, lineTwo = false, lineThree = false;
+
     Level::display();
     // get current camera display
     SDL_Rect cam = *Level::getCamera();
@@ -80,10 +82,16 @@ void Level1::display() {
     Door3Texture.render(0,0,&cam);
     // display the mission parameters
     if (CurrText == 0) {
-        LevelOneText[0].display(&cam,0);
-        LevelOneText[1].display(&cam,1);
-        LevelOneText[2].display(&cam,2);
-        LevelOneText[3].display(&cam,3);
+        lineOne = LevelOneText[0].display(&cam,0);
+        if(lineOne) {
+            lineTwo = LevelOneText[1].display(&cam,1);
+        }
+        if(lineTwo) {
+            lineThree = LevelOneText[2].display(&cam,2);
+        }
+        if (lineThree) {
+            LevelOneText[3].display(&cam,3);
+        }
     }
     else if (CurrText == 1) {
         LevelOneText[4].display(&cam,0);

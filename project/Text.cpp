@@ -43,16 +43,17 @@ void Text::loadMedia(string file) {
     }
     return;
 }
-void Text::display(SDL_Rect * cam, int line) { //line to display on
-    int camX = cam->x;
+bool Text::display(SDL_Rect * cam, int line) { //line to display on
+    //int camX = cam->x;
     //static bool first = true; // display animation when first loading
-    if (first) {
-        for(int i=0;i<NumChars-1;i++) {
-            text.render(XPos,YPos+26*line,&Chars[i],SDL_FLIP_NONE);
-            SDL_RenderPresent(Renderer);
-        }
-        first = false;
-    }
-    else
+    static int i;
+
+    if (i < NumChars) {
+        text.render(XPos,YPos+26*line,&Chars[int(i)],SDL_FLIP_NONE);
+        //SDL_RenderPresent(Renderer);
+        i++;
+        return false; //not fully displayed
+    } else
         text.render(XPos,YPos+26*line,&Chars[NumChars-1],SDL_FLIP_NONE); // does not scroll through text yet
+        return true; //fully displayed
 }
