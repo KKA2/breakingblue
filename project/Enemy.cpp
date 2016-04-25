@@ -5,6 +5,7 @@
 
 #include "Enemy.h"
 #include "Master.h"
+#include <cmath>
 
 using namespace std;
 
@@ -26,25 +27,50 @@ void Enemy::loadMedia() {
     KickingTexture.loadFromFile("imgs/figs/red/kicking.png");
 }
 
-void Enemy::move(int playerXPos, int &chX) {
+int Enemy::move(int playerXPos, int playerState) {
+    int chX = 0;
     int xPos = Person::getXPos();
+
+    if (playerState == 5) { // if player is punching
+        Person::setState(2); // jump over punch
+        if (Person::getJumpHeight() == 0) // if not already jumping
+            Person::setJumpDir(-1); // start moving upwards
+    }
+    else if (abs(playerXPos-xPos) < 40 && playerState == 0) // if close to standing player
+        Person::setState(5); // set state to punching
 
     if (playerXPos-xPos < 0) { // player to the left of the enemy
         Person::setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left
-        Person::setState(1); // set to running state
-        Person::setCurrRun(Person::getCurrRun() + .3); // change frame
-        chX = -5; // move to the left
+        if (Person::getState() != 5) { // not punching
+            if (Person::getState() != 2) { // not jumping
+                Person::setState(1); // set to running state
+                Person::setCurrRun(Person::getCurrRun() + .3); // change frame
+                chX = -2; // move to the left
+            }
+            else {
+                chX = 2;
+            }
+        }
     }
     else if (playerXPos-xPos > 0) { // player to the right of the enemy
         Person::setMoveDir(SDL_FLIP_NONE); // turn to the right
-        Person::setState(1);
-        Person::setCurrRun(Person::getCurrRun() + .3);
-        chX = 5; // move to the right
+        if (Person::getState() != 5) { // not punching
+            if (Person::getState() != 2) { // not jumping
+                Person::setState(1);
+                Person::setCurrRun(Person::getCurrRun() + .3);
+                chX = 2;
+            }
+            else {
+                chX = -2; // move to the right
+            }
+        }
     }
-    else {
+    else { // on top (error check)
         Person::setCurrRun(0); // reset frame count
     }
 
     if (Person::getCurrRun() >= 7) // keep in bounds of array for running
         Person::setCurrRun(0);
+
+    return chX; // return change in x position
 }

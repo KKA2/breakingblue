@@ -10,7 +10,6 @@ using namespace std;
 Master::Master() {
     Quit = false;
     NextLevel = true; // start game by moving to first level
-    MoveEnemy = 0; // pass into move function of enemy class to be updated
     // initialize screen
     init();
     // set up textures in composed classes
@@ -82,13 +81,15 @@ void Master::play() {
                     }
                 }
             }
-            if (NextLevel == true)
+            if (NextLevel == true || Quit == true)
                 break; // break out to move to next level
         }
         if (levels.getCurrLevel() != 0) { // if not menu screen (i.e. gameplay)
             animate(&player); // run through any animations
-            player.setState(0); // reset state (draw standing if not changed)
-            enemy.setState(0); // reset enemy state
+            if (player.getState() == 1 || player.getState() == 2) // if running or jumping animation
+                player.setState(0); // reset state just in case
+            if (enemy.getState() == 2) // if jumping
+                enemy.setState(0);
 
             checkKeyPress(); // check short key presses
             jump(&player); // jumping animation
@@ -100,8 +101,9 @@ void Master::play() {
             moveFigure(&player,0,0); // check for collisions/ground and adjust accordingly
             
             if (levels.getCurrLevel() == 4) { // move enemy if exists
-                enemy.move(player.getXPos(),MoveEnemy);
-                moveFigure(&enemy,MoveEnemy,0);
+                moveFigure(&enemy,enemy.move(player.getXPos(),player.getState()),0); // move x position
+                animate(&enemy); // complete any animations
+                jump(&enemy);
             }
             
             update(); // update screen animation
@@ -213,18 +215,14 @@ void Master::animate(Person *person) {
         }
     }
     // move person
-    while (person->getState() == 4) { // rolling
-        person->setCurrRoll(person->getCurrRoll() + .5);
+    if (person->getState() == 4) { // rolling
+        person->setCurrRoll(person->getCurrRoll() + 1);
         if (person->getMoveDir() == SDL_FLIP_NONE) // check direction for movement
-            moveFigure(person,8,0);
+            moveFigure(person,16,0);
         else
-            moveFigure(person,-8,0);
+            moveFigure(person,-16,0);
         
         if (person->getCurrRoll() < 8) {
-            if (levels.getCurrLevel() == 4) {
-                enemy.move(person->getXPos(),MoveEnemy); // update enemy
-                moveFigure(&enemy,MoveEnemy,0);
-            }
             update();
         }
         else {
@@ -232,7 +230,7 @@ void Master::animate(Person *person) {
             person->setState(3);
         }
     }
-    while (person->getState() == 5) { // punching
+    if (person->getState() == 5) { // punching
         // check for collision
         if (int(person->getCurrPunch()) == 6) { // only check frames between 6/7
             int hasCollided = checkCollision(person);
@@ -247,7 +245,6 @@ void Master::animate(Person *person) {
                 } while (hasCollided);
             }
         }
-
         if (person->getCurrPunch() == 0) { // if beginning punch
             if (person->getMoveDir() == SDL_FLIP_NONE) // move in direction punching
                 moveFigure(person,4,0);
@@ -255,17 +252,13 @@ void Master::animate(Person *person) {
                 moveFigure(person,-4,0);
         }
         if (person->getCurrPunch() < 6)
-            person->setCurrPunch(person->getCurrPunch() + .4);
+            person->setCurrPunch(person->getCurrPunch() + .8);
         else if (person->getCurrPunch() < 8)
-            person->setCurrPunch(person->getCurrPunch() + .25);
+            person->setCurrPunch(person->getCurrPunch() + .5);
         else
-            person->setCurrPunch(person->getCurrPunch() + 1);
+            person->setCurrPunch(person->getCurrPunch() + 2);
 
         if (person->getCurrPunch() < 13) {
-            if (levels.getCurrLevel() == 4) {
-                enemy.move(person->getXPos(),MoveEnemy); // update enemy
-                moveFigure(&enemy,MoveEnemy,0);
-            }
             update();
         }
         else {
@@ -274,7 +267,7 @@ void Master::animate(Person *person) {
         }
     }
 
-    while (person->getState() == 6) { // kicking
+    if (person->getState() == 6) { // kicking
         // check for collision
         int hasCollided = checkCollision(person);
         if (hasCollided) { // five must collide
@@ -289,17 +282,13 @@ void Master::animate(Person *person) {
         }
 
         if (person->getCurrKick() < 5)
-            person->setCurrKick(person->getCurrKick() + .4);
+            person->setCurrKick(person->getCurrKick() + .8);
         else if (person->getCurrKick() < 6)
-            person->setCurrKick(person->getCurrKick() + .1);
+            person->setCurrKick(person->getCurrKick() + .2);
         else
-            person->setCurrKick(person->getCurrKick() + .7);
+            person->setCurrKick(person->getCurrKick() + 1.4);
 
         if (person->getCurrKick() < 11) {
-            if (levels.getCurrLevel() == 4) {
-                enemy.move(person->getXPos(),MoveEnemy); // update enemy
-                moveFigure(&enemy,MoveEnemy,0);
-            }
             update();
         }
         else {
@@ -403,6 +392,10 @@ void Master::checkKeyboard() {
     }
 }
 
+void Master::run(Person *, SDL_RendererFlip direction) {
+
+} 
+
 void Master::checkKeyPress() {
     SDL_Event e; // store key pressed
     while (SDL_PollEvent(&e) != 0) {
@@ -460,24 +453,26 @@ int Master::moveFigure(Person *person, double chX, double chY, bool move) {
 
     // check relationship to the ground
     int notOnGround = checkGround(person);
-    if (person->getJumpHeight() == 0 && person->getState() != 7) { // not jumping or flying
-        // ensure person is on ground
-        if (notOnGround) { // continue until person hits ground or edge of board
-            if (person->getState() != 1)
-                person->setState(2); // draw falling figure
+    if (!(person->getState() == 2 && person->getJumpDir() == -1)) { // if not rising in jump
+        if (person->getState() != 7) { // not flying
+            // ensure person is on ground
+            if (notOnGround) { // continue until person hits ground or edge of board
+                if (person->getState() != 1)
+                    person->setState(2); // draw falling figure
 
-            if (notOnGround == 1) { // is in air
-                if (move == true)
-                    person->setYPos(person->getYPos() + 6); // shift person down (falling)
-                notOnGround = checkGround(person);
-                if (!notOnGround)
-                    sound.playSound(1);
+                if (notOnGround == 1) { // is in air
+                    if (move == true)
+                        person->setYPos(person->getYPos() + 6); // shift person down (falling)
+                    notOnGround = checkGround(person);
+                    if (!notOnGround)
+                        sound.playSound(1);
+                }
+                else { // is in the ground
+                    if (move == true)
+                        person->setYPos(person->getYPos() - 1); // shift person up (rising)
+                    notOnGround = checkGround(person);
+                } 
             }
-            else { // is in the ground
-                if (move == true)
-                    person->setYPos(person->getYPos() - 2); // shift person up (rising)
-                notOnGround = checkGround(person);
-            } 
         }
     }
 
@@ -546,7 +541,7 @@ int Master::checkCollision(Person *person) {
         for(int x = boundingW; x > 0; x--) { 
             // get current person pixel 
             if (person->getMoveDir() == SDL_FLIP_HORIZONTAL) // if facing left
-                personPixel = personTex->getPixel(leftEdge+boundingH-x,y);
+                personPixel = personTex->getPixel(leftEdge+boundingW-x,y);
             else 
                 personPixel = personTex->getPixel(leftEdge+x,y); // access current pixel
             // access alpha value of pixel (i.e. transparency)
@@ -555,7 +550,7 @@ int Master::checkCollision(Person *person) {
             if (int(personAlpha) > 10) { // if person is present, check for overlap with foreground
                 // get foreground pixel
                 if (person->getMoveDir() == SDL_FLIP_HORIZONTAL) // facing left
-                    pixel = levels.getForeground()->getPixel(person->getXPos()+boundingH-x,person->getYPos()+y);
+                    pixel = levels.getForeground()->getPixel(person->getXPos()+boundingW-x,person->getYPos()+y);
                 else //facing right
                     pixel = levels.getForeground()->getPixel( person->getXPos()+x,person->getYPos()+y);
                 // check foreground transparency

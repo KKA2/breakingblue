@@ -10,8 +10,8 @@ using namespace std;
 
 Person::Person() {
     // initialize all values to default
-    XPos = 0;
-    YPos = 0;
+    XPos = -75; // directly out of bounds (so not drawn)
+    YPos = -94;
     CurrRun = 0;
     CurrRoll = 0;
     CurrPunch = 0;
