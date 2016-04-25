@@ -15,8 +15,7 @@ public:
     Enemy();
     ~Enemy();
     void loadMedia(); // load all textures from path names
-    void setInitialPos(int,int);
-    void move(int,int);
+    void move(int,int &);
 private:
     int NumSteps;
     double Life;

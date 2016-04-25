@@ -26,10 +26,25 @@ void Enemy::loadMedia() {
     KickingTexture.loadFromFile("imgs/figs/red/kicking.png");
 }
 
-void Enemy::setInitialPos(int width,int height) {
-    Person::setXPos(width-75);
-    Person::setYPos(height - SCREEN_HEIGHT);
-}
-void Enemy::move(int playerXPos, int playerYPos) {
+void Enemy::move(int playerXPos, int &chX) {
+    int xPos = Person::getXPos();
 
+    if (playerXPos-xPos < 0) { // player to the left of the enemy
+        Person::setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left
+        Person::setState(1); // set to running state
+        Person::setCurrRun(Person::getCurrRun() + .3); // change frame
+        chX = -5; // move to the left
+    }
+    else if (playerXPos-xPos > 0) { // player to the right of the enemy
+        Person::setMoveDir(SDL_FLIP_NONE); // turn to the right
+        Person::setState(1);
+        Person::setCurrRun(Person::getCurrRun() + .3);
+        chX = 5; // move to the right
+    }
+    else {
+        Person::setCurrRun(0); // reset frame count
+    }
+
+    if (Person::getCurrRun() >= 7) // keep in bounds of array for running
+        Person::setCurrRun(0);
 }
