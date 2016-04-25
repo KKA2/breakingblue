@@ -55,7 +55,7 @@ void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
             //levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
-            levels.setCurrLevel(4); // TESTING LEVEL
+            levels.setCurrLevel(2); // TESTING LEVEL
             levels.playMusic(); // start music
             reset(); // set all initial values
             NextLevel = false; // reset value of next level to play in the new level
@@ -117,7 +117,7 @@ void Master::reset() {
     player.setJumpHeight(0);
     // reset camera/display
     levels.setCameraX(0);
-    if (levels.getCurrLevel() == 1)
+    if (levels.getCurrLevel() == 1 || levels.getCurrLevel() == 2)
         for (int l=0;l<=3;l++)
             levels.setCurrDoor(l,0);
     // move figure to the ground to restart gameplay
@@ -159,7 +159,7 @@ void Master::update(bool interactive) {
 
 void Master::animate() {
     // check if a door is hit down
-    if (levels.getCurrLevel() == 1) {
+    if (levels.getCurrLevel() == 1 || levels.getCurrLevel() == 2) { // first or second level
         if (levels.getCurrDoor(0) >= 3) { // hit down third door
             while (levels.getCurrDoor(3) < 6) {
                 levels.setCurrDoor(3,levels.getCurrDoor(3) + .2);
@@ -198,16 +198,18 @@ void Master::animate() {
     }
     while (player.getState() == 5) { // punching
         // check for collision
-        int hasCollided = checkCollision();
-        if (hasCollided) { // add to punch only once (five punches must collide)
-            if (levels.getCurrLevel() == 1)
-                levels.setCurrDoor(0,levels.getCurrDoor(0) + .2);
-            sound.playSound(3);
+        if (int(player.getCurrPunch()) == 6) { // only check frames between 6/7
+            int hasCollided = checkCollision();
+            if (hasCollided) { // five must collide
+                if (levels.getCurrLevel() == 1 || levels.getCurrLevel() == 2)
+                    levels.setCurrDoor(0,levels.getCurrDoor(0) + .2);
+                sound.playSound(3);
 
-            do { // fix collision
-                fixCollision(hasCollided);
-                hasCollided = checkCollision();
-            } while (hasCollided);
+                do { // fix collision
+                    fixCollision(hasCollided);
+                    hasCollided = checkCollision();
+                } while (hasCollided);
+            }
         }
 
         if (player.getCurrPunch() == 0) { // if beginning punch
@@ -232,12 +234,19 @@ void Master::animate() {
     }
 
     while (player.getState() == 6) { // kicking
-        if (player.getCurrKick() == 0) { // if beginning kick
-            if (player.getMoveDir() == SDL_FLIP_NONE) // move in direction kicking
-                moveFigure(4,0);
-            else
-                moveFigure(-4,0);
+        // check for collision
+        int hasCollided = checkCollision();
+        if (hasCollided) { // five must collide
+            if (levels.getCurrLevel() == 1 || levels.getCurrLevel() == 2)
+                levels.setCurrDoor(0,levels.getCurrDoor(0) + .2);
+            sound.playSound(3);
+
+            do { // fix collision
+                fixCollision(hasCollided);
+                hasCollided = checkCollision();
+            } while (hasCollided);
         }
+
         if (player.getCurrKick() < 5)
             player.setCurrKick(player.getCurrKick() + .4);
         else if (player.getCurrKick() < 6)
@@ -301,7 +310,7 @@ void Master::jump() {
 void Master::checkKeyboard() {
     const Uint8 *state = SDL_GetKeyboardState(NULL);
 
-    if (levels.getCurrLevel() == 3) { // in third level (add flying)
+    if (FlyingEnabled) { // in third level (add flying)
         if (state[SDL_SCANCODE_UP]) {
             player.setState(7);
             moveFigure(0,-10);
@@ -355,8 +364,8 @@ void Master::checkKeyPress() {
             Quit = true;
         else if (e.type == SDL_KEYDOWN) {
             switch(e.key.keysym.sym) {
-                case SDLK_UP: 
-                    if (levels.getCurrLevel() != 3) { // not in third level (flying instead)
+                case SDLK_UP:
+                    if (!FlyingEnabled) {
                         player.setState(2); // jump
                         if (player.getJumpHeight() == 0) // if not already jumping
                             player.setJumpDir(-1); // start moving upwards
@@ -366,7 +375,17 @@ void Master::checkKeyPress() {
                     player.setState(5); // punch
                     break;
                 case SDLK_RETURN:
-                    player.setState(6); // kick
+                    if (levels.getCurrLevel() >= 2) // if kicking ability enabled
+                        player.setState(6); // kick
+                    break;
+                case SDLK_RSHIFT:
+                    if (levels.getCurrLevel() >= 2) { // if flying ability enabled
+                        // change mode
+                        if (FlyingEnabled)
+                            FlyingEnabled = false;
+                        else
+                            FlyingEnabled = true;
+                    }
                     break;
                 case SDLK_q:
                     Quit = true;
@@ -462,6 +481,9 @@ int Master::checkCollision() {
         case 5: // punching
             frame = player.getCurrPunch();
             break;
+        case 6: // kicking
+            frame = player.getCurrKick();
+            break;
         default: // standing, jumping, ducking
             break;
     }
@@ -522,10 +544,8 @@ void Master::fixCollision(int collisionType){
         player.setXPos(player.getXPos() - 5); // kick to the left
     }
     else { // top
-        if (levels.getCurrLevel() == 1) {
-            cout << "top collision" << endl;
+        if (levels.getCurrLevel() == 1)
             reset();
-        }
         else
             player.setYPos(player.getYPos() + 5); // move player back down
     }

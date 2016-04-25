@@ -21,9 +21,20 @@ public:
     void loadMedia();
     // get/set functions
     Texture * getForeground();
+    double getCurrDoor(int);
+    void setCurrDoor(int,double);
     void setCurrText();
 private:
-    Texture Foreground;
+    Texture Foreground[4];
+    Texture Door1Texture;
+    Texture Door2Texture;
+    Texture Door3Texture;
+
+    double CurrDoor; // current relevant door (which one hasn't been knocked down)
+    // state of respective door (how many hits landed - 0.2 added for each hit)
+    double CurrDoor1;
+    double CurrDoor2;
+    double CurrDoor3;
 };
 
 #endif
