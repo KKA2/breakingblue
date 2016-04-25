@@ -76,14 +76,16 @@ Texture * Levels::getForeground() {
 }
 
 void Levels::setCurrText() {
-    if (CurrLevel == 1)
+    if (CurrLevel == 1) {
         if (level1.getCurrText() == 2) {
             if (level1.getCurrDoor(1) > 1) {
                 level1.setCurrText();
             }
-        } else {
+        }
+        else {
             level1.setCurrText();
         }
+    }
 }
 
 void Levels::setCameraX(int x) {
