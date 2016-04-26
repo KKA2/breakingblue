@@ -17,6 +17,7 @@
 #include "Enemy.h"
 #include "Sound.h"
 #include "Levels.h"
+#include "Transition.h"
 
 using namespace std;
 
@@ -61,6 +62,7 @@ private:
     Player player;
     Enemy enemy;
     Levels levels;
+    Transition transition;
 };
 
 #endif

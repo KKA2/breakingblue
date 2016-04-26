@@ -17,6 +17,7 @@ Master::Master() {
     player.setUp(Renderer);
     enemy.setUp(Renderer);
     levels.setUp(Renderer);
+    transition.setUp(Renderer);
     // load all pictures/sounds
     loadMedia();
 }
@@ -52,12 +53,34 @@ void Master::loadMedia() {
     player.loadMedia();
     enemy.loadMedia();
     levels.loadMedia();
+    transition.loadMedia();
 }
 
 void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
-            levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
+            transition.display(levels.getCurrLevel()); // display transition
+            bool spacePressed = false; // exit while loop when user chooses to move to on
+            while (!spacePressed && Quit == false) { // or exit if user chooses to quit
+                SDL_Event e; // store key pressed
+                while (SDL_PollEvent(&e) != 0) {
+                    if (e.type == SDL_QUIT)
+                        Quit = true;
+                    else if (e.type == SDL_KEYDOWN) {
+                        switch(e.key.keysym.sym) {
+                            case SDLK_SPACE: // press space to move on from transition
+                                spacePressed = true;
+                                break;
+                            case SDLK_q: // press q to quit game
+                                Quit = true;
+                                break;
+                        }
+                    }
+                }
+            }
+            if (Quit == true) // if user chooses to quit
+                break;
+            levels.setCurrLevel(levels.getCurrLevel() + 1); // go to next level
             //levels.setCurrLevel(4); // TESTING LEVEL
             levels.playMusic(); // start music
             reset(); // set all initial values
@@ -67,64 +90,49 @@ void Master::play() {
             if (levels.getCurrLevel() == 4) // fourth level, set enemy jump height
                 enemy.setMaxJumpHeight(250);
         }
+        animate(&player); // run through any animations
+        if (player.getState() <= 3 || player.getState() == 7) // if running, jumping, ducking, or flying animation
+            player.setState(0); // reset state just in case
+        if (enemy.getState() == 2) // if jumping
+            enemy.setState(0);
 
-        while (levels.getCurrLevel() == 0) { // while in menu screen
-            SDL_Event e; // store key pressed
-            while (SDL_PollEvent(&e) != 0) {
-                if (e.type == SDL_QUIT)
-                    Quit = true;
-                else if (e.type == SDL_KEYDOWN) {
-                    switch(e.key.keysym.sym) {
-                        case SDLK_SPACE: // press space to move to start game
-                            NextLevel = true;
-                            break;
-                        case SDLK_q: // press q to quit game
-                            Quit = true;
-                            break;
-                    }
+        checkKeyPress(); // check short key presses
+
+        jump(&player); // jumping animation
+        checkKeyboard(); // check for held key presses
+
+        if (player.getCurrRun() >= 7) // keep in bounds of array for running
+            player.setCurrRun(0);
+
+        if (player.getState() != 5 && player.getState() != 6) // not punching/kicking (fixed within function)
+            moveFigure(&player,0,0); // check for collisions/ground and adjust accordingly
+        
+        if (levels.getCurrLevel() == 4) { // move enemy if exists
+            moveFigure(&enemy,enemy.move(player.getXPos(),player.getState()),0); // move x position
+            animate(&enemy); // complete any animations
+            jump(&enemy);
+            if (checkEnemy()) { // if player collides with enemy
+                if (player.getState() == 5 || player.getState() == 6) { // if player is punching or kicking
+                    enemy.setLifePts(enemy.getLifePts() - 1); // enemy loses life
+                    Hit = 2;
+                }
+                else if (enemy.getState() == 5 || enemy.getState() == 6) { // if enemy is punching or kicking
+                    player.setLifePts(player.getLifePts() - 1); // player loses life
+                    Hit = 2;
                 }
             }
-            if (NextLevel == true || Quit == true)
-                break; // break out to move to next level
-        }
-        if (levels.getCurrLevel() != 0) { // if not menu screen (i.e. gameplay)
-            animate(&player); // run through any animations
-            if (player.getState() <= 3 || player.getState() == 7) // if running, jumping, ducking, or flying animation
-                player.setState(0); // reset state just in case
-            if (enemy.getState() == 2) // if jumping
-                enemy.setState(0);
-
-            checkKeyPress(); // check short key presses
-
-            jump(&player); // jumping animation
-            checkKeyboard(); // check for held key presses
-
-            if (player.getCurrRun() >= 7) // keep in bounds of array for running
-                player.setCurrRun(0);
-
-            if (player.getState() != 5 && player.getState() != 6) // not punching/kicking (fixed within function)
-                moveFigure(&player,0,0); // check for collisions/ground and adjust accordingly
-            
-            if (levels.getCurrLevel() == 4) { // move enemy if exists
-                moveFigure(&enemy,enemy.move(player.getXPos(),player.getState()),0); // move x position
-                animate(&enemy); // complete any animations
-                jump(&enemy);
-                if (checkEnemy()) { // if player collides with enemy
-                    if (player.getState() == 5 || player.getState() == 6) { // if player is punching or kicking
-                        enemy.setLifePts(enemy.getLifePts() - 1); // enemy loses life
-                        Hit = 2;
-                    }
-                    else if (enemy.getState() == 5 || enemy.getState() == 6) { // if enemy is punching or kicking
-                        player.setLifePts(player.getLifePts() - 1); // player loses life
-                        Hit = 2;
-                    }
-                }
-                else {
-                    Hit = 0;
-                }
+            else {
+                Hit = 0;
             }
-            update(); // update screen animation
+            // check life points
+            if (enemy.getLifePts() <= 0) { // if enemy defeated
+                NextLevel = true;
+            }
+            else if (player.getLifePts() <= 0) { // if player dies
+                reset();
+            }
         }
+        update(); // update screen animation
     }
 }
 
