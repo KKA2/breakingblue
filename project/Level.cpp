@@ -45,8 +45,8 @@ void Level::display() {
 void Level::playMusic() {
     // play music on channel
     Mix_PlayMusic(Music,-1);
-    // set volume of music played to 30
-    Mix_VolumeMusic(30);
+    // set volume of music played to 50
+    Mix_VolumeMusic(50);
 }
 
 SDL_Texture * Level::loadTexture(string path) {

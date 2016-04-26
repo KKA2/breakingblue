@@ -30,7 +30,7 @@ void Sound::loadMedia(int load) {
         }
         else if (load == 2) {
             Mix_FreeChunk(SoundEffect);
-            SoundEffect = Mix_LoadWAV("sound/running.wav");
+            //SoundEffect = Mix_LoadWAV("sound/running.wav");
             loaded = 2;
         }
         else if (load == 3) {
@@ -55,8 +55,8 @@ void Sound::playSound(int sound) {
     loadMedia(sound); // load sound effect to be played
     if (sound == 1 && Mix_Playing(1) == 0) // landing, make sure sound not already playing
         Mix_PlayChannel(1,SoundEffect,0);
-    else if (sound == 2 && Mix_Playing(2) == 0) // running
-        Mix_PlayChannel(2,SoundEffect,0);
+    //else if (sound == 2 && Mix_Playing(2) == 0) // running
+    //    Mix_PlayChannel(2,SoundEffect,0);
     else if (sound == 3) // punching, sound can overlap
         Mix_PlayChannel(3,SoundEffect,0);
     else if (sound == 4) // success, play at end of each level

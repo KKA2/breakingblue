@@ -59,8 +59,10 @@ void Master::loadMedia() {
 void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
-            if (levels.getCurrLevel() != 0) // if not the first level
-                sound.playSound(4);
+            if (levels.getCurrLevel() != 0) { // if not the first level
+                levels.stopMusic(); // fade out music
+                sound.playSound(4); // play success sound
+            }
             showTransition();
             levels.stopMusic(); // fade out music
             if (Quit == true) // if user chooses to quit or game is over
@@ -71,7 +73,9 @@ void Master::play() {
             //levels.setCurrLevel(2); // TESTING LEVEL
             levels.playMusic(); // start music
             if (levels.getCurrLevel() == 5) { // if finished with the game
-                levels.setCurrLevel(1); // set to first level
+                levels.setCurrLevel(0); // set to first level
+                levels.stopMusic();
+                continue; // restart while loop
             }
 
             reset(); // set all initial values
@@ -170,6 +174,10 @@ void Master::reset() {
         player.setXPos(0);
         player.setYPos(levels.getLevelHeight() - SCREEN_HEIGHT);
     }
+    // get a new maze
+    if (levels.getCurrLevel() == 3) {
+        levels.setCurrMaze();
+    }
     // move display to center over figure
     updateCamera();
     // redraw screen images
@@ -196,10 +204,6 @@ void Master::reset() {
         enemy.setMoveDir(SDL_FLIP_HORIZONTAL);
         enemy.setJumpDir(0);
         enemy.setJumpHeight(0);
-    }
-    // get a new maze
-    if (levels.getCurrLevel() == 3) {
-        levels.setCurrMaze();
     }
     // reset camera/display
     levels.setCameraX(0);
@@ -434,25 +438,29 @@ void Master::checkKeyboard() {
     }
     else if (state[SDL_SCANCODE_LEFT]) { // run left
         player.setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left
-        if (player.getState() != 2 && player.getState() != 7) { // if not jumping or flying
-            sound.playSound(2); // play running sound effect
-            if (moveFigure(&player,0,0,false) != 1) { // if not above ground
-                player.setState(1); // set to running state
-                player.setCurrRun(player.getCurrRun() + .3); // change frame
+        if (!checkCollision(&player)) { // not in a tunnel
+            if (player.getState() != 2 && player.getState() != 7) { // if not jumping or flying
+                if (moveFigure(&player,0,0,false) != 1) { // if not above ground
+                    if (!checkCollision(&player)) {
+                        player.setState(1); // set to running state
+                        player.setCurrRun(player.getCurrRun() + .3); // change frame
+                    }
+                }
             }
+            moveFigure(&player,-10,0); // move to the left
         }
-        moveFigure(&player,-10,0); // move to the left
     }
     else if (state[SDL_SCANCODE_RIGHT]) { // run right
         player.setMoveDir(SDL_FLIP_NONE); // turn to the right
-        if (player.getState() != 2 && player.getState() != 7) {
-            sound.playSound(2);
-            if (moveFigure(&player,0,0,false) != 1) { // if not above ground
-                player.setState(1);
-                player.setCurrRun(player.getCurrRun() + .3);
+        if (!checkCollision(&player)) { // not in a tunnel
+            if (player.getState() != 2 && player.getState() != 7) {
+                if (moveFigure(&player,0,0,false) != 1) { // if not above ground
+                            player.setState(1); // set to running state
+                            player.setCurrRun(player.getCurrRun() + .3); // change frame
+                }
             }
+            moveFigure(&player,10,0); // move to the right
         }
-        moveFigure(&player,10,0); // move to the right
     }
     else {
         player.setCurrRun(0); // reset frame count
@@ -551,12 +559,12 @@ int Master::moveFigure(Person *person, double chX, double chY, bool move) {
             if (levels.getCurrLevel() == 1) // if in first level
                 NextLevel = true; // move to next level when hit end
             else
-                person->setXPos(levels.getLevelWidth()  - 75); // fix overstep
+                person->setXPos(levels.getLevelWidth() - 75); // fix overstep
         }
         else if (person->getXPos() < 0) // overstep left boundary
             person->setXPos(0);
 
-        if (person->getYPos() > levels.getLevelHeight()) { // overstep bottom boundary
+        if (person->getYPos() > levels.getLevelHeight() - 94) { // overstep bottom boundary
             if (levels.getCurrLevel() == 3) // if in third level
                 NextLevel = true;
             else {
@@ -649,7 +657,7 @@ void Master::fixCollision(Person *person, int collisionType) {
             person->setXPos(person->getXPos() + 2);
         else { // catch exception (standing)
             person->setState(3); // force to duck
-            person->setXPos(person->getXPos() + 1);
+            //person->setXPos(person->getXPos() + 1);
         }
     }
     else if (collisionType == 2) { // right, kick to left
@@ -661,7 +669,7 @@ void Master::fixCollision(Person *person, int collisionType) {
             person->setXPos(person->getXPos() - 2);
         else { // catch exception (standing)
             person->setState(3); // force to duck
-            person->setXPos(person->getXPos() - 1);
+            //person->setXPos(person->getXPos() - 1);
         }
     }
     else { // top
