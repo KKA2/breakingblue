@@ -10,6 +10,7 @@ using namespace std;
 Master::Master() {
     Quit = false;
     NextLevel = true; // start game by moving to first level
+    Hit = 0; // stores if enemy has hit the player
     // initialize screen
     init();
     // set up textures in composed classes
@@ -56,8 +57,8 @@ void Master::loadMedia() {
 void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
-            levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
-            //levels.setCurrLevel(4); // TESTING LEVEL
+            //levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
+            levels.setCurrLevel(4); // TESTING LEVEL
             levels.playMusic(); // start music
             reset(); // set all initial values
             NextLevel = false; // reset value of next level to play in the new level
@@ -107,14 +108,18 @@ void Master::play() {
                 jump(&enemy);
                 if (checkEnemy()) { // if player collides with enemy
                     if (player.getState() == 5 || player.getState() == 6) { // if player is punching or kicking
-                        enemy.setLifePts(enemy.getLifePts()-5); // enemy loses life
+                        enemy.setLifePts(enemy.getLifePts() - 1); // enemy loses life
+                        Hit = 2;
                     }
                     else if (enemy.getState() == 5 || enemy.getState() == 6) { // if enemy is punching or kicking
-                        player.setLifePts(player.getLifePts()-5); // player loses life
+                        player.setLifePts(player.getLifePts() - 1); // player loses life
+                        Hit = 2;
                     }
                 }
+                else {
+                    Hit = 0;
+                }
             }
-            //cout << player.getLifePts() << " " << enemy.getLifePts() << endl;
             update(); // update screen animation
         }
     }
@@ -122,20 +127,20 @@ void Master::play() {
 
 void Master::reset() {
     // set player's initial position
-    if (levels.getCurrLevel() != 3) {
-        player.setXPos(0);
-        player.setYPos(levels.getLevelHeight() - SCREEN_HEIGHT);
-    }
-    else {
+    if (levels.getCurrLevel() == 3) { // 3rd level
         player.setXPos(2122);
         player.setYPos(0);
+    }
+    else {
+        player.setXPos(0);
+        player.setYPos(levels.getLevelHeight() - SCREEN_HEIGHT);
     }
     // move display to center over figure
     updateCamera();
     // redraw screen images
     update(false); // do not draw person just yet
     // set player stats
-    player.setLifePts(100); // reset life to 100
+    player.setLifePts(200); // reset life to 200
     player.setCurrRun(0);
     player.setCurrRoll(0);
     player.setCurrPunch(0);
@@ -147,7 +152,7 @@ void Master::reset() {
     player.setFlyingEnabled(false);
     // set enemy stats
     if (levels.getCurrLevel() == 4) {
-        enemy.setLifePts(100); // reset life to 100
+        enemy.setLifePts(200); // reset life to 200
         enemy.setCurrRun(0);
         enemy.setCurrRoll(0);
         enemy.setCurrPunch(0);
@@ -712,8 +717,8 @@ bool Master::checkEnemy() {
                     // check transparency of enemy pixel
                     enemyAlpha = enemyTex->getAlpha(enemyPixel);
                     if (int(enemyAlpha) > 10) { // collision
-                        //cout << player.getXPos() << " " << enemy.getXPos() << endl;
-                        return true;
+                        if (Hit == 0) // only add to hit if in state 0 (pre-hit)
+                            return true;
                     }
                 }
             }

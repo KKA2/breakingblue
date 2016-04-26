@@ -34,7 +34,7 @@ void Enemy::loadMedia() {
     FlyingTexture.loadFromFile("imgs/figs/red/flying.png");
 
     LifeTexture.loadFromFile("imgs/life.png");
-    for (int i=0;i<11;i++) {
+    for (int i=0;i<201;i++) {
         Life[i].x = 0;
         Life[i].y = 10*i;
         Life[i].w = 200;
@@ -45,8 +45,7 @@ void Enemy::loadMedia() {
 void Enemy::draw(int camX, int camY, int level) {
     Person::draw(camX,camY);
     if (level == 4) {
-        int lifeLeft = 100-Person::getLifePts();
-        LifeTexture.render(SCREEN_WIDTH-220,20,&Life[lifeLeft/5]);
+        LifeTexture.render(camX+SCREEN_WIDTH-220,camY+20,&Life[200-Person::getLifePts()]);
     }
 }
 

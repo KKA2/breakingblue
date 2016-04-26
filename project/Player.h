@@ -19,7 +19,7 @@ public:
     void draw(int,int,int);
 private:
     // life bar rectangle/texture
-    SDL_Rect Life[21];
+    SDL_Rect Life[201];
     Texture LifeTexture;
 };
 

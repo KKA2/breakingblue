@@ -10,7 +10,7 @@ using namespace std;
 
 Person::Person() {
     // initialize all values to default
-    LifePts = 100;
+    LifePts = 200;
     XPos = -75; // directly out of bounds (so not drawn)
     YPos = -94;
     CurrRun = 0;

@@ -30,7 +30,7 @@ void Player::loadMedia() {
     FlyingTexture.loadFromFile("imgs/figs/blue/flying.png");
 
     LifeTexture.loadFromFile("imgs/life.png");
-    for (int i=0;i<11;i++) {
+    for (int i=0;i<201;i++) {
         Life[i].x = 0;
         Life[i].y = 10*i;
         Life[i].w = 200;
@@ -41,8 +41,6 @@ void Player::loadMedia() {
 void Player::draw(int camX, int camY, int level) {
     Person::draw(camX,camY);
     if (level == 4) {
-        int lifeLeft = 100-Person::getLifePts();
-        cout << lifeLeft/5 << endl;
-        LifeTexture.render(20,20,&Life[lifeLeft/5]);
+        LifeTexture.render(camX+20,camY+20,&Life[200-Person::getLifePts()]);
     }
 } 

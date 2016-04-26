@@ -53,6 +53,10 @@ private:
     SDL_Renderer *Renderer; // window renderer
     bool Quit; // boolean to quit, false = do not quit, true = quit
     bool NextLevel; // true = move on to next level
+    // three states
+    // 0 - pre-hit, 1 - hit, 2 - wait for no collision->back to 0
+    int Hit;
+    // composition
     Sound sound;
     Player player;
     Enemy enemy;

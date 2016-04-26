@@ -14,7 +14,7 @@ class Person {
 public:
     Person();
     ~Person();
-    void setUp(SDL_Renderer *); // set up all textures to render
+    virtual void setUp(SDL_Renderer *); // set up all textures to render
     virtual void loadMedia(); // load all textures from path names
     void draw(int,int); // draw all textures onto the screen
     // get/set functions

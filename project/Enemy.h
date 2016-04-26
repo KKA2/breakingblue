@@ -7,6 +7,8 @@
 #define _ENEMY
 
 #include "Person.h"
+#include <ctime>
+#include <cstdlib>
 
 using namespace std;
 
@@ -20,7 +22,7 @@ public:
     int move(int,int); // return change in x position
 private:
     // life bar rectangle/texture
-    SDL_Rect Life[21];
+    SDL_Rect Life[201];
     Texture LifeTexture;
 
     int NumSteps;
