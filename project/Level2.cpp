@@ -7,7 +7,9 @@
 
 using namespace std;
 
-Level2::Level2() {}
+Level2::Level2() {
+    CurrText = 0;
+}
 
 Level2::~Level2() {
     for (int f=0;f<4;f++)
@@ -15,6 +17,7 @@ Level2::~Level2() {
     Door1Texture.free();
     Door2Texture.free();
     Door3Texture.free();
+    LevelTwoText.clear();
 }
 
 void Level2::setUp(SDL_Renderer *renderer) {
@@ -30,6 +33,14 @@ void Level2::setUp(SDL_Renderer *renderer) {
     Level::setLevelHeight(800);
     Level::setCameraX(0);
     Level::setCameraY(0);
+
+    Text temp(21);
+
+    LevelTwoText.push_back(temp);
+
+    for(unsigned int i=0; i<LevelTwoText.size();i++) {
+        LevelTwoText[i].setUp(renderer);   
+    }    
 }
 
 void Level2::display() {
@@ -46,6 +57,11 @@ void Level2::display() {
     Door2Texture.render(0,0,&cam);
     cam.y = 400*int(CurrDoor3);
     Door3Texture.render(0,0,&cam);
+
+    if (CurrText == 0) {
+        //display message
+        LevelTwoText[0].display(&cam, 0);
+    }
 }
 
 void Level2::loadMedia() {
@@ -61,6 +77,9 @@ void Level2::loadMedia() {
     Door1Texture.loadFromFile("imgs/lvl2/door1.png");
     Door2Texture.loadFromFile("imgs/lvl2/door2.png");
     Door3Texture.loadFromFile("imgs/lvl2/door3.png");
+
+    LevelTwoText[0].loadMedia("imgs/lvl2/txt/welcome.png");
+
 }
 
 Texture * Level2::getForeground() {
@@ -95,4 +114,11 @@ void Level2::setCurrDoor(int door, double currDoor) {
         CurrDoor2 = currDoor;
     else if (door == 3)
         CurrDoor3 = currDoor;
+}
+void Level2::setCurrText() {
+    CurrText++; // move to next direction for mission parameter text
+}
+int Level2::getCurrText() {
+
+    return CurrText;
 }
