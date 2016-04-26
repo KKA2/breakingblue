@@ -43,6 +43,8 @@ void Level1::setUp(SDL_Renderer *renderer) {
     Text temp3(31);
     Text temp6(42);
     Text temp7(33);
+    Text temp8(52);
+
 
     //add text displays to (in order of display)
     LevelOneText.push_back(tempText);
@@ -52,6 +54,7 @@ void Level1::setUp(SDL_Renderer *renderer) {
     LevelOneText.push_back(temp3);
     LevelOneText.push_back(temp6);
     LevelOneText.push_back(temp7);
+    LevelOneText.push_back(temp8);
 
 
     for(unsigned int i=0; i<LevelOneText.size();i++) {
@@ -100,6 +103,8 @@ void Level1::display() {
         LevelOneText[5].display(&cam,0);
     } else if (CurrText == 3) {
         LevelOneText[6].display(&cam, 0);
+    } else if (CurrText == 4) {
+        LevelOneText[7].display(&cam, 0);
     }
 }
 
@@ -117,6 +122,7 @@ void Level1::loadMedia() {
     LevelOneText[4].loadMedia("imgs/lvl1/text/howToMove.png");
     LevelOneText[5].loadMedia("imgs/lvl1/text/howToPunch.png");
     LevelOneText[6].loadMedia("imgs/lvl1/text/howToJump.png");
+    LevelOneText[7].loadMedia("imgs/lvl1/text/goThroughTunnel.png");
     
     // load all foreground textures
     Foreground[0].loadFromFile("imgs/lvl1/base1.png");

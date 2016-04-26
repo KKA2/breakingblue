@@ -24,11 +24,16 @@ public:
     double getCurrDoor(int);
     void setCurrDoor(int,double);
     void setCurrText();
+    void setCurrText(int);
+    int getCurrText();
 private:
     Texture Foreground[4];
     Texture Door1Texture;
     Texture Door2Texture;
     Texture Door3Texture;
+
+    vector<Text> LevelTwoText;
+    int CurrText;
 
     double CurrDoor; // current relevant door (which one hasn't been knocked down)
     // state of respective door (how many hits landed - 0.2 added for each hit)

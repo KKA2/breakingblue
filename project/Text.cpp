@@ -49,11 +49,11 @@ bool Text::display(SDL_Rect * cam, int line) { //line to display on
     static int i;
 
     if (i < NumChars) {
-        text.render(XPos,YPos+26*line,&Chars[int(i)],SDL_FLIP_NONE);
+        text.render(XPos, 26*line,&Chars[int(i)],SDL_FLIP_NONE);
         //SDL_RenderPresent(Renderer);
         i++;
         return false; //not fully displayed
     } else
-        text.render(XPos,YPos+26*line,&Chars[NumChars-1],SDL_FLIP_NONE); // does not scroll through text yet
+        text.render(XPos, 26*line,&Chars[NumChars-1],SDL_FLIP_NONE); // does not scroll through text yet
         return true; //fully displayed
 }

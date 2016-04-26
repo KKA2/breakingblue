@@ -24,7 +24,9 @@ public:
     void setCurrText();
 private:
     Texture Foreground;
-    Text MissionParam; // text for mission parameters
+
+    vector<Text> LevelThreeText;
+
     int CurrText; //current text direction to be displayed
 };
 

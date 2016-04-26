@@ -8,7 +8,7 @@
 using namespace std;
 
 Levels::Levels() {
-    CurrLevel = -1; // set to before any level
+    CurrLevel = 0; // set to before any level
 }
 
 Levels::~Levels() {}
@@ -85,6 +85,10 @@ void Levels::setCurrText() {
         else {
             level1.setCurrText();
         }
+    } else if (CurrLevel == 2) {
+        level2.setCurrText();
+    } else if (CurrLevel == 3) {
+        level3.setCurrText();
     }
 }
 

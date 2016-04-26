@@ -16,18 +16,29 @@ Level3::Level3() {
 Level3::~Level3() {
     // free all textures
     Foreground.free();
+    LevelThreeText.clear();
 }
 
 void Level3::setUp(SDL_Renderer *renderer) {
     // set up renderer on all textures
     Level::setUp(renderer);
     Foreground.setUp(renderer);
-    MissionParam.setUp(renderer);
 
     Level::setLevelWidth(3360);
     Level::setLevelHeight(3360);
     Level::setCameraX(1622);
     Level::setCameraY(0);
+
+    Text tempText;
+
+    LevelThreeText.push_back(tempText);
+    LevelThreeText.push_back(tempText);
+    LevelThreeText.push_back(tempText);
+
+    for(unsigned int i=0; i<LevelThreeText.size();i++) {
+        LevelThreeText[i].setUp(renderer);   
+    }
+
 }
 
 void Level3::display() {
@@ -38,8 +49,11 @@ void Level3::display() {
     // render foreground onto screen
     getForeground()->render(0,0,&cam);
     // display the mission parameters
-    if(CurrText == 1) {
-        MissionParam.display(&cam, 0); // PLACEHOLDER
+    if(CurrText == 0) {
+        for (int i = 0; i<3; i++) {
+            LevelThreeText[i].display(&cam, i); // display text
+        }
+        
     }
 }
 
@@ -49,7 +63,11 @@ void Level3::loadMedia() {
     Level::setMusic(Mix_LoadMUS("sound/suspense.wav"));
     // load all foreground textures
     Foreground.loadFromFile("imgs/lvl3/maze.png");
-    MissionParam.loadMedia("imgs/lvl1/text/missionParam.png"); // PLACEHOLDER
+
+    LevelThreeText[0].loadMedia("imgs/lvl3/mission02.png");
+    LevelThreeText[1].loadMedia("imgs/lvl3/intel.png");
+    LevelThreeText[2].loadMedia("imgs/lvl3/purple.png");
+
 }
 
 Texture * Level3::getForeground() {
