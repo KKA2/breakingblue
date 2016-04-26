@@ -528,6 +528,9 @@ void Master::checkKeyPress() {
                 case SDLK_c:
                     levels.setCurrText();
                     break;
+                case SDLK_TAB: // CHEAT CODE TO ALLOW FOR DEBUGGING
+                    NextLevel = true;
+                    break;
             }
         }
     }
@@ -585,7 +588,6 @@ int Master::moveFigure(Person *person, double chX, double chY, bool move) {
         }
         else if (person->getXPos() < 0) { // overstep left boundary
             person->setXPos(0);
-            NextLevel = true; // ALLOW FOR MOVING TO THE NEXT LEVEL EASILY - REMOVE LATER
         }
 
         if (person->getYPos() > levels.getLevelHeight() - 94) { // overstep bottom boundary
@@ -600,7 +602,6 @@ int Master::moveFigure(Person *person, double chX, double chY, bool move) {
                 NextLevel = true;
             else
                 person->setYPos(0);
-                NextLevel = true; // ALLOW FOR MOVING TO THE NEXT LEVEL EASILY - REMOVE LATER
         }
 
         updateCamera();
