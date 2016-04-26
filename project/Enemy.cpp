@@ -11,10 +11,16 @@ using namespace std;
 
 Enemy::Enemy() {
     NumSteps = 0;
-    Life = 100;
 }
 
-Enemy::~Enemy() {}
+Enemy::~Enemy() {
+    LifeTexture.free();
+}
+
+void Enemy::setUp(SDL_Renderer *renderer) {
+    Person::setUp(renderer);
+    LifeTexture.setUp(renderer);
+}
 
 void Enemy::loadMedia() {
     Person::loadMedia();
@@ -26,6 +32,22 @@ void Enemy::loadMedia() {
     PunchingTexture.loadFromFile("imgs/figs/red/punching.png");
     KickingTexture.loadFromFile("imgs/figs/red/kicking.png");
     FlyingTexture.loadFromFile("imgs/figs/red/flying.png");
+
+    LifeTexture.loadFromFile("imgs/life.png");
+    for (int i=0;i<11;i++) {
+        Life[i].x = 0;
+        Life[i].y = 10*i;
+        Life[i].w = 200;
+        Life[i].h = 10;
+    }
+}
+
+void Enemy::draw(int camX, int camY, int level) {
+    Person::draw(camX,camY);
+    if (level == 4) {
+        int lifeLeft = 100-Person::getLifePts();
+        LifeTexture.render(SCREEN_WIDTH-220,20,&Life[lifeLeft/5]);
+    }
 }
 
 int Enemy::move(int playerXPos, int playerState) {

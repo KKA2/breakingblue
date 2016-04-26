@@ -10,6 +10,7 @@ using namespace std;
 
 Person::Person() {
     // initialize all values to default
+    LifePts = 100;
     XPos = -75; // directly out of bounds (so not drawn)
     YPos = -94;
     CurrRun = 0;
@@ -20,6 +21,7 @@ Person::Person() {
     State = 0;
     JumpDir = 0;
     JumpHeight = 0;
+    JumpChange = 0;
     MaxJumpHeight = 140;
     FlyingEnabled = false;
 }
@@ -131,6 +133,14 @@ Texture * Person::getTexture(const int state) {
     return texture;
 }
 
+int Person::getLifePts() const {
+    return LifePts;
+}
+
+void Person::setLifePts(const int lifePts) {
+    LifePts = lifePts;
+}
+
 double Person::getXPos() const {
     return XPos;
 }
@@ -209,6 +219,14 @@ double Person::getJumpHeight() const {
 
 void Person::setJumpHeight(const double jumpHeight) {
     JumpHeight = jumpHeight;
+}
+
+double Person::getJumpChange() const {
+    return JumpChange;
+}
+
+void Person::setJumpChange(const double jumpChange) {
+    JumpChange = jumpChange;
 }
 
 int Person::getMaxJumpHeight() const {

@@ -42,9 +42,12 @@ public:
     void checkKeyPress(); // check keyboard for short motion
     int moveFigure(Person *,double,double,bool=true); // change figure position, only check new position if bool set to false
     // collision detection
+    // to foreground
     int checkCollision(Person *); // checks for right/left/top collisions with foreground
     void fixCollision(Person *,int collisionType); // respond to collision
     int checkGround(Person *);
+    // to enemy
+    bool checkEnemy(); // true if collision
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
