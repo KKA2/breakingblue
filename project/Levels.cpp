@@ -89,6 +89,8 @@ void Levels::setCurrText() {
         level2.setCurrText();
     } else if (CurrLevel == 3) {
         level3.setCurrText();
+    } else if (CurrLevel == 4) {
+        level4.setCurrText();
     }
 }
 

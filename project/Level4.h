@@ -24,6 +24,10 @@ public:
     void setCurrText();
 private:
     Texture Foreground;
+
+    vector<Text> LevelFourText;
+
+    int CurrText; //current text direction to be displayed
 };
 
 #endif
