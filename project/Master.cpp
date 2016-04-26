@@ -436,6 +436,7 @@ void Master::checkKeyPress() {
                     if (levels.getCurrLevel() >= 2) // if kicking ability enabled
                         player.setState(6); // kick
                     break;
+                case SDLK_LSHIFT: //do same as right shift
                 case SDLK_RSHIFT:
                     if (levels.getCurrLevel() >= 2) { // if flying ability enabled
                         // change mode

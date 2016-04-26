@@ -35,8 +35,17 @@ void Level2::setUp(SDL_Renderer *renderer) {
     Level::setCameraY(0);
 
     Text temp(21);
+    Text temp2(66);
+    Text temp3(65);
+    Text temp4(40);
+    Text temp5(58);
 
     LevelTwoText.push_back(temp);
+    LevelTwoText.push_back(temp2);
+    LevelTwoText.push_back(temp3);
+    LevelTwoText.push_back(temp4);
+    LevelTwoText.push_back(temp5);
+
 
     for(unsigned int i=0; i<LevelTwoText.size();i++) {
         LevelTwoText[i].setUp(renderer);   
@@ -60,7 +69,13 @@ void Level2::display() {
 
     if (CurrText == 0) {
         //display message
-        LevelTwoText[0].display(&cam, 0);
+        for(int i = 0; i<3; i++) {
+            LevelTwoText[i].display(&cam, i);
+        }  
+    } else if (CurrText == 1) {
+        LevelTwoText[3].display(&cam, 0);
+        LevelTwoText[4].display(&cam, 1);
+
     }
 }
 
@@ -79,6 +94,10 @@ void Level2::loadMedia() {
     Door3Texture.loadFromFile("imgs/lvl2/door3.png");
 
     LevelTwoText[0].loadMedia("imgs/lvl2/txt/welcome.png");
+    LevelTwoText[1].loadMedia("imgs/lvl2/txt/decrypt.png");
+    LevelTwoText[2].loadMedia("imgs/lvl2/txt/AQUA.png");
+    LevelTwoText[3].loadMedia("imgs/lvl2/txt/kick.png");
+    LevelTwoText[4].loadMedia("imgs/lvl2/txt/fly.png");
 
 }
 
