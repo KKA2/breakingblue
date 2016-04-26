@@ -9,7 +9,14 @@ using namespace std;
 
 Player::Player() {}
 
-Player::~Player() {}
+Player::~Player() {
+    LifeTexture.free();
+}
+
+void Player::setUp(SDL_Renderer *renderer) {
+    Person::setUp(renderer);
+    LifeTexture.setUp(renderer);
+}
 
 void Player::loadMedia() {
     Person::loadMedia();
@@ -21,4 +28,21 @@ void Player::loadMedia() {
     PunchingTexture.loadFromFile("imgs/figs/blue/punching.png");
     KickingTexture.loadFromFile("imgs/figs/blue/kicking.png");
     FlyingTexture.loadFromFile("imgs/figs/blue/flying.png");
+
+    LifeTexture.loadFromFile("imgs/life.png");
+    for (int i=0;i<11;i++) {
+        Life[i].x = 0;
+        Life[i].y = 10*i;
+        Life[i].w = 200;
+        Life[i].h = 10;
+    }
 }
+
+void Player::draw(int camX, int camY, int level) {
+    Person::draw(camX,camY);
+    if (level == 4) {
+        int lifeLeft = 100-Person::getLifePts();
+        cout << lifeLeft/5 << endl;
+        LifeTexture.render(20,20,&Life[lifeLeft/5]);
+    }
+} 
