@@ -11,6 +11,7 @@ Master::Master() {
     Quit = false;
     NextLevel = true; // start game by moving to first level
     Hit = 0; // stores if enemy has hit the player
+    Status = 0; // set win/lose status to 0 initially
     // initialize screen
     init();
     // set up textures in composed classes
@@ -61,29 +62,41 @@ void Master::play() {
         if (NextLevel) { // check if new/next level
             if (levels.getCurrLevel() != 0) { // if not the first level
                 levels.stopMusic(); // fade out music
-                sound.playSound(4); // play success sound
+                if (levels.getCurrLevel() == 4) {// if after the fourth level
+                    if (Status == 0)
+                        sound.playSound(5); // failure sound
+                    else {
+                        sound.playSound(6); // win sound
+                    }
+                }
+                else
+                    sound.playSound(4); // success sound
             }
             showTransition();
-            levels.stopMusic(); // fade out music
             if (Quit == true) // if user chooses to quit or game is over
-                break;
-            else // if not, then play sound to indicate that user has chosen to continue
-                sound.playSound(5);
+                continue; // restart while loop
+            else { // if not, then play sound to indicate that user has chosen to continue
+                levels.stopMusic();
+                sound.playSound(7); // select sound
+            }
             levels.setCurrLevel(levels.getCurrLevel() + 1); // go to next level
             //levels.setCurrLevel(2); // TESTING LEVEL
-            levels.playMusic(); // start music
             if (levels.getCurrLevel() == 5) { // if finished with the game
-                levels.setCurrLevel(0); // set to first level
                 levels.stopMusic();
-                continue; // restart while loop
+                if (Status == 1) { // if won game
+                    levels.setCurrLevel(0); // set to first level
+                } 
+                else { // if lost game
+                    levels.setCurrLevel(4); // restart fourth level
+                }             
             }
-
             reset(); // set all initial values
-            NextLevel = false; // reset value of next level to play in the new level
+            levels.playMusic(); // start music
             if (levels.getCurrLevel() >= 2) // increase jump height
                 player.setMaxJumpHeight(200);
             if (levels.getCurrLevel() == 4) // fourth level, set enemy jump height
                 enemy.setMaxJumpHeight(250);
+            NextLevel = false; // reset value of next level to play in the new level
         }
 
         animate(&player); // run through any animations
@@ -109,18 +122,22 @@ void Master::play() {
             jump(&enemy);
             if (checkEnemy()) { // if player collides with enemy
                 if (player.getState() == 5) { // if player is punching
+                    sound.playSound(2); // play punching sound
                     enemy.setLifePts(enemy.getLifePts() - 2); // enemy loses life
                     Hit = 2;
                 }
                 else if (player.getState() == 6) { // if player is kicking
+                    sound.playSound(1);
                     enemy.setLifePts(enemy.getLifePts() - 4); // enemy loses more life
                     Hit = 2;
                 }
-                if (enemy.getState() == 5) { // if enemy is punching or kicking
+                if (enemy.getState() == 5) { // if enemy is punching
+                    sound.playSound(2); // play punching sound
                     player.setLifePts(player.getLifePts() - 1); // player loses life
                     Hit = 2;
                 }
                 else if (enemy.getState() == 6) { // if enemy is kicking
+                    sound.playSound(1);
                     player.setLifePts(player.getLifePts() -2);
                     Hit = 2;
                 }
@@ -131,9 +148,11 @@ void Master::play() {
             // check life points
             if (enemy.getLifePts() <= 0) { // if enemy defeated
                 NextLevel = true;
+                Status = 1; // win game
             }
             else if (player.getLifePts() <= 0) { // if player dies
-                reset();
+                NextLevel = true;
+                Status = 0; // lose game
             }
         }
         update(); // update screen animation
@@ -143,7 +162,10 @@ void Master::play() {
 void Master::showTransition() { // returns true if player decides to continue
     if (levels.getCurrLevel() == 0) // if menu screen
         transition.playMusic(); // play music
-    transition.display(levels.getCurrLevel()); // display transition
+    transition.display(levels.getCurrLevel(),Status); // display transition
+    if (levels.getCurrLevel() == 4) // if after level 4
+        while (Mix_Playing(4) != 0); // play win sound until complete before allowing user input
+
     bool spacePressed = false; // exit while loop when user chooses to move to on
     while (!spacePressed && Quit == false) { // or exit if user chooses to quit
         SDL_Event e; // store key pressed
@@ -561,8 +583,10 @@ int Master::moveFigure(Person *person, double chX, double chY, bool move) {
             else
                 person->setXPos(levels.getLevelWidth() - 75); // fix overstep
         }
-        else if (person->getXPos() < 0) // overstep left boundary
+        else if (person->getXPos() < 0) { // overstep left boundary
             person->setXPos(0);
+            NextLevel = true; // ALLOW FOR MOVING TO THE NEXT LEVEL EASILY - REMOVE LATER
+        }
 
         if (person->getYPos() > levels.getLevelHeight() - 94) { // overstep bottom boundary
             if (levels.getCurrLevel() == 3) // if in third level
@@ -576,6 +600,7 @@ int Master::moveFigure(Person *person, double chX, double chY, bool move) {
                 NextLevel = true;
             else
                 person->setYPos(0);
+                NextLevel = true; // ALLOW FOR MOVING TO THE NEXT LEVEL EASILY - REMOVE LATER
         }
 
         updateCamera();

@@ -20,13 +20,13 @@ public:
     void display(); // included to avoid warnings
     void loadMedia();
 
-    void display(int); // takes in current level (redefine display function)
+    void display(int,int=0); // takes in current level and status - win(1)/lose(0) (redefine display function)
     // get/set functions
-    Texture * getForeground(int);
+    Texture * getForeground(int,int);
 private:
     SDL_Renderer *Renderer;
     // store foregrounds for 6 transition screens
-    Texture Foreground[5];
+    Texture Foreground[6];
 };
 
 #endif

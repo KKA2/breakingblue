@@ -22,7 +22,6 @@ public:
     virtual void loadMedia() = 0;
     // utility functions
     void playMusic(); // play level music
-    void stopMusic(); // stop level music
     SDL_Texture * loadTexture(string);
     // get/set functions
     void setBackground(string);

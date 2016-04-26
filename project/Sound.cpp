@@ -30,7 +30,7 @@ void Sound::loadMedia(int load) {
         }
         else if (load == 2) {
             Mix_FreeChunk(SoundEffect);
-            //SoundEffect = Mix_LoadWAV("sound/running.wav");
+            SoundEffect = Mix_LoadWAV("sound/kicking.wav");
             loaded = 2;
         }
         else if (load == 3) {
@@ -45,8 +45,18 @@ void Sound::loadMedia(int load) {
         }
         else if (load == 5) {
             Mix_FreeChunk(SoundEffect);
-            SoundEffect = Mix_LoadWAV("sound/select.wav");
+            SoundEffect = Mix_LoadWAV("sound/failure.wav");
             loaded = 5;
+        }
+        else if (load == 6) {
+            Mix_FreeChunk(SoundEffect);
+            SoundEffect = Mix_LoadWAV("sound/win.wav");
+            loaded = 6;
+        }
+        else if (load == 7) {
+            Mix_FreeChunk(SoundEffect);
+            SoundEffect = Mix_LoadWAV("sound/select.wav");
+            loaded = 7;
         }
     }
 }
@@ -55,13 +65,19 @@ void Sound::playSound(int sound) {
     loadMedia(sound); // load sound effect to be played
     if (sound == 1 && Mix_Playing(1) == 0) // landing, make sure sound not already playing
         Mix_PlayChannel(1,SoundEffect,0);
-    //else if (sound == 2 && Mix_Playing(2) == 0) // running
-    //    Mix_PlayChannel(2,SoundEffect,0);
+    else if (sound == 2) // kicking, sound can overlap
+        Mix_PlayChannel(2,SoundEffect,0);
     else if (sound == 3) // punching, sound can overlap
         Mix_PlayChannel(3,SoundEffect,0);
-    else if (sound == 4) // success, play at end of each level
+    else if (sound == 4) // success, play at end of each level and if win game
         Mix_PlayChannel(4,SoundEffect,0);
-    else if (sound == 5) { // select a choice from the menu
+    else if (sound == 5) { // failure, play if lose game
+        Mix_PlayChannel(4,SoundEffect,0);
+    }
+    else if (sound == 6) { // win, play if win game
+        Mix_PlayChannel(4,SoundEffect,0);
+    }
+    else if (sound == 7) { // select a choice from the menu
         Mix_PlayChannel(5,SoundEffect,0);
         while (Mix_Playing(5) != 0); // play until complete
     }

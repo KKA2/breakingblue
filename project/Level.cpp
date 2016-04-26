@@ -43,8 +43,8 @@ void Level::display() {
 }
 
 void Level::playMusic() {
-    // play music on channel
-    Mix_PlayMusic(Music,-1);
+    // play music on channel, fade in over 2 seconds
+    Mix_FadeInMusic(Music,-1,2000);
     // set volume of music played to 50
     Mix_VolumeMusic(50);
 }
