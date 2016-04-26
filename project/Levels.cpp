@@ -8,7 +8,7 @@
 using namespace std;
 
 Levels::Levels() {
-    CurrLevel = 0; // set to before any level
+    CurrLevel = -1; // set to before any level
 }
 
 Levels::~Levels() {}

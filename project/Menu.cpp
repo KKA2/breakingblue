@@ -17,15 +17,13 @@ void Menu::setUp(SDL_Renderer *renderer) {
     // set to fit screen
     Level::setLevelWidth(1000);
     Level::setLevelHeight(400);
-    Level::setCameraX(0);
-    Level::setCameraY(0);
+    
 }
 
 void Menu::display() {
     // call display of Level class
     Level::display();
     // get current camera display
-    SDL_Rect cam = *Level::getCamera();
 }
 
 void Menu::loadMedia() {
