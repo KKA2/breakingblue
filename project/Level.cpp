@@ -32,18 +32,14 @@ Level::~Level() {
     Music = NULL;
 }
 
-SDL_Texture * Level::loadTexture(string path) {
-    SDL_Texture *newTexture = NULL; // optimized surface
-    SDL_Surface *loadedSurface = IMG_Load(path.c_str()); // temporary loaded surface
-    newTexture = SDL_CreateTextureFromSurface(Renderer,loadedSurface);
-    SDL_FreeSurface(loadedSurface); // free temporary loaded surface
-    // return the loaded texture
-    return newTexture;
-}
-
 void Level::setUp(SDL_Renderer *renderer) {
     // allow for textures to be rendered onto the screen
     Renderer = renderer;
+}
+
+void Level::display() {
+    // draw background image onto screen
+    SDL_RenderCopy(Renderer,Background,NULL,NULL);
 }
 
 void Level::playMusic() {
@@ -53,9 +49,13 @@ void Level::playMusic() {
     Mix_VolumeMusic(30);
 }
 
-void Level::display() {
-    // draw background image onto screen
-    SDL_RenderCopy(Renderer,Background,NULL,NULL);
+SDL_Texture * Level::loadTexture(string path) {
+    SDL_Texture *newTexture = NULL; // optimized surface
+    SDL_Surface *loadedSurface = IMG_Load(path.c_str()); // temporary loaded surface
+    newTexture = SDL_CreateTextureFromSurface(Renderer,loadedSurface);
+    SDL_FreeSurface(loadedSurface); // free temporary loaded surface
+    // return the loaded texture
+    return newTexture;
 }
 
 void Level::setBackground(string path) {

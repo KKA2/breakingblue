@@ -59,30 +59,21 @@ void Master::loadMedia() {
 void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
-            transition.display(levels.getCurrLevel()); // display transition
-            bool spacePressed = false; // exit while loop when user chooses to move to on
-            while (!spacePressed && Quit == false) { // or exit if user chooses to quit
-                SDL_Event e; // store key pressed
-                while (SDL_PollEvent(&e) != 0) {
-                    if (e.type == SDL_QUIT)
-                        Quit = true;
-                    else if (e.type == SDL_KEYDOWN) {
-                        switch(e.key.keysym.sym) {
-                            case SDLK_SPACE: // press space to move on from transition
-                                spacePressed = true;
-                                break;
-                            case SDLK_q: // press q to quit game
-                                Quit = true;
-                                break;
-                        }
-                    }
-                }
-            }
-            if (Quit == true) // if user chooses to quit
+            if (levels.getCurrLevel() != 0) // if not the first level
+                sound.playSound(4);
+            showTransition();
+            levels.stopMusic(); // fade out music
+            if (Quit == true) // if user chooses to quit or game is over
                 break;
+            else // if not, then play sound to indicate that user has chosen to continue
+                sound.playSound(5);
             levels.setCurrLevel(levels.getCurrLevel() + 1); // go to next level
-            //levels.setCurrLevel(4); // TESTING LEVEL
+            //levels.setCurrLevel(2); // TESTING LEVEL
             levels.playMusic(); // start music
+            if (levels.getCurrLevel() == 5) { // if finished with the game
+                levels.setCurrLevel(1); // set to first level
+            }
+
             reset(); // set all initial values
             NextLevel = false; // reset value of next level to play in the new level
             if (levels.getCurrLevel() >= 2) // increase jump height
@@ -90,6 +81,7 @@ void Master::play() {
             if (levels.getCurrLevel() == 4) // fourth level, set enemy jump height
                 enemy.setMaxJumpHeight(250);
         }
+
         animate(&player); // run through any animations
         if (player.getState() <= 3 || player.getState() == 7) // if running, jumping, ducking, or flying animation
             player.setState(0); // reset state just in case
@@ -112,12 +104,20 @@ void Master::play() {
             animate(&enemy); // complete any animations
             jump(&enemy);
             if (checkEnemy()) { // if player collides with enemy
-                if (player.getState() == 5 || player.getState() == 6) { // if player is punching or kicking
-                    enemy.setLifePts(enemy.getLifePts() - 1); // enemy loses life
+                if (player.getState() == 5) { // if player is punching
+                    enemy.setLifePts(enemy.getLifePts() - 2); // enemy loses life
                     Hit = 2;
                 }
-                else if (enemy.getState() == 5 || enemy.getState() == 6) { // if enemy is punching or kicking
+                else if (player.getState() == 6) { // if player is kicking
+                    enemy.setLifePts(enemy.getLifePts() - 4); // enemy loses more life
+                    Hit = 2;
+                }
+                if (enemy.getState() == 5) { // if enemy is punching or kicking
                     player.setLifePts(player.getLifePts() - 1); // player loses life
+                    Hit = 2;
+                }
+                else if (enemy.getState() == 6) { // if enemy is kicking
+                    player.setLifePts(player.getLifePts() -2);
                     Hit = 2;
                 }
             }
@@ -133,6 +133,30 @@ void Master::play() {
             }
         }
         update(); // update screen animation
+    }
+}
+
+void Master::showTransition() { // returns true if player decides to continue
+    if (levels.getCurrLevel() == 0) // if menu screen
+        transition.playMusic(); // play music
+    transition.display(levels.getCurrLevel()); // display transition
+    bool spacePressed = false; // exit while loop when user chooses to move to on
+    while (!spacePressed && Quit == false) { // or exit if user chooses to quit
+        SDL_Event e; // store key pressed
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT)
+                Quit = true;
+            else if (e.type == SDL_KEYDOWN) {
+                switch(e.key.keysym.sym) {
+                    case SDLK_SPACE: // press space to move on from transition
+                        spacePressed = true;
+                        break;
+                    case SDLK_q: // press q to quit game
+                        Quit = true;
+                        break;
+                }
+            }
+        }
     }
 }
 
@@ -172,6 +196,10 @@ void Master::reset() {
         enemy.setMoveDir(SDL_FLIP_HORIZONTAL);
         enemy.setJumpDir(0);
         enemy.setJumpHeight(0);
+    }
+    // get a new maze
+    if (levels.getCurrLevel() == 3) {
+        levels.setCurrMaze();
     }
     // reset camera/display
     levels.setCameraX(0);
@@ -267,19 +295,18 @@ void Master::animate(Person *person) {
     }
     if (person->getState() == 5) { // punching
         // check for collision
-        if (int(person->getCurrPunch()) == 6) { // only check frames between 6/7
-            int hasCollided = checkCollision(person);
-            if (hasCollided) { // five must collide
-                if (levels.getCurrLevel() == 1 || levels.getCurrLevel() == 2)
-                    levels.setCurrDoor(0,levels.getCurrDoor(0) + .2);
-                sound.playSound(3);
+        int hasCollided = checkCollision(person);
+        if (hasCollided) { // five must collide
+            if (levels.getCurrLevel() == 1 || levels.getCurrLevel() == 2)
+                levels.setCurrDoor(0,levels.getCurrDoor(0) + .2);
+            sound.playSound(3);
 
-                do { // fix collision
-                    fixCollision(person,hasCollided);
-                    hasCollided = checkCollision(person);
-                } while (hasCollided);
-            }
+            do { // fix collision
+                fixCollision(person,hasCollided);
+                hasCollided = checkCollision(person);
+            } while (hasCollided);
         }
+
         if (person->getCurrPunch() == 0) { // if beginning punch
             if (person->getMoveDir() == SDL_FLIP_NONE) // move in direction punching
                 moveFigure(person,4,0);
@@ -596,8 +623,9 @@ int Master::checkCollision(Person *person) {
                 // check foreground transparency
                 alpha = levels.getForeground()->getAlpha(pixel);
                 if (int(alpha) > 10) { // collision
-                    if (y < boundingH/6) // top
+                    if (y < boundingH/6) { // top
                         return 1;
+                    }
                     if (person->getMoveDir() == SDL_FLIP_NONE) { // return response for right facing person
                         return 2;
                     }

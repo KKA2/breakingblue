@@ -10,7 +10,8 @@
 using namespace std;
 
 int main() {
-    srand (time(NULL));
+    srand(time(NULL)); // seed random number generator
+    
     Master master;
     master.play();
 

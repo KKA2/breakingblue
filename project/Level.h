@@ -15,13 +15,14 @@ class Level {
 public:
     Level();
     ~Level();
-    void playMusic(); // play level music
     // virtual functions to be expanded
     virtual void setUp(SDL_Renderer *); // set up all textures/music to render
     virtual void display(); // draw all textures onto the screen
     // pure virtual function to be implemented lower in the hierarchy
     virtual void loadMedia() = 0;
     // utility functions
+    void playMusic(); // play level music
+    void stopMusic(); // stop level music
     SDL_Texture * loadTexture(string);
     // get/set functions
     void setBackground(string);

@@ -9,9 +9,7 @@
 
 using namespace std;
 
-Enemy::Enemy() {
-    NumSteps = 0;
-}
+Enemy::Enemy() {}
 
 Enemy::~Enemy() {
     LifeTexture.free();
@@ -32,20 +30,14 @@ void Enemy::loadMedia() {
     PunchingTexture.loadFromFile("imgs/figs/red/punching.png");
     KickingTexture.loadFromFile("imgs/figs/red/kicking.png");
     FlyingTexture.loadFromFile("imgs/figs/red/flying.png");
-
     LifeTexture.loadFromFile("imgs/figs/life.png");
-    for (int i=0;i<201;i++) {
-        Life[i].x = 0;
-        Life[i].y = 10*i;
-        Life[i].w = 200;
-        Life[i].h = 10;
-    }
+
 }
 
 void Enemy::draw(int camX, int camY, int level) {
     Person::draw(camX,camY);
     if (level == 4) {
-        LifeTexture.render(camX+SCREEN_WIDTH-220,20,&Life[200-Person::getLifePts()]);
+        LifeTexture.render(camX+SCREEN_WIDTH-220,20,Person::getLife());
     }
 }
 
@@ -53,39 +45,54 @@ int Enemy::move(int playerXPos, int playerState) {
     int chX = 0;
     int xPos = Person::getXPos();
     int choice;
+    bool playerAttack = false;
+    if (playerState == 5 || playerState == 6)
+        playerAttack = true;
 
-    if (playerState == 5 && abs(playerXPos-xPos) < 100) { // if player is punching and close by
-        choice = rand()%12;
-        if (choice == 0) { // jump
-            Person::setState(2);
-            if (Person::getJumpHeight() == 0) // if not already jumping
-                Person::setJumpDir(-1); // start moving upwards
-        }
-        else { // roll
-            Person::setState(4);
+    if (abs(playerXPos-xPos) < 100) { // if player is close by
+        choice = rand()%100;
+        // if not in the process of attacking
+        if (Person::getState() != 5 && Person::getState() != 6) {
+            // if not jumping or rolling
+            if (Person::getState() != 2 && Person::getState() != 4) {
+                if (playerAttack) { // if player is attacking, respond
+                    if (choice < 25) { // jump away (25% chance)
+                        Person::setState(2);
+                        if (Person::getJumpHeight() == 0) // if not already jumping
+                            Person::setJumpDir(-1); // start moving upwards
+                    }
+                    else if (choice < 70) { // roll away (45% chance)
+                        Person::setState(4);
+                    }
+                    else if (choice < 95) { // punch (25% chance)
+                        Person::setState(5);
+                    }
+                    else { // kick (5% chance)
+                        Person::setState(6);
+                    }
+                }
+                else if (playerState != 7) { // player not attacking or flying
+                    if (choice < 75) // punch (75%)
+                        Person::setState(5);
+                    else // kick (25%)
+                        Person::setState(6);
+                }
+            }
         }
     }
-    else if (playerState == 0 && abs(playerXPos-xPos) < 100) // if close to standing player
-        Person::setState(5); // set state to punching
-
     if (playerXPos-xPos < 0) { // player to the left of the enemy
         if (Person::getState() == 4) { // if rolling
             Person::setMoveDir(SDL_FLIP_NONE); // turn to the right (move away)
         }
         else if (Person::getState() == 2) { // if jumping
-            chX = 4; // move to the left
+            chX = 4; // move to the right
         }
         else {
-            if (Person::getState() != 5) { // not punching/rolling
-                if (Person::getState() != 2) { // not jumping
-                    Person::setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left
-                    Person::setState(1); // set to running state
-                    Person::setCurrRun(Person::getCurrRun() + .3); // change frame
-                    chX = -2; // move to the left
-                }
-                else {
-                    chX = 4;
-                }
+            Person::setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left
+            if (Person::getState() != 5) { // not punching
+                Person::setState(1); // set to running state
+                Person::setCurrRun(Person::getCurrRun() + .3); // change frame
+                chX = -2; // move to the left
             }
         }
     }
@@ -94,14 +101,14 @@ int Enemy::move(int playerXPos, int playerState) {
             Person::setMoveDir(SDL_FLIP_HORIZONTAL); // turn to the left (move away)
         }
         else if (Person::getState() == 2) { // if jumping
-            chX = -4; // move to the right
+            chX = -4; // move to the left
         }
         else {
+            Person::setMoveDir(SDL_FLIP_NONE); // turn to the left
             if (Person::getState() != 5) { // not punching
-                Person::setMoveDir(SDL_FLIP_NONE); // turn to the right
-                Person::setState(1);
-                Person::setCurrRun(Person::getCurrRun() + .3);
-                chX = 2; // move to the right
+                Person::setState(1); // set to running state
+                Person::setCurrRun(Person::getCurrRun() + .3); // change frame
+                chX = 2; // move to the left
             }
         }
     }

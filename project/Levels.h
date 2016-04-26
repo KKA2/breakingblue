@@ -24,11 +24,13 @@ public:
     // level specific
     void display(); // display current level
     void playMusic(); // play music associated to current level
+    void stopMusic(); // stop music currently playing
     // get/set functions
     int getCurrLevel();
     void setCurrLevel(int);
     Texture * getForeground(); // get associated foreground to current level
     void setCurrText(); // mission parameters
+    void setCurrMaze(); // maze
     void setCameraX(int);
     int getCameraX();
     void setCameraY(int);

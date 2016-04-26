@@ -19,6 +19,7 @@ public:
     void draw(int,int); // draw all textures onto the screen
     // get/set functions
     Texture * getTexture(const int);
+    SDL_Rect * getLife();
     int getLifePts() const;
     void setLifePts(const int);
     double getXPos() const;
@@ -67,7 +68,7 @@ private:
     SDL_Rect Punching[13];
     SDL_Rect Kicking[11];
     SDL_Rect Flying;
-
+    SDL_Rect Life[201];
     int LifePts; // life left (in battle)
     // position of the figure
     int XPos;

@@ -22,11 +22,11 @@ public:
     // get/set functions
     Texture * getForeground();
     void setCurrText();
+    void setCurrMaze();
 private:
-    Texture Foreground;
-
+    Texture Foreground[5];
     vector<Text> LevelThreeText;
-
+    int CurrMaze;
     int CurrText; //current text direction to be displayed
 };
 

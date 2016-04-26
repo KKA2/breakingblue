@@ -80,6 +80,12 @@ void Person::loadMedia() {
         Kicking[i].h = 94;
     }
     Flying.x = 0; Flying.y = 0; Flying.w = 75; Flying.h = 94;
+    for (int i=0;i<201;i++) {
+        Life[i].x = 0;
+        Life[i].y = 10*i;
+        Life[i].w = 200;
+        Life[i].h = 10;
+    }
 }
 
 void Person::draw(int camX, int camY) {
@@ -124,13 +130,19 @@ Texture * Person::getTexture(const int state) {
             break;
         case 6: // kicking
             texture = &KickingTexture;
+            break;
         case 7: // flying
             texture = &FlyingTexture;
+            break;
         default: // assume standing
             texture = &StandingTexture;
             break;
     }
     return texture;
+}
+
+SDL_Rect * Person::getLife() {
+    return &Life[200-LifePts];
 }
 
 int Person::getLifePts() const {

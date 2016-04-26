@@ -18,9 +18,7 @@ public:
     void loadMedia(); // load all textures from path names
     void draw(int,int,int);
 private:
-    // life bar rectangle/texture
-    SDL_Rect Life[201];
-    Texture LifeTexture;
+    Texture LifeTexture; // life bar texture
 };
 
 #endif

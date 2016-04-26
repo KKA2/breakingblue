@@ -38,6 +38,16 @@ void Sound::loadMedia(int load) {
             SoundEffect = Mix_LoadWAV("sound/punching.wav");
             loaded = 3;
         }
+        else if (load == 4) {
+            Mix_FreeChunk(SoundEffect);
+            SoundEffect = Mix_LoadWAV("sound/success.wav");
+            loaded = 4;
+        }
+        else if (load == 5) {
+            Mix_FreeChunk(SoundEffect);
+            SoundEffect = Mix_LoadWAV("sound/select.wav");
+            loaded = 5;
+        }
     }
 }
 
@@ -49,4 +59,10 @@ void Sound::playSound(int sound) {
         Mix_PlayChannel(2,SoundEffect,0);
     else if (sound == 3) // punching, sound can overlap
         Mix_PlayChannel(3,SoundEffect,0);
+    else if (sound == 4) // success, play at end of each level
+        Mix_PlayChannel(4,SoundEffect,0);
+    else if (sound == 5) { // select a choice from the menu
+        Mix_PlayChannel(5,SoundEffect,0);
+        while (Mix_Playing(5) != 0); // play until complete
+    }
 }

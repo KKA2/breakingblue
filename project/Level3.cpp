@@ -11,18 +11,22 @@ using namespace std;
 Level3::Level3() {
     // initialize to 0
     CurrText = 0;
+    // select a random maze
+    CurrMaze = rand()%5;
 }
 
 Level3::~Level3() {
     // free all textures
-    Foreground.free();
+    for (int f=0;f<5;f++)
+        Foreground[f].free();
     LevelThreeText.clear();
 }
 
 void Level3::setUp(SDL_Renderer *renderer) {
     // set up renderer on all textures
     Level::setUp(renderer);
-    Foreground.setUp(renderer);
+    for (int f=0;f<5;f++)
+        Foreground[f].setUp(renderer);
 
     Level::setLevelWidth(3360);
     Level::setLevelHeight(3360);
@@ -40,7 +44,6 @@ void Level3::setUp(SDL_Renderer *renderer) {
     for(unsigned int i=0; i<LevelThreeText.size();i++) {
         LevelThreeText[i].setUp(renderer);   
     }
-
 }
 
 void Level3::display() {
@@ -64,7 +67,11 @@ void Level3::loadMedia() {
     Level::setBackground("imgs/bg/lvl1.png"); // PLACEHOLDER
     Level::setMusic(Mix_LoadMUS("sound/suspense.wav"));
     // load all foreground textures
-    Foreground.loadFromFile("imgs/lvl3/maze.png");
+    Foreground[0].loadFromFile("imgs/lvl3/maze0.png");
+    Foreground[1].loadFromFile("imgs/lvl3/maze1.png");
+    Foreground[2].loadFromFile("imgs/lvl3/maze2.png");
+    Foreground[3].loadFromFile("imgs/lvl3/maze3.png");
+    Foreground[4].loadFromFile("imgs/lvl3/maze4.png");
 
     LevelThreeText[0].loadMedia("imgs/lvl3/mission02.png");
     LevelThreeText[1].loadMedia("imgs/lvl3/intel.png");
@@ -73,10 +80,22 @@ void Level3::loadMedia() {
 }
 
 Texture * Level3::getForeground() {
-    // get foreground
-    return &Foreground;
+    if (CurrMaze == 0)
+        return &Foreground[0];
+    else if (CurrMaze == 1)
+        return &Foreground[1];
+    else if (CurrMaze == 2)
+        return &Foreground[2];
+    else if (CurrMaze == 3)
+        return &Foreground[3];
+    else
+        return &Foreground[4];
 }
 
 void Level3::setCurrText() {
     CurrText++; // move to next direction for mission parameter text
+}
+
+void Level3::setCurrMaze() {
+    CurrMaze = rand()%5; // choose a random number between 0-4 and set as the current maze
 }

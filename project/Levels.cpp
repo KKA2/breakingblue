@@ -57,6 +57,14 @@ void Levels::playMusic() {
         level4.playMusic();
 }
 
+void Levels::stopMusic() {
+    // fade out music in 1 second
+    while(!Mix_FadeOutMusic(1000) && Mix_PlayingMusic()) {
+        // wait for any fades to complete
+        SDL_Delay(100);
+    }
+}
+
 Texture * Levels::getForeground() {
     // menu does not have a foreground
     if (CurrLevel == 1)
@@ -86,6 +94,11 @@ void Levels::setCurrText() {
     } else if (CurrLevel == 4) {
         level4.setCurrText();
     }
+}
+
+void Levels::setCurrMaze() {
+    if (CurrLevel == 3)
+        level3.setCurrMaze(); // call level3 class function
 }
 
 void Levels::setCameraX(int x) {

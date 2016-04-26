@@ -34,6 +34,7 @@ public:
     // main function
     void play(); // play game
     // utility functions
+    void showTransition();
     void reset(); // reset/initially set all game attributes
     void update(bool=true);
     void updateCamera();

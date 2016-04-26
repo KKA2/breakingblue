@@ -21,11 +21,7 @@ public:
     void draw(int,int,int);
     int move(int,int); // return change in x position
 private:
-    // life bar rectangle/texture
-    SDL_Rect Life[201];
-    Texture LifeTexture;
-
-    int NumSteps;
+    Texture LifeTexture; // life bar texture
 };
 
 #endif
