@@ -34,12 +34,14 @@ void Level2::setUp(SDL_Renderer *renderer) {
     Level::setCameraX(0);
     Level::setCameraY(0);
 
+    Text temp0(20);
     Text temp(21);
     Text temp2(66);
     Text temp3(65);
     Text temp4(40);
     Text temp5(58);
 
+    LevelTwoText.push_back(temp0);
     LevelTwoText.push_back(temp);
     LevelTwoText.push_back(temp2);
     LevelTwoText.push_back(temp3);
@@ -69,12 +71,15 @@ void Level2::display() {
 
     if (CurrText == 0) {
         //display message
-        for(int i = 0; i<3; i++) {
+        for(int i = 0; i<2; i++) {
             LevelTwoText[i].display(&cam, i);
         }  
     } else if (CurrText == 1) {
-        LevelTwoText[3].display(&cam, 0);
-        LevelTwoText[4].display(&cam, 1);
+        LevelTwoText[2].display(&cam, 0);
+        LevelTwoText[3].display(&cam, 1);
+    } else if (CurrText == 2) {
+        LevelTwoText[4].display(&cam, 0);
+        LevelTwoText[5].display(&cam, 1);
 
     }
 }
@@ -93,11 +98,12 @@ void Level2::loadMedia() {
     Door2Texture.loadFromFile("imgs/lvl2/door2.png");
     Door3Texture.loadFromFile("imgs/lvl2/door3.png");
 
-    LevelTwoText[0].loadMedia("imgs/lvl2/txt/welcome.png");
-    LevelTwoText[1].loadMedia("imgs/lvl2/txt/decrypt.png");
-    LevelTwoText[2].loadMedia("imgs/lvl2/txt/AQUA.png");
-    LevelTwoText[3].loadMedia("imgs/lvl2/txt/kick.png");
-    LevelTwoText[4].loadMedia("imgs/lvl2/txt/fly.png");
+    LevelTwoText[0].loadMedia("imgs/lvl2/txt/mission01.png");
+    LevelTwoText[1].loadMedia("imgs/lvl2/txt/welcome.png");
+    LevelTwoText[2].loadMedia("imgs/lvl2/txt/decrypt.png");
+    LevelTwoText[3].loadMedia("imgs/lvl2/txt/AQUA.png");
+    LevelTwoText[4].loadMedia("imgs/lvl2/txt/kick.png");
+    LevelTwoText[5].loadMedia("imgs/lvl2/txt/fly.png");
 
 }
 
