@@ -29,11 +29,13 @@ void Level3::setUp(SDL_Renderer *renderer) {
     Level::setCameraX(1622);
     Level::setCameraY(0);
 
-    Text tempText;
+    Text tempText(29);
+    Text tempText2(44);
+    Text tempText3(41);
 
     LevelThreeText.push_back(tempText);
-    LevelThreeText.push_back(tempText);
-    LevelThreeText.push_back(tempText);
+    LevelThreeText.push_back(tempText2);
+    LevelThreeText.push_back(tempText3);
 
     for(unsigned int i=0; i<LevelThreeText.size();i++) {
         LevelThreeText[i].setUp(renderer);   

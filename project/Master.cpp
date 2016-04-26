@@ -57,7 +57,7 @@ void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
             //levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
-            levels.setCurrLevel(3); // TESTING LEVEL
+            levels.setCurrLevel(4); // TESTING LEVEL
             levels.playMusic(); // start music
             reset(); // set all initial values
             NextLevel = false; // reset value of next level to play in the new level
