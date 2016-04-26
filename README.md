@@ -3,11 +3,14 @@
 
 A 2-D multi-stage action adventure game in which you play as a Blue involved in the struggle to overcome the Reds.
 
+## Still to Do
+
+- return to main menu option?
+- finish fixing collision detection
 
 ## Known Issues
-- Load text from file causes segfault (commented out usage in Level1 to prevent currently)
-- Figure teleports to end of tunnel if attempting to stand up during it. (Possible fix to modify so teleports back to start?) 
-  - Note: I (Kate) will modify this next so that the player crouches when they hit the top of something and they are standing on the ground (i.e. they're in the tunnel)
+  - Collision detection still behaving weirdly... you can fly into walls.
+- Kat still can't view menu (skips to level 1)
 
 ## Recently Resolved Issues
 - Jumping while running at wall allows teleport through wall (Result of temp fix in checkGround until checkCollision finished) (4/23 KB)
