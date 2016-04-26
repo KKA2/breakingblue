@@ -8,7 +8,7 @@
 using namespace std;
 
 Levels::Levels() {
-    CurrLevel = 0; // set to before any level
+    CurrLevel = -1; // set to before any level
 }
 
 Levels::~Levels() {}
@@ -78,7 +78,7 @@ Texture * Levels::getForeground() {
 void Levels::setCurrText() {
     if (CurrLevel == 1) {
         if (level1.getCurrText() == 2) {
-            if (level1.getCurrDoor(1) > 1) {
+            if (level1.getCurrDoor(0) > 1) {
                 level1.setCurrText();
             }
         }

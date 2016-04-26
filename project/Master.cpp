@@ -57,13 +57,15 @@ void Master::loadMedia() {
 void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
-            //levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
-            levels.setCurrLevel(4); // TESTING LEVEL
+            levels.setCurrLevel(levels.getCurrLevel() + 1); // go to first/next level
+            //levels.setCurrLevel(4); // TESTING LEVEL
             levels.playMusic(); // start music
             reset(); // set all initial values
             NextLevel = false; // reset value of next level to play in the new level
             if (levels.getCurrLevel() >= 2) // increase jump height
                 player.setMaxJumpHeight(200);
+            if (levels.getCurrLevel() == 4) // fourth level, set enemy jump height
+                enemy.setMaxJumpHeight(250);
         }
 
         while (levels.getCurrLevel() == 0) { // while in menu screen
@@ -93,6 +95,7 @@ void Master::play() {
                 enemy.setState(0);
 
             checkKeyPress(); // check short key presses
+
             jump(&player); // jumping animation
             checkKeyboard(); // check for held key presses
 
@@ -444,7 +447,7 @@ void Master::checkKeyPress() {
                     if (levels.getCurrLevel() >= 2) // if kicking ability enabled
                         player.setState(6); // kick
                     break;
-                case SDLK_LSHIFT: //do same as right shift
+                case SDLK_LSHIFT: // do same as right shift
                 case SDLK_RSHIFT:
                     if (levels.getCurrLevel() >= 2) { // if flying ability enabled
                         // change mode

@@ -149,6 +149,7 @@ Texture * Level1::getForeground() {
 
 double Level1::getCurrDoor(int door) {
     // get CurrDoor variable associated to door
+    // if door = 0, then return the number of doors that have been knocked down
     if (door == 0)
         return CurrDoor;
     else if (door == 1)
@@ -174,6 +175,5 @@ void Level1::setCurrText() {
     CurrText++; // move to next direction for mission parameter text
 }
 int Level1::getCurrText() {
-
     return CurrText;
 }

@@ -29,7 +29,7 @@ void Player::loadMedia() {
     KickingTexture.loadFromFile("imgs/figs/blue/kicking.png");
     FlyingTexture.loadFromFile("imgs/figs/blue/flying.png");
 
-    LifeTexture.loadFromFile("imgs/life.png");
+    LifeTexture.loadFromFile("imgs/figs/life.png");
     for (int i=0;i<201;i++) {
         Life[i].x = 0;
         Life[i].y = 10*i;
@@ -41,6 +41,6 @@ void Player::loadMedia() {
 void Player::draw(int camX, int camY, int level) {
     Person::draw(camX,camY);
     if (level == 4) {
-        LifeTexture.render(camX+20,camY+20,&Life[200-Person::getLifePts()]);
+        LifeTexture.render(Person::getXPos()-62,Person::getYPos()-100,&Life[200-Person::getLifePts()]);
     }
 } 
