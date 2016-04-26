@@ -20,6 +20,7 @@ Level3::~Level3() {
     for (int f=0;f<5;f++)
         Foreground[f].free();
     LevelThreeText.clear();
+    PurpleFigTexture.free();
 }
 
 void Level3::setUp(SDL_Renderer *renderer) {
@@ -27,6 +28,7 @@ void Level3::setUp(SDL_Renderer *renderer) {
     Level::setUp(renderer);
     for (int f=0;f<5;f++)
         Foreground[f].setUp(renderer);
+    PurpleFigTexture.setUp(renderer);
 
     Level::setLevelWidth(3360);
     Level::setLevelHeight(3360);
@@ -50,16 +52,17 @@ void Level3::display() {
     // call display of Level class
     Level::display();
     // get current camera display
-    SDL_Rect cam = *Level::getCamera();
+    SDL_Rect *cam = Level::getCamera();
     // render foreground onto screen
-    getForeground()->render(0,0,&cam);
+    getForeground()->render(0,0,cam);
     // display the mission parameters
     if(CurrText == 0) {
         for (int i = 0; i<3; i++) {
-            LevelThreeText[i].display(&cam, i); // display text
+            LevelThreeText[i].display(cam, i); // display text
         }
-        
     }
+    // draw purple fig at end of maze
+    PurpleFigTexture.render(1802-cam->x,3266-cam->y,&PurpleFig);
 }
 
 void Level3::loadMedia() {
@@ -73,10 +76,12 @@ void Level3::loadMedia() {
     Foreground[3].loadFromFile("imgs/lvl3/maze3.png");
     Foreground[4].loadFromFile("imgs/lvl3/maze4.png");
 
+    PurpleFigTexture.loadFromFile("imgs/figs/purple/ducking.png");
+    PurpleFig.x = 0; PurpleFig.y = 0; PurpleFig.w = 75; PurpleFig.h = 94;
+
     LevelThreeText[0].loadMedia("imgs/lvl3/mission02.png");
     LevelThreeText[1].loadMedia("imgs/lvl3/intel.png");
     LevelThreeText[2].loadMedia("imgs/lvl3/purple.png");
-
 }
 
 Texture * Level3::getForeground() {

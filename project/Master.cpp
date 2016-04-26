@@ -84,7 +84,7 @@ void Master::play() {
             if (levels.getCurrLevel() == 5) { // if finished with the game
                 levels.stopMusic();
                 if (Status == 1) { // if won game
-                    levels.setCurrLevel(0); // set to first level
+                    levels.setCurrLevel(1); // set to first level
                 } 
                 else { // if lost game
                     levels.setCurrLevel(4); // restart fourth level
@@ -618,21 +618,12 @@ int Master::checkCollision(Person *person) {
 
     // access current frame value within texture (or access only frame)
     double frame = 0; // current frame in sprite
-    switch (person->getState()) {
-        case 1: // running
-            frame = person->getCurrRun();
-            break;
-        case 4: // rolling
-            frame = person->getCurrRoll();
-            break;
-        case 5: // punching
-            frame = person->getCurrPunch();
-            break;
-        case 6: // kicking
-            frame = person->getCurrKick();
-            break;
-        default: // standing, jumping, ducking,flying
-            break;
+    switch (player.getState()) {
+        case 1: frame = person->getCurrRun(); break;
+        case 4: frame = person->getCurrRoll(); break;
+        case 5: frame = person->getCurrPunch(); break;
+        case 6: frame = person->getCurrKick(); break;
+        default: break;
     }
 
     // set bound for collisions check
@@ -675,7 +666,7 @@ int Master::checkCollision(Person *person) {
 
 void Master::fixCollision(Person *person, int collisionType) {
     if (collisionType == 3) { // left side, kick to right
-        if (person->getState() == 1 || person->getState() == 2 || person->getState() == 7) // if running/jumping/flying
+        if (person->getState() == 1 || person->getState() == 2) // if running/jumping
             person->setXPos(person->getXPos() + 10);
         else if (person->getState() == 4) // if rolling
             person->setXPos(person->getXPos() + 16);
