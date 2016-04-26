@@ -17,10 +17,10 @@ public:
     ~Transition();
     // implement virtual functions of Level class
     void setUp(SDL_Renderer *);
-    void display();
+    void display(); // included to avoid warnings
     void loadMedia();
 
-    void display(int); // takes in current level
+    void display(int); // takes in current level (redefine display function)
     // get/set functions
     Texture * getForeground(int);
 private:
