@@ -79,7 +79,7 @@ Texture * Levels::getForeground() {
 
 void Levels::setCurrText() {
     if (CurrLevel == 1) {
-        if (level1.getCurrText() == 2) {
+        if (level1.getCurrText() == 3) {
             if (level1.getCurrDoor(0) >= 1) { // hit the first door down
                 level1.setCurrText();
             }
