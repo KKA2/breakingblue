@@ -532,7 +532,7 @@ void Master::checkKeyPress() {
                 case SDLK_RSHIFT:
                     if (levels.getCurrLevel() >= 2) { // if flying ability enabled
                         // change mode
-                        if (player.getFlyingEnabled()==true)
+                        if (player.getFlyingEnabled() == true)
                             player.setFlyingEnabled(false);
                         else
                             player.setFlyingEnabled(true);

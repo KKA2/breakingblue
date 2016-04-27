@@ -25,42 +25,42 @@ void Sound::loadMedia(int load) {
     if (load != loaded) { // check if desired sound effect has been loaded
         if (load == 1) {
             Mix_FreeChunk(SoundEffect); // free previous sound effect
-            SoundEffect = Mix_LoadWAV("sound/landing.wav"); // load landing sound
+            SoundEffect = Mix_LoadWAV("sound/effects/landing.wav"); // load landing sound
             loaded = 1; // track which sound effect has been loaded
         }
         else if (load == 2) {
             Mix_FreeChunk(SoundEffect);
-            SoundEffect = Mix_LoadWAV("sound/kicking.wav");
+            SoundEffect = Mix_LoadWAV("sound/effects/kicking.wav");
             loaded = 2;
         }
         else if (load == 3) {
             Mix_FreeChunk(SoundEffect);
-            SoundEffect = Mix_LoadWAV("sound/punching.wav");
+            SoundEffect = Mix_LoadWAV("sound/effects/punching.wav");
             loaded = 3;
         }
         else if (load == 4) {
             Mix_FreeChunk(SoundEffect);
-            SoundEffect = Mix_LoadWAV("sound/success.wav");
+            SoundEffect = Mix_LoadWAV("sound/effects/success.wav");
             loaded = 4;
         }
         else if (load == 5) {
             Mix_FreeChunk(SoundEffect);
-            SoundEffect = Mix_LoadWAV("sound/failure.wav");
+            SoundEffect = Mix_LoadWAV("sound/effects/failure.wav");
             loaded = 5;
         }
         else if (load == 6) {
             Mix_FreeChunk(SoundEffect);
-            SoundEffect = Mix_LoadWAV("sound/win.wav");
+            SoundEffect = Mix_LoadWAV("sound/effects/win.wav");
             loaded = 6;
         }
         else if (load == 7) {
             Mix_FreeChunk(SoundEffect);
-            SoundEffect = Mix_LoadWAV("sound/select.wav");
+            SoundEffect = Mix_LoadWAV("sound/effects/select.wav");
             loaded = 7;
         }
         else if (load == 8) {
             Mix_FreeChunk(SoundEffect);
-            SoundEffect = Mix_LoadWAV("sound/pageflip.wav");
+            SoundEffect = Mix_LoadWAV("sound/effects/pageflip.wav");
             loaded = 8;
         }
     }
@@ -76,13 +76,11 @@ void Sound::playSound(int sound) {
         Mix_PlayChannel(3,SoundEffect,0);
     else if (sound == 4) // success, play at end of each level and if win game
         Mix_PlayChannel(4,SoundEffect,0);
-    else if (sound == 5) { // failure, play if lose game
+    else if (sound == 5) // failure, play if lose game
         Mix_PlayChannel(4,SoundEffect,0);
-    }
-    else if (sound == 6) { // win, play if win game
+    else if (sound == 6) // win, play if win game
         Mix_PlayChannel(4,SoundEffect,0);
-    }
-    else if (sound == 7) { // select a choice from the menu
+    else if (sound == 7) { // select a choice from the menu (i.e. pressed the spacebar)
         Mix_PlayChannel(5,SoundEffect,0);
         while (Mix_Playing(5) != 0); // play until complete
     }
