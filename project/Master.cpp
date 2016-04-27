@@ -80,7 +80,7 @@ void Master::play() {
                 sound.playSound(7); // select sound
             }
             levels.setCurrLevel(levels.getCurrLevel() + 1); // go to next level
-            //levels.setCurrLevel(2); // TESTING LEVEL
+            levels.setCurrLevel(4); // TESTING LEVEL
             if (levels.getCurrLevel() == 5) { // if finished with the game
                 levels.stopMusic();
                 if (Status == 1) { // if won game
@@ -200,10 +200,6 @@ void Master::reset() {
     if (levels.getCurrLevel() == 3) {
         levels.setCurrMaze();
     }
-    // move display to center over figure
-    updateCamera();
-    // redraw screen images
-    update(false); // do not draw person just yet
     // set player stats
     player.setLifePts(200); // reset life to 200
     player.setCurrRun(0);
@@ -232,6 +228,10 @@ void Master::reset() {
     if (levels.getCurrLevel() == 1 || levels.getCurrLevel() == 2)
         for (int l=0;l<=3;l++)
             levels.setCurrDoor(l,0);
+    // move display to center over figure
+    updateCamera();
+    // redraw screen images
+    update(false); // do not draw person just yet
     // move figure to the ground to restart gameplay
     if (levels.getCurrLevel() != 0) { // if not in menu screen
         while (moveFigure(&player,0,15,false) == 2) { // continue until player hits ground or edge of board
@@ -431,7 +431,7 @@ void Master::jump(Person *person) {
 
 void Master::checkKeyboard() {
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-
+    
     if (player.getFlyingEnabled()) { // in third level (add flying)
         if (state[SDL_SCANCODE_UP]) {
             player.setState(7);
@@ -761,7 +761,7 @@ bool Master::checkEnemy() {
     int xDist = enemy.getXPos() - player.getXPos();
     int yDist = enemy.getYPos() - player.getYPos();
 
-    if (abs(xDist) < boundingW && abs(yDist) < boundingH) {
+    if (abs(xDist) < boundingW && abs(yDist) < boundingH) { // if bounding rectangles overlap
     // loops through bounding box of the person, compares alpha of enemy and person
         for(int y = 2*boundingH/3; y > 0; y--) { 
             for(int x = 0; x < boundingW; x++) {
@@ -774,15 +774,16 @@ bool Master::checkEnemy() {
                 playerAlpha = playerTex->getAlpha(playerPixel); 
                 
                 if (int(playerAlpha) > 10) { // if person is present, check for overlap with enemy
-                    if (enemy.getMoveDir() == SDL_FLIP_HORIZONTAL) // if facing left
+                    if (enemy.getMoveDir() == SDL_FLIP_NONE) // if facing right
                         enemyPixel = enemyTex->getPixel(enemyLeftEdge+x-xDist,y-yDist);
                     else
                         enemyPixel = enemyTex->getPixel(enemyLeftEdge+boundingW-x-xDist,y-yDist);
                     // check transparency of enemy pixel
                     enemyAlpha = enemyTex->getAlpha(enemyPixel);
                     if (int(enemyAlpha) > 10) { // collision
-                        if (Hit == 0) // only add to hit if in state 0 (pre-hit)
+                        if (Hit == 0) { // only add to hit if in state 0 (pre-hit)
                             return true;
+                        }
                     }
                 }
             }
