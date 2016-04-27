@@ -62,10 +62,12 @@ void Master::loadMedia() {
 
 void Master::play() {
     while (!Quit) {
-        if (NextLevel) { // check if new/next level
-            if (levels.getCurrLevel() == 0) {
+        if (levels.getCurrLevel() < 1) {
                 showIntro();
-            }
+                SDL_RenderClear(Renderer);
+        }
+        if (NextLevel) { // check if new/next level
+
             if (levels.getCurrLevel() != 0) { // if not the intro
                 levels.setCurrText(0); // reset text display to 0
                 levels.stopMusic(); // fade out music

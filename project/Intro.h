@@ -22,7 +22,7 @@ public:
     // get/set functions
 private:
     SDL_Renderer *Renderer;
-    Texture Foreground[1];
+    Texture Foreground[20];
 
 };
 
