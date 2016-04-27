@@ -80,7 +80,7 @@ void Master::play() {
                 sound.playSound(7); // select sound
             }
             levels.setCurrLevel(levels.getCurrLevel() + 1); // go to next level
-            levels.setCurrLevel(4); // TESTING LEVEL
+            //levels.setCurrLevel(4); // TESTING LEVEL
             if (levels.getCurrLevel() == 5) { // if finished with the game
                 levels.stopMusic();
                 if (Status == 1) { // if won game
@@ -528,9 +528,9 @@ void Master::checkKeyPress() {
                 case SDLK_c:
                     levels.setCurrText();
                     break;
-                case SDLK_TAB: // CHEAT CODE TO ALLOW FOR DEBUGGING
+                /*case SDLK_TAB: // CHEAT CODE TO ALLOW FOR DEBUGGING
                     NextLevel = true;
-                    break;
+                    break;*/
             }
         }
     }

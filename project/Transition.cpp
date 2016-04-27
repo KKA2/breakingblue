@@ -34,7 +34,7 @@ void Transition::display() {
 
 void Transition::loadMedia() {
     // set up media from Level class
-    Level::setBackground("imgs/bg/lvl2.png");
+    Level::setBackground("imgs/bg/transition.png");
     Level::setMusic(Mix_LoadMUS("sound/techno.wav")); // music for menu screen
 
     // load all foreground textures
