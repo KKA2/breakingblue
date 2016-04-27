@@ -7,10 +7,11 @@ A 2-D multi-stage action adventure game in which you play as a Blue involved in 
 
 - Level 4 background
 - Collision detection of enemy w/ player in level 4
+- Intro/Outro
 
 ## Known Issues
 - Rolling messes with collision/ground detection
-- Kat still can't view menu (skips to level 1)
+- Enemy detects general vicinty rather than specific pixels
 
 ## Recently Resolved Issues
 - Jumping while running at wall allows teleport through wall (Result of temp fix in checkGround until checkCollision finished)
