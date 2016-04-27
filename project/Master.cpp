@@ -526,10 +526,12 @@ void Master::checkKeyPress() {
                     break;
                 case SDLK_c:
                     levels.setCurrText();
+                    if (levels.getCurrText() <= levels.getTotalText()) // if displaying a new text image
+                        sound.playSound(8); // page flip sound
                     break;
-                /*case SDLK_TAB: // CHEAT CODE TO ALLOW FOR DEBUGGING
+                case SDLK_TAB: // CHEAT CODE TO ALLOW FOR DEBUGGING
                     NextLevel = true;
-                    break;*/
+                    break;
             }
         }
     }

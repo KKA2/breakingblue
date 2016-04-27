@@ -37,12 +37,15 @@ public:
     SDL_Rect * getCamera();
     void setMusic(Mix_Music *);
     Mix_Music * getMusic();
+    int getCurrText();
+    int getTotalText();
+protected:
+    Text Tutorial;
 private:
     SDL_Renderer *Renderer; // window renderer
     SDL_Texture *Background; // base background texture image
     SDL_Rect Camera; // current screen on texture to be rendered
     Mix_Music *Music; // level music
-
     int LevelWidth;
     int LevelHeight;
 };

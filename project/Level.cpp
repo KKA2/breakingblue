@@ -35,6 +35,7 @@ Level::~Level() {
 void Level::setUp(SDL_Renderer *renderer) {
     // allow for textures to be rendered onto the screen
     Renderer = renderer;
+    Tutorial.setUp(renderer);
 }
 
 void Level::display() {
@@ -108,4 +109,12 @@ void Level::setMusic(Mix_Music *music) {
 
 Mix_Music * Level::getMusic() {
     return Music;
+}
+
+int Level::getCurrText() {
+    return Tutorial.getCurrText();
+}
+
+int Level::getTotalText() {
+    return Tutorial.getTotalText();
 }

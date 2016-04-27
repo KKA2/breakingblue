@@ -30,6 +30,8 @@ public:
     void setCurrLevel(int);
     Texture * getForeground(); // get associated foreground to current level
     void setCurrText(); // mission parameters
+    int getCurrText();
+    int getTotalText();
     void setCurrMaze(); // maze
     void setCameraX(int);
     int getCameraX();

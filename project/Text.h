@@ -14,18 +14,19 @@ class Text {
 
 public:
 	Text();
-	Text(int num);
 	~Text();
-	bool display(SDL_Rect *, int);
 	void setUp(SDL_Renderer *);
-    void loadMedia(string);
+    void loadText(string);
+    void display();
+    int getCurrText();
+    void setCurrText(int);
+    int getTotalText();
+    void setTotalText(int);
 private:
     SDL_Renderer *Renderer;
-    Texture text;
-    vector<SDL_Rect> Chars;
-	int XPos;
-	int YPos;
-	int NumChars;
-	bool first;
+    Texture Tutorial; // instructions
+    SDL_Rect TutorialRect;
+    int CurrText; // current text box displayed
+    int TotalText; // total number of text boxes
 };
 #endif

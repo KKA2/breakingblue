@@ -78,22 +78,36 @@ Texture * Levels::getForeground() {
 }
 
 void Levels::setCurrText() {
-    if (CurrLevel == 1) {
-        if (level1.getCurrText() == 2) {
-            if (level1.getCurrDoor(0) >= 1) { // hit the first door down
-                level1.setCurrText();
-            }
-        }
-        else {
-            level1.setCurrText();
-        }
-    } else if (CurrLevel == 2) {
+    if (CurrLevel == 1)
+        level1.setCurrText();
+    else if (CurrLevel == 2)
         level2.setCurrText();
-    } else if (CurrLevel == 3) {
+    else if (CurrLevel == 3)
         level3.setCurrText();
-    } else if (CurrLevel == 4) {
+    else if (CurrLevel == 4)
         level4.setCurrText();
-    }
+}
+
+int Levels::getCurrText() {
+    if (CurrLevel == 1)
+        return level1.getCurrText();
+    else if (CurrLevel == 2)
+        return level2.getCurrText();
+    else if (CurrLevel == 3)
+        return level3.getCurrText();
+    else // if (CurrLevel == 4)
+        return level4.getCurrText();
+}
+
+int Levels::getTotalText() {
+    if (CurrLevel == 1)
+        return level1.getTotalText();
+    else if (CurrLevel == 2)
+        return level2.getTotalText();
+    else if (CurrLevel == 3)
+        return level3.getTotalText();
+    else // if (CurrLevel == 4)
+        return level4.getTotalText();
 }
 
 void Levels::setCurrMaze() {

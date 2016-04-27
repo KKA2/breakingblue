@@ -58,6 +58,11 @@ void Sound::loadMedia(int load) {
             SoundEffect = Mix_LoadWAV("sound/select.wav");
             loaded = 7;
         }
+        else if (load == 8) {
+            Mix_FreeChunk(SoundEffect);
+            SoundEffect = Mix_LoadWAV("sound/pageflip.wav");
+            loaded = 8;
+        }
     }
 }
 
@@ -81,4 +86,6 @@ void Sound::playSound(int sound) {
         Mix_PlayChannel(5,SoundEffect,0);
         while (Mix_Playing(5) != 0); // play until complete
     }
+    else if (sound == 8) // page flip, can overlap
+        Mix_PlayChannel(6,SoundEffect,0);
 }

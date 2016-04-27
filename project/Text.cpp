@@ -1,5 +1,5 @@
 // Text.cpp
-// text animations on screen
+// Tutorial animations on screen
 // Project: Breaking Blue
 // Authors: Kate Barlock, Kat Herring, Ann Keenan
 
@@ -8,52 +8,42 @@
 using namespace std;
 
 Text::Text() {
-    // position to display
-    XPos = 0;
-    YPos = 25;
-    first = true;
-    NumChars = 50;
+    TutorialRect.x = 0;
+    TutorialRect.y = 0;
+    TutorialRect.w = 450;
+    TutorialRect.h = 125;
 }
-Text::Text(int num) {
-    // position to display
-    XPos = 0;
-    YPos = 25;
-    first = true;
-    // number of characters in image to display (49 in 00)
-    NumChars = num;
-}
+
 Text::~Text() {
-	text.free();
-    Chars.clear();
+    Tutorial.free();
 }
+
 void Text::setUp(SDL_Renderer *renderer) {
     Renderer = renderer;
-    text.setUp(renderer);
+    Tutorial.setUp(renderer);
 }
-void Text::loadMedia(string file) {
-    text.loadFromFile(file);
-    SDL_Rect temp;
-    for (int i=1;i<=NumChars;i++) {
-        temp.x = 0;
-        temp.y = 0;
-        temp.w = 11*i;
-        temp.h = 26;
 
-        Chars.push_back(temp);
-    }
-    return;
+void Text::loadText(string text) {
+    Tutorial.loadFromFile(text); // load image
 }
-bool Text::display(SDL_Rect * cam, int line) { //line to display on
-    //int camX = cam->x;
-    //static bool first = true; // display animation when first loading
-    static int i;
 
-    if (i < NumChars) {
-        text.render(XPos, 26*line,&Chars[int(i)],SDL_FLIP_NONE);
-        //SDL_RenderPresent(Renderer);
-        i++;
-        return false; //not fully displayed
-    } else
-        text.render(XPos, 26*line,&Chars[NumChars-1],SDL_FLIP_NONE); // does not scroll through text yet
-        return true; //fully displayed
+void Text::display() { // line to display on
+    if (CurrText < TotalText) // if still have text to display
+        Tutorial.render(20,20,&TutorialRect); // display at (20,20)
+}
+
+int Text::getCurrText() {
+    return CurrText;
+}
+
+void Text::setCurrText(int currText) {
+    CurrText = currText;
+}
+
+int Text::getTotalText() {
+    return TotalText;
+}
+
+void Text::setTotalText(int totalText) {
+    TotalText = totalText;
 }

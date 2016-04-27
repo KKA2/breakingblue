@@ -24,7 +24,6 @@ public:
     double getCurrDoor(int);
     void setCurrDoor(int,double);
     void setCurrText();
-    int getCurrText();
 private:
     // foregrounds containing or mission each door
     // 0=all doors, 1=first door gone, 2=second door gone, 3=all doors gone
@@ -34,15 +33,11 @@ private:
     Texture Door2Texture;
     Texture Door3Texture;
 
-    vector<Text> LevelOneText;
-    //Text MissionParam; // text for mission parameters
-
     double CurrDoor; // current relevant door (number stored = number of doors that have been knocked down)
     // state of respective door (how many hits landed - 0.25 added for each hit)
     double CurrDoor1;
     double CurrDoor2;
     double CurrDoor3;
-    int CurrText; //current text direction to be displayed
 };
 
 #endif

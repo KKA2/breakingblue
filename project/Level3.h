@@ -27,10 +27,7 @@ private:
     Texture Foreground[5];
     Texture PurpleFigTexture;
     SDL_Rect PurpleFig;
-
-    vector<Text> LevelThreeText;
     int CurrMaze;
-    int CurrText; //current text direction to be displayed
 };
 
 #endif
