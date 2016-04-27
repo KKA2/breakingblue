@@ -12,7 +12,7 @@ Intro::Intro() {
 }
 
 Intro::~Intro() {
-    for (int f=0;f<13;f++)
+    for (int f=0;f<17;f++)
         Foreground[f].free();
 }
 
@@ -20,7 +20,7 @@ void Intro::setUp(SDL_Renderer *renderer) {
     Renderer = renderer;
     // set up renderer on all textures
     Level::setUp(renderer);
-    for (int f=0;f<13;f++)
+    for (int f=0;f<17;f++)
         Foreground[f].setUp(renderer);
     // set to fit screen
     Level::setLevelWidth(1000);
@@ -53,7 +53,15 @@ void Intro::display() {
     //third screen
     SDL_RenderClear(Renderer);
     for (int i = 9; i<13; i++) {
-        for(int j = 4; j<=i;j++) {
+        for(int j = 9; j<=i;j++) {
+            Foreground[j].render(0,0,&cam);
+        }
+        SDL_RenderPresent(Renderer);
+        SDL_Delay(800);  
+    }
+    SDL_RenderClear(Renderer);
+    for (int i = 13; i<17; i++) {
+        for(int j = 13; j<=i;j++) {
             Foreground[j].render(0,0,&cam);
         }
         SDL_RenderPresent(Renderer);
@@ -82,5 +90,8 @@ void Intro::loadMedia() {
     Foreground[10].loadFromFile("imgs/intro/3-1.png");
     Foreground[11].loadFromFile("imgs/intro/3-2.png");
     Foreground[12].loadFromFile("imgs/intro/3-3.png");
-
+    Foreground[13].loadFromFile("imgs/intro/4-0.png");
+    Foreground[14].loadFromFile("imgs/intro/4-1.png");
+    Foreground[15].loadFromFile("imgs/intro/4-2.png");
+    Foreground[16].loadFromFile("imgs/intro/4-3.png");
 }
