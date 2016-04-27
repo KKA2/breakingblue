@@ -41,7 +41,7 @@ void Level1::setUp(SDL_Renderer *renderer) {
     Text temp5(62);
     Text tempText2(22);
     Text temp3(31);
-    Text temp6(42);
+    Text temp6(46);
     Text temp7(33);
     Text temp8(52);
 
