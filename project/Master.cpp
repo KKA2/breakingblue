@@ -126,7 +126,7 @@ void Master::play() {
                 }
                 else if (player.getState() == 6) { // if player is kicking
                     sound.playSound(2);
-                    enemy.setLifePts(enemy.getLifePts() - 4); // enemy loses more life
+                    enemy.setLifePts(enemy.getLifePts() - 3); // enemy loses more life
                     Hit = 2;
                 }
                 if (enemy.getState() == 5) { // if enemy is punching
@@ -136,7 +136,7 @@ void Master::play() {
                 }
                 else if (enemy.getState() == 6) { // if enemy is kicking
                     sound.playSound(2);
-                    player.setLifePts(player.getLifePts() -2);
+                    player.setLifePts(player.getLifePts() - 2);
                     Hit = 2;
                 }
             }
@@ -303,11 +303,12 @@ void Master::animate(Person *person) {
     }
     // move person
     if (person->getState() == 4) { // rolling
+
         person->setCurrRoll(person->getCurrRoll() + 1);
         if (person->getMoveDir() == SDL_FLIP_NONE) // check direction for movement
-            moveFigure(person,16,0);
+            moveFigure(person,14,0);
         else
-            moveFigure(person,-16,0);
+            moveFigure(person,-14,0);
         
         if (person->getCurrRoll() < 8) {
             update();
@@ -667,7 +668,7 @@ void Master::fixCollision(Person *person, int collisionType) {
         if (person->getState() == 1 || person->getState() == 2) // if running/jumping
             person->setXPos(person->getXPos() + 10);
         else if (person->getState() == 4) // if rolling
-            person->setXPos(person->getXPos() + 16);
+            person->setXPos(person->getXPos() + 14);
         else if (person->getState() == 5 || person->getState() == 6) // punching/kicking
             person->setXPos(person->getXPos() + 2);
         else { // catch exception (standing)
@@ -679,7 +680,7 @@ void Master::fixCollision(Person *person, int collisionType) {
         if (person->getState() == 1 || person->getState() == 2) // if running/jumping
             person->setXPos(person->getXPos() - 10);
         else if (person->getState() == 4) // if rolling
-            person->setXPos(person->getXPos() - 16);
+            person->setXPos(person->getXPos() - 14);
         else if (person->getState() == 5 || person->getState() == 6)  // if punching/kicking
             person->setXPos(person->getXPos() - 2);
         else { // catch exception (standing)
