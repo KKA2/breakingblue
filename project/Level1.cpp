@@ -32,7 +32,6 @@ void Level1::setUp(SDL_Renderer *renderer) {
     Door1Texture.setUp(renderer);
     Door2Texture.setUp(renderer);
     Door3Texture.setUp(renderer);
-
     Level::setLevelWidth(4000);
     Level::setLevelHeight(400);
     Level::setCameraX(0);
@@ -53,7 +52,6 @@ void Level1::display() {
     Door2Texture.render(0,0,&cam);
     cam.y = 400*int(CurrDoor3);
     Door3Texture.render(0,0,&cam);
-
     Tutorial.display();
 }
 
