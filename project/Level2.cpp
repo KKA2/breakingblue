@@ -35,11 +35,11 @@ void Level2::setUp(SDL_Renderer *renderer) {
     Level::setCameraY(0);
 
     Text temp0(20);
-    Text temp(21);
+    Text temp(25);
     Text temp2(66);
-    Text temp3(65);
+    Text temp3(67);
     Text temp4(40);
-    Text temp5(58);
+    Text temp5(60);
 
     LevelTwoText.push_back(temp0);
     LevelTwoText.push_back(temp);
