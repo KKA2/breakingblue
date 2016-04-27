@@ -21,7 +21,7 @@ public:
     void loadMedia();
     // get/set functions
     Texture * getForeground();
-    void setCurrText();
+    void setCurrText(int);
 private:
     Texture Foreground;
 };

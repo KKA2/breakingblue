@@ -78,15 +78,15 @@ Texture * Levels::getForeground() {
         return level4.getForeground();
 }
 
-void Levels::setCurrText() {
+void Levels::setCurrText(int currText) {
     if (CurrLevel == 1)
-        level1.setCurrText();
+        level1.setCurrText(currText);
     else if (CurrLevel == 2)
-        level2.setCurrText();
+        level2.setCurrText(currText);
     else if (CurrLevel == 3)
-        level3.setCurrText();
+        level3.setCurrText(currText);
     else if (CurrLevel == 4)
-        level4.setCurrText();
+        level4.setCurrText(currText);
 }
 
 int Levels::getCurrText() {

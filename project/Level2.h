@@ -24,7 +24,6 @@ public:
     Texture * getForeground();
     double getCurrDoor(int);
     void setCurrDoor(int,double);
-    void setCurrText();
     void setCurrText(int);
 private:
     Texture Foreground[4];

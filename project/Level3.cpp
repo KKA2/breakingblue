@@ -81,6 +81,6 @@ void Level3::setCurrMaze() {
     CurrMaze = rand()%5; // choose a random number between 0-4 and set as the current maze
 }
 
-void Level3::setCurrText() {
-    Tutorial.setCurrText(Tutorial.getCurrText() + 1); // increment currText
+void Level3::setCurrText(int currText) {
+    Tutorial.setCurrText(currText); // increment currText
 }

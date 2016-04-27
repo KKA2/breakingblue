@@ -56,8 +56,9 @@ void Level1::display() {
 
 void Level1::display(bool showText) {
     display(); // call other display function
-    if (Tutorial.getCurrText() < 1) // if mission text only
-        Tutorial.display();
+    if (!showText) // mission text only
+        Tutorial.setTotalText(1);
+    Tutorial.display();
 }
 
 void Level1::loadMedia() {
@@ -114,7 +115,7 @@ void Level1::setCurrDoor(int door, double currDoor) {
         CurrDoor3 = currDoor;
 }
 
-void Level1::setCurrText() {
+void Level1::setCurrText(int currText) {
     // load the next texture to display
     if (Tutorial.getCurrText() == 0)
         Tutorial.loadText("imgs/lvl1/txt/1.png");
@@ -125,5 +126,5 @@ void Level1::setCurrText() {
     else if (Tutorial.getCurrText() == 3)
         Tutorial.loadText("imgs/lvl1/txt/4.png");
 
-    Tutorial.setCurrText(Tutorial.getCurrText() + 1); // increment currText
+    Tutorial.setCurrText(currText); // increment currText
 }

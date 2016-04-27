@@ -24,7 +24,7 @@ public:
     Texture * getForeground();
     double getCurrDoor(int);
     void setCurrDoor(int,double);
-    void setCurrText();
+    void setCurrText(int);
 private:
     // foregrounds containing or mission each door
     // 0=all doors, 1=first door gone, 2=second door gone, 3=all doors gone

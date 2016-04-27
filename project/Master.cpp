@@ -66,7 +66,8 @@ void Master::play() {
             if (levels.getCurrLevel() == 0) {
                 showIntro();
             }
-            if (levels.getCurrLevel() != 0) { // if not the first level
+            if (levels.getCurrLevel() != 0) { // if not the intro
+                levels.setCurrText(0); // reset text display to 0
                 levels.stopMusic(); // fade out music
                 if (levels.getCurrLevel() == 4) {// if after the fourth level
                     if (Status == 0)
@@ -92,6 +93,7 @@ void Master::play() {
                 if (Status == 1) { // if won game
                     levels.setCurrLevel(1); // set to first level
                     ShowText = false;
+                    Status = 0; // reset to lose game status
                 } 
                 else { // if lost game
                     levels.setCurrLevel(4); // restart fourth level
@@ -279,7 +281,7 @@ void Master::updateCamera() {
 
 void Master::update(bool interactive) {
     SDL_RenderClear(Renderer); // clear screen to redraw
-    levels.display(); // draw background/foreground
+    levels.display(ShowText); // draw background/foreground
     if (interactive) { // only draw player if in interactive mode
         player.draw(levels.getCameraX(),levels.getCameraY(),levels.getCurrLevel()); // draw player
         if (levels.getCurrLevel() == 4) { // if in final level
@@ -538,7 +540,7 @@ void Master::checkKeyPress() {
                     Quit = true;
                     break;
                 case SDLK_c:
-                    levels.setCurrText();
+                    levels.setCurrText(levels.getCurrText() + 1);
                     if (levels.getCurrText() <= levels.getTotalText()) // if displaying a new text image
                         sound.playSound(8); // page flip sound
                     break;

@@ -37,6 +37,7 @@ public:
     SDL_Rect * getCamera();
     void setMusic(Mix_Music *);
     Mix_Music * getMusic();
+    void setCurrText(int);
     int getCurrText();
     int getTotalText();
 protected:

@@ -50,6 +50,6 @@ Texture * Level4::getForeground() {
     // get foreground
     return &Foreground;
 }
-void Level4::setCurrText() {
-    Tutorial.setCurrText(Tutorial.getCurrText() + 1); // increment currText
+void Level4::setCurrText(int currText) {
+    Tutorial.setCurrText(currText); // increment currText
 }

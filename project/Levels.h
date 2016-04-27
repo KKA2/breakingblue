@@ -29,7 +29,7 @@ public:
     int getCurrLevel();
     void setCurrLevel(int);
     Texture * getForeground(); // get associated foreground to current level
-    void setCurrText(); // mission parameters
+    void setCurrText(int); // set text
     int getCurrText();
     int getTotalText();
     void setCurrMaze(); // maze
