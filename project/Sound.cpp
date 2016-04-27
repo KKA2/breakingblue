@@ -65,9 +65,9 @@ void Sound::playSound(int sound) {
     loadMedia(sound); // load sound effect to be played
     if (sound == 1 && Mix_Playing(1) == 0) // landing, make sure sound not already playing
         Mix_PlayChannel(1,SoundEffect,0);
-    else if (sound == 2) // kicking, sound can overlap
+    else if (sound == 2 && Mix_Playing(2) == 0) // kicking, no overlap
         Mix_PlayChannel(2,SoundEffect,0);
-    else if (sound == 3) // punching, sound can overlap
+    else if (sound == 3 && Mix_Playing(3) == 0) // punching, no overlap
         Mix_PlayChannel(3,SoundEffect,0);
     else if (sound == 4) // success, play at end of each level and if win game
         Mix_PlayChannel(4,SoundEffect,0);

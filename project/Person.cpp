@@ -22,7 +22,7 @@ Person::Person() {
     JumpDir = 0;
     JumpHeight = 0;
     JumpChange = 0;
-    MaxJumpHeight = 140;
+    MaxJumpHeight = 200;
     FlyingEnabled = false;
 }
 

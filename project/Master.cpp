@@ -92,9 +92,7 @@ void Master::play() {
             }
             reset(); // set all initial values
             levels.playMusic(); // start music
-            if (levels.getCurrLevel() >= 2) // increase jump height
-                player.setMaxJumpHeight(200);
-            if (levels.getCurrLevel() == 4) // fourth level, set enemy jump height
+            if (levels.getCurrLevel() == 4) // set enemy jump height
                 enemy.setMaxJumpHeight(250);
             NextLevel = false; // reset value of next level to play in the new level
         }
@@ -122,22 +120,22 @@ void Master::play() {
             jump(&enemy);
             if (checkEnemy()) { // if player collides with enemy
                 if (player.getState() == 5) { // if player is punching
-                    sound.playSound(2); // play punching sound
+                    sound.playSound(3); // play punching sound
                     enemy.setLifePts(enemy.getLifePts() - 2); // enemy loses life
                     Hit = 2;
                 }
                 else if (player.getState() == 6) { // if player is kicking
-                    sound.playSound(1);
+                    sound.playSound(2);
                     enemy.setLifePts(enemy.getLifePts() - 4); // enemy loses more life
                     Hit = 2;
                 }
                 if (enemy.getState() == 5) { // if enemy is punching
-                    sound.playSound(2); // play punching sound
+                    sound.playSound(3); // play punching sound
                     player.setLifePts(player.getLifePts() - 1); // player loses life
                     Hit = 2;
                 }
                 else if (enemy.getState() == 6) { // if enemy is kicking
-                    sound.playSound(1);
+                    sound.playSound(2);
                     player.setLifePts(player.getLifePts() -2);
                     Hit = 2;
                 }
@@ -361,7 +359,7 @@ void Master::animate(Person *person) {
         if (hasCollided) { // five must collide
             if (levels.getCurrLevel() == 1 || levels.getCurrLevel() == 2)
                 levels.setCurrDoor(0,levels.getCurrDoor(0) + .2);
-            sound.playSound(3);
+            sound.playSound(2);
 
             do { // fix collision
                 fixCollision(person,hasCollided);
