@@ -58,6 +58,7 @@ private:
     bool Quit; // boolean to quit, false = do not quit, true = quit
     bool NextLevel; // true = move on to next level
     int Status; // 0 - lose game, 1 - win game
+    bool ShowText; // only show Tutorial text for first game (Mission Files only afterwards)
     // three states
     // 0 - pre-hit, 1 - hit, 2 - wait for no collision->back to 0
     int Hit;

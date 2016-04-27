@@ -18,6 +18,7 @@ public:
     // implement virtual functions of Level class
     void setUp(SDL_Renderer *);
     void display();
+    void display(bool);
     void loadMedia();
     // get/set functions
     Texture * getForeground();

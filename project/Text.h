@@ -17,7 +17,7 @@ public:
 	~Text();
 	void setUp(SDL_Renderer *);
     void loadText(string);
-    void display();
+    void display(); // default to show text
     int getCurrText();
     void setCurrText(int);
     int getTotalText();

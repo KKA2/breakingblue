@@ -35,11 +35,12 @@ void Levels::setCurrLevel(int currLevel) {
     CurrLevel = currLevel;
 }
 
-void Levels::display() {
+void Levels::display(bool showText) {
+    // only levels 1 and 2 have tutorial text (levels 3 and 4 display all text always)
     if (CurrLevel == 1)
-        level1.display();
+        level1.display(showText);
     else if (CurrLevel == 2)
-        level2.display();
+        level2.display(showText);
     else if (CurrLevel == 3)
         level3.display();
     else // if (CurrLevel == 4)

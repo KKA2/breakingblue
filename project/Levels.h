@@ -22,7 +22,7 @@ public:
     void setUp(SDL_Renderer *); // set up renderer for all level textures
     void loadMedia(); // load media from all levels
     // level specific
-    void display(); // display current level
+    void display(bool=true); // display current level, default showtext to true
     void playMusic(); // play music associated to current level
     void stopMusic(); // stop music currently playing
     // get/set functions

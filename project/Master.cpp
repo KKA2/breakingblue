@@ -8,6 +8,7 @@
 using namespace std;
 
 Master::Master() {
+    ShowText = true;
     Quit = false;
     NextLevel = true; // start game by moving to first level
     Hit = 0; // stores if enemy has hit the player
@@ -90,6 +91,7 @@ void Master::play() {
                 levels.stopMusic();
                 if (Status == 1) { // if won game
                     levels.setCurrLevel(1); // set to first level
+                    ShowText = false;
                 } 
                 else { // if lost game
                     levels.setCurrLevel(4); // restart fourth level
@@ -188,11 +190,13 @@ void Master::showTransition() { // returns true if player decides to continue
         }
     }
 }
+
 void Master::showIntro() {
     if (levels.getCurrLevel() == 0) // if menu screen
         intro.playMusic(); // play music
     intro.display();
 }
+
 void Master::reset() {
     // set player's initial position
     if (levels.getCurrLevel() == 3) { // 3rd level
