@@ -19,6 +19,7 @@ Master::Master() {
     enemy.setUp(Renderer);
     levels.setUp(Renderer);
     transition.setUp(Renderer);
+    intro.setUp(Renderer);
     // load all pictures/sounds
     loadMedia();
 }
@@ -55,11 +56,15 @@ void Master::loadMedia() {
     enemy.loadMedia();
     levels.loadMedia();
     transition.loadMedia();
+    intro.loadMedia();
 }
 
 void Master::play() {
     while (!Quit) {
         if (NextLevel) { // check if new/next level
+            if (levels.getCurrLevel() == 0) {
+                showIntro();
+            }
             if (levels.getCurrLevel() != 0) { // if not the first level
                 levels.stopMusic(); // fade out music
                 if (levels.getCurrLevel() == 4) {// if after the fourth level
@@ -183,7 +188,11 @@ void Master::showTransition() { // returns true if player decides to continue
         }
     }
 }
-
+void Master::showIntro() {
+    if (levels.getCurrLevel() == 0) // if menu screen
+        intro.playMusic(); // play music
+    intro.display();
+}
 void Master::reset() {
     // set player's initial position
     if (levels.getCurrLevel() == 3) { // 3rd level

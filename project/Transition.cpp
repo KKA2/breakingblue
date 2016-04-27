@@ -20,7 +20,6 @@ void Transition::setUp(SDL_Renderer *renderer) {
     Level::setUp(renderer);
     for (int f=0;f<6;f++)
         Foreground[f].setUp(renderer);
-
     // set to fit screen
     Level::setLevelWidth(1000);
     Level::setLevelHeight(400);

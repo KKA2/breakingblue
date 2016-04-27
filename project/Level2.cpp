@@ -39,7 +39,7 @@ void Level2::setUp(SDL_Renderer *renderer) {
     Text temp2(66);
     Text temp3(67);
     Text temp4(40);
-    Text temp5(60);
+    Text temp5(61);
 
     LevelTwoText.push_back(temp0);
     LevelTwoText.push_back(temp);
