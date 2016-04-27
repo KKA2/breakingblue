@@ -5,8 +5,8 @@ A 2-D multi-stage action adventure game in which you play as a Blue involved in 
 
 ## Still to Do
 
-- return to main menu option?
-- finish fixing collision detection
+- Level 4 background
+- Collision detection of enemy w/ player in level 4
 
 ## Known Issues
 - Rolling messes with collision/ground detection
