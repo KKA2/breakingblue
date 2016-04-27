@@ -12,7 +12,7 @@ Intro::Intro() {
 }
 
 Intro::~Intro() {
-    for (int f=0;f<17;f++)
+    for (int f=0;f<23;f++)
         Foreground[f].free();
 }
 
@@ -20,7 +20,7 @@ void Intro::setUp(SDL_Renderer *renderer) {
     Renderer = renderer;
     // set up renderer on all textures
     Level::setUp(renderer);
-    for (int f=0;f<17;f++)
+    for (int f=0;f<23;f++)
         Foreground[f].setUp(renderer);
     // set to fit screen
     Level::setLevelWidth(1000);
@@ -39,7 +39,7 @@ void Intro::display() {
             Foreground[j].render(0,0,&cam);          
         }
         SDL_RenderPresent(Renderer);
-        SDL_Delay(800);  
+        SDL_Delay(1200);  
     }
     SDL_RenderClear(Renderer);
     //second screen
@@ -48,7 +48,7 @@ void Intro::display() {
             Foreground[j].render(0,0,&cam);
         }
         SDL_RenderPresent(Renderer);
-        SDL_Delay(800);  
+        SDL_Delay(1200);  
     }
     //third screen
     SDL_RenderClear(Renderer);
@@ -57,15 +57,25 @@ void Intro::display() {
             Foreground[j].render(0,0,&cam);
         }
         SDL_RenderPresent(Renderer);
-        SDL_Delay(800);  
+        SDL_Delay(1200);  
     }
+    //screen four
     SDL_RenderClear(Renderer);
-    for (int i = 13; i<17; i++) {
+    for (int i = 13; i<18; i++) {
         for(int j = 13; j<=i;j++) {
             Foreground[j].render(0,0,&cam);
         }
         SDL_RenderPresent(Renderer);
-        SDL_Delay(800);  
+        SDL_Delay(1200);  
+    }
+    //screen 5
+    SDL_RenderClear(Renderer);
+    for (int i = 18; i<23; i++) {
+        for(int j = 18; j<=i;j++) {
+            Foreground[j].render(0,0,&cam);
+        }
+        SDL_RenderPresent(Renderer);
+        SDL_Delay(1200);  
     }
 
     //SDL_RenderPresent(Renderer); // update screen
@@ -94,4 +104,10 @@ void Intro::loadMedia() {
     Foreground[14].loadFromFile("imgs/intro/4-1.png");
     Foreground[15].loadFromFile("imgs/intro/4-2.png");
     Foreground[16].loadFromFile("imgs/intro/4-3.png");
+    Foreground[17].loadFromFile("imgs/intro/4-3.png");
+    Foreground[18].loadFromFile("imgs/intro/5-0.png");
+    Foreground[19].loadFromFile("imgs/intro/5-1.png");
+    Foreground[20].loadFromFile("imgs/intro/5-2.png");
+    Foreground[21].loadFromFile("imgs/intro/5-3.png");
+    Foreground[22].loadFromFile("imgs/intro/5-4.png");
 }
