@@ -733,7 +733,7 @@ void Master::checkEnemy() {
     int xDist = enemy.getXPos() - player.getXPos();
     int yDist = enemy.getYPos() - player.getYPos();
 
-    if (abs(xDist) < 5*boundingW/2 && abs(yDist) < 2*boundingH/3) { // if bounding rectangles are close enough
+    if (abs(xDist) < 3*boundingW/2 && abs(yDist) < 2*boundingH/3) { // if bounding rectangles are close enough
         // loops through bounding box of the person, compares alpha of enemy and person
         // get current person pixel
         if (player.getXPos() < enemy.getXPos()) { // enemy is to the right of the player
