@@ -727,27 +727,31 @@ int Master::checkGround(Person *person) {
 
 void Master::checkEnemy() {
     // compare current player image to enemy image and detect collision
-    int boundingH = 94, boundingW = 75; // height and width of image
-
     // distance between the two
     int xDist = enemy.getXPos() - player.getXPos();
     int yDist = enemy.getYPos() - player.getYPos();
 
-    if (abs(xDist) < 3*boundingW/2 && abs(yDist) < 2*boundingH/3) { // if bounding rectangles are close enough
+    if (abs(xDist) < 70 && abs(yDist) < 30) { // if bounding rectangles are close enough
         // loops through bounding box of the person, compares alpha of enemy and person
         // get current person pixel
         if (player.getXPos() < enemy.getXPos()) { // enemy is to the right of the player
             if (player.getMoveDir() == SDL_FLIP_NONE) { // if player facing to the right
                 if (player.getState() == 5) { // if player is punching
                     if (PlayerHit == 0) {
-                        enemy.setLifePts(enemy.getLifePts() - 5); // enemy loses life
-                        PlayerHit = 2;
+                        if (player.getCurrPunch() >= 5 && player.getCurrPunch() <= 8) { // if extended
+                            sound.playSound(3);
+                            enemy.setLifePts(enemy.getLifePts() - 5); // enemy loses life
+                            PlayerHit = 2;
+                        }
                     }
                 }
-                else if (player.getState() == 6) { // if player is kicking
+                else if (player.getState() == 6 && player.getCurrKick() >= 5) { // if player is kicking
                     if (PlayerHit == 0) {
-                        enemy.setLifePts(enemy.getLifePts() - 7); // enemy loses more life
-                        PlayerHit = 2;
+                        if (player.getCurrKick() >= 5 && player.getCurrKick() <= 7) {
+                            sound.playSound(2);
+                            enemy.setLifePts(enemy.getLifePts() - 7); // enemy loses more life
+                            PlayerHit = 2;
+                        }
                     }
                 }
                 else {
@@ -757,14 +761,20 @@ void Master::checkEnemy() {
             if (enemy.getMoveDir() == SDL_FLIP_HORIZONTAL) {
                 if (enemy.getState() == 5) { // if enemy is punching
                     if (EnemyHit == 0) {
-                        player.setLifePts(player.getLifePts() - 3); // player loses life
-                        EnemyHit = 2;
+                        if (enemy.getCurrPunch() >= 5 && enemy.getCurrPunch() <= 8) { // if extended
+                            sound.playSound(3);
+                            player.setLifePts(player.getLifePts() - 3); // player loses life
+                            EnemyHit = 2;
+                        }
                     }
                 }
                 else if (enemy.getState() == 6) { // if enemy is kicking
                     if (EnemyHit == 0) {
-                        player.setLifePts(player.getLifePts() - 5);
-                        EnemyHit = 2;
+                        if (enemy.getCurrKick() >= 5 && enemy.getCurrKick() <= 7) {  // if extended
+                            sound.playSound(2);
+                            player.setLifePts(player.getLifePts() - 5);
+                            EnemyHit = 2;
+                        }
                     }
                 }
                 else {
@@ -776,14 +786,20 @@ void Master::checkEnemy() {
             if (player.getMoveDir() == SDL_FLIP_HORIZONTAL) { // if player facing to the right
                 if (player.getState() == 5) { // if player is punching
                     if (PlayerHit == 0) {
-                        enemy.setLifePts(enemy.getLifePts() - 2); // enemy loses life
-                        PlayerHit = 2;
+                        if (player.getCurrPunch() >= 5 && player.getCurrPunch() <= 8) { // if extended
+                            sound.playSound(3);
+                            enemy.setLifePts(enemy.getLifePts() - 2); // enemy loses life
+                            PlayerHit = 2;
+                        }
                     }
                 }
                 else if (player.getState() == 6) { // if player is kicking
                     if (PlayerHit == 0) {
-                        enemy.setLifePts(enemy.getLifePts() - 3); // enemy loses more life
-                        PlayerHit = 2;
+                        if (player.getCurrKick() >= 5 && player.getCurrKick() <= 7) {
+                            sound.playSound(2);
+                            enemy.setLifePts(enemy.getLifePts() - 3); // enemy loses more life
+                            PlayerHit = 2;
+                        }
                     }
                 }
                 else {
@@ -793,14 +809,20 @@ void Master::checkEnemy() {
             if (enemy.getMoveDir() == SDL_FLIP_NONE) {
                 if (enemy.getState() == 5) { // if enemy is punching
                     if (EnemyHit == 0) {
-                        player.setLifePts(player.getLifePts() - 1); // player loses life
-                        EnemyHit = 2;
+                        if (enemy.getCurrPunch() >= 5 && enemy.getCurrPunch() <= 8) { // if extended
+                            sound.playSound(3);
+                            player.setLifePts(player.getLifePts() - 1); // player loses life
+                            EnemyHit = 2;
+                        }
                     }
                 }
-                else if (enemy.getState() == 6) { // if enemy is kicking
+                else if (enemy.getState() == 6 && enemy.getCurrKick() >= 5) { // if enemy is kicking
                     if (EnemyHit == 0) {
-                        player.setLifePts(player.getLifePts() - 2);
-                        EnemyHit = 2;
+                        if (enemy.getCurrKick() >= 5 && enemy.getCurrKick() <= 7) {  // if extended
+                            sound.playSound(2);
+                            player.setLifePts(player.getLifePts() - 2);
+                            EnemyHit = 2;
+                        }
                     }
                 }
                 else {
@@ -808,19 +830,5 @@ void Master::checkEnemy() {
                 }
             }
         }
-    }
-
-    // play sound effect
-    if (PlayerHit == 2) { // punching or kicking
-        if (player.getCurrPunch() == 4)
-            sound.playSound(3);
-        else if (player.getCurrKick() == 5)
-            sound.playSound(2);
-    }
-    if (EnemyHit == 2) {
-        if (enemy.getCurrPunch() == 4)
-            sound.playSound(3);
-        else if (enemy.getCurrKick() == 5)
-            sound.playSound(2);
     }
 }
