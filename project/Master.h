@@ -51,7 +51,7 @@ public:
     void fixCollision(Person *,int collisionType); // respond to collision
     int checkGround(Person *);
     // to enemy
-    bool checkEnemy(); // true if collision
+    void checkEnemy(); // true if collision
 private:
     SDL_Window *Window; // window rendering to
     SDL_Renderer *Renderer; // window renderer
@@ -61,7 +61,8 @@ private:
     bool ShowText; // only show Tutorial text for first game (Mission Files only afterwards)
     // three states
     // 0 - pre-hit, 1 - hit, 2 - wait for no collision->back to 0
-    int Hit;
+    int EnemyHit;
+    int PlayerHit;
     // composition
     Sound sound;
     Player player;

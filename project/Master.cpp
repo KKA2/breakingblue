@@ -11,7 +11,8 @@ Master::Master() {
     ShowText = true;
     Quit = false;
     NextLevel = true; // start game by moving to first level
-    Hit = 0; // stores if enemy has hit the player
+    EnemyHit = 0; // stores if hit collides
+    PlayerHit = 0;
     Status = 0; // set win/lose status to 0 initially
     // initialize screen
     init();
@@ -98,7 +99,6 @@ void Master::play() {
                 sound.playSound(7); // select sound
             }
             levels.setCurrLevel(levels.getCurrLevel() + 1); // go to next level
-            //levels.setCurrLevel(4); // TESTING LEVEL
             if (levels.getCurrLevel() == 5) { // if finished with the game
                 levels.stopMusic();
                 if (Status == 1) { // if won game
@@ -139,31 +139,8 @@ void Master::play() {
             moveFigure(&enemy,enemy.move(player.getXPos(),player.getState()),0); // move x position
             animate(&enemy); // complete any animations
             jump(&enemy);
-            if (checkEnemy()) { // if player collides with enemy
-                if (player.getState() == 5) { // if player is punching
-                    sound.playSound(3); // play punching sound
-                    enemy.setLifePts(enemy.getLifePts() - 2); // enemy loses life
-                    Hit = 2;
-                }
-                else if (player.getState() == 6) { // if player is kicking
-                    sound.playSound(2);
-                    enemy.setLifePts(enemy.getLifePts() - 3); // enemy loses more life
-                    Hit = 2;
-                }
-                if (enemy.getState() == 5) { // if enemy is punching
-                    sound.playSound(3); // play punching sound
-                    player.setLifePts(player.getLifePts() - 1); // player loses life
-                    Hit = 2;
-                }
-                else if (enemy.getState() == 6) { // if enemy is kicking
-                    sound.playSound(2);
-                    player.setLifePts(player.getLifePts() - 2);
-                    Hit = 2;
-                }
-            }
-            else {
-                Hit = 0;
-            }
+            checkEnemy(); // check enemy and deduct life accordingly
+
             // check life points
             if (enemy.getLifePts() <= 0) { // if enemy defeated
                 NextLevel = true;
@@ -748,68 +725,102 @@ int Master::checkGround(Person *person) {
     return 0;
 }
 
-bool Master::checkEnemy() {
+void Master::checkEnemy() {
     // compare current player image to enemy image and detect collision
     int boundingH = 94, boundingW = 75; // height and width of image
-    Uint8 playerAlpha, enemyAlpha; // store alpha levels 
-    Uint32 playerPixel, enemyPixel; // store current pixel for for loop
-
-    // access current frame value within texture (or access only frame)
-    double playerFrame = 0; // current frame in sprite
-    switch (player.getState()) {
-        case 1: playerFrame = player.getCurrRun(); break;
-        case 4: playerFrame = player.getCurrRoll(); break;
-        case 5: playerFrame = player.getCurrPunch(); break;
-        case 6: playerFrame = player.getCurrKick(); break;
-        default: break;
-    }
-    double enemyFrame = 0;
-    switch (enemy.getState()) {
-        case 1: enemyFrame = enemy.getCurrRun(); break;
-        case 4: enemyFrame = enemy.getCurrRoll(); break;
-        case 5: enemyFrame = enemy.getCurrPunch(); break;
-        case 6: enemyFrame = enemy.getCurrKick(); break;
-        default: break;
-    }
-
-    // set bound for collisions check
-    int playerLeftEdge = int(playerFrame)*boundingW;
-    int enemyLeftEdge = int(enemyFrame)*boundingW;
-
-    Texture * playerTex = player.getTexture(player.getState());
-    Texture * enemyTex = enemy.getTexture(enemy.getState());
 
     // distance between the two
     int xDist = enemy.getXPos() - player.getXPos();
     int yDist = enemy.getYPos() - player.getYPos();
 
-    if (abs(xDist) < boundingW && abs(yDist) < boundingH) { // if bounding rectangles overlap
-    // loops through bounding box of the person, compares alpha of enemy and person
-        for(int y = 2*boundingH/3; y > 0; y--) { 
-            for(int x = 0; x < boundingW; x++) {
-                // get current person pixel
-                if (player.getMoveDir() == SDL_FLIP_HORIZONTAL) // if facing left
-                    playerPixel = playerTex->getPixel(playerLeftEdge+boundingW-x,y);
-                else 
-                    playerPixel = playerTex->getPixel(playerLeftEdge+x,y); // access current pixel
-                // access alpha value of pixel (i.e. transparency)
-                playerAlpha = playerTex->getAlpha(playerPixel); 
-                
-                if (int(playerAlpha) > 10) { // if person is present, check for overlap with enemy
-                    if (enemy.getMoveDir() == SDL_FLIP_NONE) // if facing right
-                        enemyPixel = enemyTex->getPixel(enemyLeftEdge+x-xDist,y-yDist);
-                    else
-                        enemyPixel = enemyTex->getPixel(enemyLeftEdge+boundingW-x-xDist,y-yDist);
-                    // check transparency of enemy pixel
-                    enemyAlpha = enemyTex->getAlpha(enemyPixel);
-                    if (int(enemyAlpha) > 10) { // collision
-                        if (Hit == 0) { // only add to hit if in state 0 (pre-hit)
-                            return true;
-                        }
+    if (abs(xDist) < 5*boundingW/2 && abs(yDist) < 2*boundingH/3) { // if bounding rectangles are close enough
+        // loops through bounding box of the person, compares alpha of enemy and person
+        // get current person pixel
+        if (player.getXPos() < enemy.getXPos()) { // enemy is to the right of the player
+            if (player.getMoveDir() == SDL_FLIP_NONE) { // if player facing to the right
+                if (player.getState() == 5) { // if player is punching
+                    if (PlayerHit == 0) {
+                        enemy.setLifePts(enemy.getLifePts() - 5); // enemy loses life
+                        PlayerHit = 2;
                     }
+                }
+                else if (player.getState() == 6) { // if player is kicking
+                    if (PlayerHit == 0) {
+                        enemy.setLifePts(enemy.getLifePts() - 7); // enemy loses more life
+                        PlayerHit = 2;
+                    }
+                }
+                else {
+                    PlayerHit = 0; // switch state to allow punch to collide (once punch is over)
+                }
+            }
+            if (enemy.getMoveDir() == SDL_FLIP_HORIZONTAL) {
+                if (enemy.getState() == 5) { // if enemy is punching
+                    if (EnemyHit == 0) {
+                        player.setLifePts(player.getLifePts() - 3); // player loses life
+                        EnemyHit = 2;
+                    }
+                }
+                else if (enemy.getState() == 6) { // if enemy is kicking
+                    if (EnemyHit == 0) {
+                        player.setLifePts(player.getLifePts() - 5);
+                        EnemyHit = 2;
+                    }
+                }
+                else {
+                    EnemyHit = 0;
+                }
+            }
+        }
+        else { // enemy is to the left of the player
+            if (player.getMoveDir() == SDL_FLIP_HORIZONTAL) { // if player facing to the right
+                if (player.getState() == 5) { // if player is punching
+                    if (PlayerHit == 0) {
+                        enemy.setLifePts(enemy.getLifePts() - 2); // enemy loses life
+                        PlayerHit = 2;
+                    }
+                }
+                else if (player.getState() == 6) { // if player is kicking
+                    if (PlayerHit == 0) {
+                        enemy.setLifePts(enemy.getLifePts() - 3); // enemy loses more life
+                        PlayerHit = 2;
+                    }
+                }
+                else {
+                    PlayerHit = 0;
+                }
+            }
+            if (enemy.getMoveDir() == SDL_FLIP_NONE) {
+                if (enemy.getState() == 5) { // if enemy is punching
+                    if (EnemyHit == 0) {
+                        player.setLifePts(player.getLifePts() - 1); // player loses life
+                        EnemyHit = 2;
+                    }
+                }
+                else if (enemy.getState() == 6) { // if enemy is kicking
+                    if (EnemyHit == 0) {
+                        player.setLifePts(player.getLifePts() - 2);
+                        EnemyHit = 2;
+                    }
+                }
+                else {
+                    EnemyHit = 0;
                 }
             }
         }
     }
-    return false; // no collision
+
+    // play sound effect
+    if (PlayerHit == 2) { // punching or kicking
+        if (player.getCurrPunch() == 4)
+            sound.playSound(3);
+        else if (player.getCurrKick() == 5)
+            sound.playSound(2);
+    }
+    if (EnemyHit == 2) {
+        if (enemy.getCurrPunch() == 4)
+            sound.playSound(3);
+        else if (enemy.getCurrKick() == 5)
+            sound.playSound(2);
+    }
 }
