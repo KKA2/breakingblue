@@ -21,6 +21,7 @@ Master::Master() {
     levels.setUp(Renderer);
     transition.setUp(Renderer);
     intro.setUp(Renderer);
+    outro.setUp(Renderer);
     // load all pictures/sounds
     loadMedia();
 }
@@ -58,24 +59,31 @@ void Master::loadMedia() {
     levels.loadMedia();
     transition.loadMedia();
     intro.loadMedia();
+    outro.loadMedia();
 }
 
 void Master::play() {
     while (!Quit) {
-        if (levels.getCurrLevel() < 1) {
-                showIntro();
-                SDL_RenderClear(Renderer);
-        }
         if (NextLevel) { // check if new/next level
-
+            if (levels.getCurrLevel() == 0) { // before menu screen
+                intro.animate();
+            }
             if (levels.getCurrLevel() != 0) { // if not the intro
                 levels.setCurrText(0); // reset text display to 0
                 levels.stopMusic(); // fade out music
-                if (levels.getCurrLevel() == 4) {// if after the fourth level
+                if (levels.getCurrLevel() == 4) { // if after the fourth level
+                    // display outro
                     if (Status == 0)
                         sound.playSound(5); // failure sound
                     else {
-                        sound.playSound(6); // win sound
+                        if (ShowText) { // first time winning
+                            outro.animate(); // if win game then show outro
+                            levels.stopMusic(); // stop outro music
+                            sound.playSound(6); // win sound
+                        }
+                        else {
+                            sound.playSound(4); // play shorter success sound
+                        }
                     }
                 }
                 else
@@ -193,12 +201,6 @@ void Master::showTransition() { // returns true if player decides to continue
             }
         }
     }
-}
-
-void Master::showIntro() {
-    if (levels.getCurrLevel() == 0) // if menu screen
-        intro.playMusic(); // play music
-    intro.display();
 }
 
 void Master::reset() {

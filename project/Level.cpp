@@ -13,9 +13,9 @@ Level::Level() {
     Renderer = NULL;
     Background = NULL;
     Music = NULL;
-    // initialize size of screen to 0
-    LevelWidth = 0;
-    LevelHeight = 0;
+    // initialize size of screen to actual screen size
+    LevelWidth = SCREEN_WIDTH;
+    LevelHeight = SCREEN_HEIGHT;
     // set bounds of display to allow for side scrolling
     Camera.x = 0;
     Camera.y = 0;
@@ -44,8 +44,8 @@ void Level::display() {
 }
 
 void Level::playMusic() {
-    // play music on channel, fade in over .5 seconds
-    Mix_FadeInMusic(Music,-1,500);
+    // play music on channel
+    Mix_PlayMusic(Music,-1);
     // set volume of music played to 50
     Mix_VolumeMusic(50);
 }

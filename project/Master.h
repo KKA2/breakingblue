@@ -19,6 +19,7 @@
 #include "Levels.h"
 #include "Transition.h"
 #include "Intro.h"
+#include "Outro.h"
 
 using namespace std;
 
@@ -36,7 +37,6 @@ public:
     void play(); // play game
     // utility functions
     void showTransition();
-    void showIntro();
     void reset(); // reset/initially set all game attributes
     void update(bool=true);
     void updateCamera();
@@ -69,6 +69,7 @@ private:
     Levels levels;
     Transition transition;
     Intro intro;
+    Outro outro;
 };
 
 #endif
