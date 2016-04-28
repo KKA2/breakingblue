@@ -54,12 +54,12 @@ int Enemy::move(int playerXPos, int playerState) {
         // if running/standing (not jumping/attacking/rolling)
         if (Person::getState() <= 1) {
             if (playerAttack) { // if player is attacking, respond
-                if (choice < 25) { // jump away (25% chance)
+                if (choice < 35) { // jump away (35% chance)
                     Person::setState(2);
                     if (Person::getJumpHeight() == 0) // if not already jumping
                         Person::setJumpDir(-1); // start moving upwards
                 }
-                else if (choice < 70) { // roll away (45% chance)
+                else if (choice < 70) { // roll away (35% chance)
                     Person::setState(4);
                 }
                 else if (choice < 95) { // punch (25% chance)

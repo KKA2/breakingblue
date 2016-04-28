@@ -16,7 +16,7 @@ Outro::~Outro() {
     // free all textures
     for (int f=0;f<11;f++)
         Fade[f].free();
-    for (int s=0;s<3;s++)
+    for (int s=0;s<4;s++)
         Scene[s].free();
 }
 
@@ -24,7 +24,7 @@ void Outro::setUp(SDL_Renderer *renderer) {
     Renderer = renderer;
     for (int f=0;f<11;f++)
         Fade[f].setUp(renderer);
-    for (int s=0;s<3;s++)
+    for (int s=0;s<4;s++)
         Scene[s].setUp(renderer);
 }
 
@@ -46,6 +46,7 @@ void Outro::loadMedia() {
     Scene[0].loadFromFile("imgs/bg/outro0.png");
     Scene[1].loadFromFile("imgs/bg/outro1.png");
     Scene[2].loadFromFile("imgs/bg/outro2.png");
+    Scene[3].loadFromFile("imgs/bg/outro3.png");
 }
 
 void Outro::display() {
@@ -58,25 +59,31 @@ void Outro::display() {
 
 void Outro::animate() {
     Level::playMusic();
-
-    CurrScene = 0; // text
     SDL_Delay(200);
+
+    CurrScene = 0; // first scene
     show();
-    display();
     SDL_Delay(100);
     hide();
-    SDL_Delay(300);
+    SDL_Delay(100);
 
-    CurrScene = 1; // set to first scene
+    CurrScene = 1; // next scene
+    show();
+    SDL_Delay(100);
+    hide();
+    SDL_Delay(400);
+
+    CurrScene = 2;
     show();
     SDL_Delay(1800);
     hide();
-    SDL_Delay(1500);
-    CurrScene = 2; // set to second scene
+    SDL_Delay(1600);
+
+    CurrScene = 3;
     show();
     SDL_Delay(1800);
     hide();
-    SDL_Delay(1400);
+    SDL_Delay(1600);
 }
 
 void Outro::show() {

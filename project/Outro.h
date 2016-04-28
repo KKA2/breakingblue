@@ -24,7 +24,7 @@ public:
 private:
     SDL_Renderer *Renderer; // window renderer
     Texture Fade[11]; // fade textures array
-    Texture Scene[3]; // backgrounds of outro
+    Texture Scene[4]; // backgrounds of outro
     int CurrScene; // current background displaying
     int CurrFade; // current texture
 };

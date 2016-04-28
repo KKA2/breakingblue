@@ -57,12 +57,12 @@ void Intro::loadMedia() {
 }
 
 void Intro::display() {    
-    SDL_Rect cam = *Level::getCamera(); // get rect to display
+    SDL_Rect *cam = Level::getCamera(); // get rect to display
     for (int i=CurrScene;i<CurrScene+NumScenes;i++) { // run through all scenes for the screen
         for(int j=CurrScene;j<=i;j++) // render screens between first and current screen
-            Foreground[j].render(0,0,&cam);
+            Foreground[j].render(0,0,cam);
         SDL_RenderPresent(Renderer); // update
-        SDL_Delay(1200); // wait
+        SDL_Delay(1250); // wait
     }
     CurrScene += NumScenes; // set new current scene
 }
