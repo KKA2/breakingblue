@@ -8,6 +8,7 @@
 using namespace std;
 
 Text::Text() {
+    CurrText = 0;
     TutorialRect.x = 0;
     TutorialRect.y = 0;
     TutorialRect.w = 450;

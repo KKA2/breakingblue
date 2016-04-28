@@ -69,7 +69,8 @@ void Master::play() {
                 intro.animate();
             }
             if (levels.getCurrLevel() != 0) { // if not the intro
-                levels.setCurrText(0); // reset text display to 0
+                if (!ShowText)
+                    levels.setCurrText(-1); // reset text display to -1 (so it shows the first)
                 levels.stopMusic(); // fade out music
                 if (levels.getCurrLevel() == 4) { // if after the fourth level
                     // display outro
@@ -107,6 +108,7 @@ void Master::play() {
                 } 
                 else { // if lost game
                     levels.setCurrLevel(4); // restart fourth level
+                    levels.setCurrText(0);
                 }             
             }
             reset(); // set all initial values
